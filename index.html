@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V6.8 - Final Logic</title>
+    <title>Ads Cloud Master V6.8 - Secured</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -53,104 +53,125 @@
         .sidebar { position: fixed; top: 0; right: 0; height: 100%; width: 320px; background: white; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transform: translateX(100%); transition: transform 0.3s ease; z-index: 2000; padding: 2rem; }
         .sidebar.open { transform: translateX(0); }
         .hidden-force { display: none !important; }
+        
+        /* LOCK SCREEN STYLE */
+        #lockOverlay { position: fixed; inset: 0; background-color: #0f172a; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s ease; }
     </style>
 </head>
 <body class="p-4 md:p-8 pb-32">
 
-    <div id="settingsSidebar" class="sidebar flex flex-col gap-6">
-        <div class="flex justify-between items-center border-b pb-4"><h2 class="h-bold text-xl text-slate-800">ADMIN SETTINGS</h2><button onclick="toggleSidebar()" class="text-slate-400 hover:text-rose-500"><i data-lucide="x" size="24"></i></button></div>
-        <div class="bg-indigo-50 p-5 rounded-2xl border border-indigo-100"><label class="text-xs h-bold text-indigo-600 uppercase mb-2 block">Admin Security Key</label><div class="relative"><input type="password" id="adminKeyInput" placeholder="กรอกรหัส kjondabeat" class="w-full pl-10 text-sm" onchange="saveAdminKey(this.value)"><i data-lucide="lock" size="14" class="absolute left-3 top-3.5 text-indigo-400"></i></div></div>
-        <div class="space-y-2"><label class="text-xs h-bold text-slate-400 uppercase">Monthly Goal</label><input type="number" id="goalInput" class="w-full" onchange="updateGoal(this.value)"></div>
-        <div class="mt-auto"><button onclick="exportJSON()" class="w-full py-3 bg-slate-800 text-white rounded-xl h-bold text-sm flex justify-center gap-2 mb-3"><i data-lucide="download"></i> Backup Data</button><label class="w-full py-3 bg-amber-500 text-white rounded-xl h-bold text-sm flex justify-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload"></i> Import Data <input type="file" hidden onchange="importJSON(event)"></label></div>
+    <div id="lockOverlay">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-sm text-center">
+            <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 text-white">
+                <i data-lucide="lock" size="32"></i>
+            </div>
+            <h2 class="text-2xl h-bold text-slate-800 mb-2">SYSTEM LOCKED</h2>
+            <p class="text-slate-400 text-sm mb-6">กรุณาใส่รหัสผ่านเพื่อเข้าใช้งาน</p>
+            
+            <div class="space-y-4">
+                <input type="password" id="unlockPass" placeholder="ใบ้: kj" class="w-full text-center text-lg bg-slate-50 border-none focus:ring-2 focus:ring-indigo-500" onkeyup="if(event.key==='Enter') checkUnlock()">
+                <button onclick="checkUnlock()" class="w-full py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg hover:bg-indigo-700 transition transform active:scale-95">UNLOCK</button>
+                <p id="unlockMsg" class="text-rose-500 text-sm font-bold hidden">รหัสผ่านผิด!</p>
+            </div>
+        </div>
     </div>
 
-    <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V6.8 Final Logic</p></div></div>
-        <button onclick="toggleSidebar()" class="w-10 h-10 bg-white border rounded-xl flex items-center justify-center text-slate-500 hover:text-indigo-600 transition shadow-sm"><i data-lucide="settings" size="20"></i></button>
-    </header>
+    <div id="mainContent" style="display: none;">
+        <div id="settingsSidebar" class="sidebar flex flex-col gap-6">
+            <div class="flex justify-between items-center border-b pb-4"><h2 class="h-bold text-xl text-slate-800">ADMIN SETTINGS</h2><button onclick="toggleSidebar()" class="text-slate-400 hover:text-rose-500"><i data-lucide="x" size="24"></i></button></div>
+            <div class="bg-indigo-50 p-5 rounded-2xl border border-indigo-100"><label class="text-xs h-bold text-indigo-600 uppercase mb-2 block">Admin Security Key</label><div class="relative"><input type="password" id="adminKeyInput" placeholder="กรอกรหัส kjondabeat" class="w-full pl-10 text-sm" onchange="saveAdminKey(this.value)"><i data-lucide="lock" size="14" class="absolute left-3 top-3.5 text-indigo-400"></i></div></div>
+            <div class="space-y-2"><label class="text-xs h-bold text-slate-400 uppercase">Monthly Goal</label><input type="number" id="goalInput" class="w-full" onchange="updateGoal(this.value)"></div>
+            <div class="mt-auto"><button onclick="exportJSON()" class="w-full py-3 bg-slate-800 text-white rounded-xl h-bold text-sm flex justify-center gap-2 mb-3"><i data-lucide="download"></i> Backup Data</button><label class="w-full py-3 bg-amber-500 text-white rounded-xl h-bold text-sm flex justify-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload"></i> Import Data <input type="file" hidden onchange="importJSON(event)"></label></div>
+        </div>
 
-    <section class="max-w-7xl mx-auto mb-10">
-        <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 relative overflow-hidden">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                <div><div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="target" size="14"></i><span class="text-xs h-bold uppercase">เป้าหมายเดือนนี้</span></div><div class="text-4xl h-bold text-slate-800" id="ui-goal">฿0</div></div>
-                <div><div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="trending-up" size="14"></i><span class="text-xs h-bold uppercase">เฉลี่ยต่อวันจริง</span></div><div class="text-4xl h-bold text-emerald-500" id="ui-avg-actual">฿0</div></div>
-                <div><div class="flex items-center gap-2 text-amber-500 mb-1"><i data-lucide="zap" size="14"></i><span class="text-xs h-bold uppercase">ยอดต้องทำ/วัน</span></div><div class="text-4xl h-bold text-amber-500" id="ui-avg-required">฿0</div></div>
-            </div>
-            <div class="space-y-3">
-                <div class="flex justify-between items-end"><span class="text-xs h-bold text-slate-400 uppercase tracking-widest">Progression Status</span><span class="text-2xl h-bold text-slate-800" id="ui-percent">0%</span></div>
-                <div class="progress-bar-bg">
-                    <div class="progress-text-overlay" id="ui-progress-text">฿0 / ขาดอีก ฿0</div>
-                    <div id="ui-progress-bar" class="progress-bar-fill" style="width: 0%"></div>
+        <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V6.8 Final Logic</p></div></div>
+            <button onclick="toggleSidebar()" class="w-10 h-10 bg-white border rounded-xl flex items-center justify-center text-slate-500 hover:text-indigo-600 transition shadow-sm"><i data-lucide="settings" size="20"></i></button>
+        </header>
+
+        <section class="max-w-7xl mx-auto mb-10">
+            <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 relative overflow-hidden">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                    <div><div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="target" size="14"></i><span class="text-xs h-bold uppercase">เป้าหมายเดือนนี้</span></div><div class="text-4xl h-bold text-slate-800" id="ui-goal">฿0</div></div>
+                    <div><div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="trending-up" size="14"></i><span class="text-xs h-bold uppercase">เฉลี่ยต่อวันจริง</span></div><div class="text-4xl h-bold text-emerald-500" id="ui-avg-actual">฿0</div></div>
+                    <div><div class="flex items-center gap-2 text-amber-500 mb-1"><i data-lucide="zap" size="14"></i><span class="text-xs h-bold uppercase">ยอดต้องทำ/วัน</span></div><div class="text-4xl h-bold text-amber-500" id="ui-avg-required">฿0</div></div>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-end"><span class="text-xs h-bold text-slate-400 uppercase tracking-widest">Progression Status</span><span class="text-2xl h-bold text-slate-800" id="ui-percent">0%</span></div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-text-overlay" id="ui-progress-text">฿0 / ขาดอีก ฿0</div>
+                        <div id="ui-progress-bar" class="progress-bar-fill" style="width: 0%"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="max-w-7xl mx-auto mb-12">
-        <div class="bg-white rounded-[1.5rem] p-8 shadow-lg border-t-4 border-indigo-600">
-            <h3 class="h-bold text-lg mb-6 flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center"><i data-lucide="plus" size="16"></i></div> ลงข้อมูลรายวัน</h3>
-            <form id="adsForm" class="grid grid-cols-2 md:grid-cols-6 gap-4">
-                <input type="hidden" id="editId">
-                <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="formPageId" class="w-full bg-slate-50"></select></div>
-                <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">วันที่</label><input type="date" id="formDate" class="w-full bg-slate-50" required></div>
-                <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-rose-400 uppercase">ค่าแอด</label><input type="number" id="adSpend" placeholder="0" class="w-full bg-rose-50 text-rose-600 font-bold" step="any"></div>
-                <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-emerald-500 uppercase">ยอดขาย</label><input type="number" id="sales" placeholder="0" class="w-full bg-emerald-50 text-emerald-600 font-bold" step="any"></div>
-                <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-blue-400 uppercase">ออเดอร์</label><input type="number" id="orders" placeholder="0" class="w-full bg-blue-50 text-blue-600 font-bold"></div>
-                <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-amber-400 uppercase">ทัก</label><input type="number" id="inquiries" placeholder="0" class="w-full bg-amber-50 text-amber-600 font-bold"></div>
-                <div class="col-span-2 md:col-span-4 space-y-1"><input type="text" id="note" placeholder="บันทึกหมายเหตุ..." class="w-full bg-slate-50"></div>
-                <div class="col-span-2 md:col-span-2 flex items-end gap-2"><button type="button" onclick="resetForm()" id="cancelBtn" class="hidden px-4 py-3 bg-slate-100 text-slate-500 rounded-xl"><i data-lucide="x"></i></button><button type="button" onclick="saveData()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">บันทึกข้อมูล</button></div>
-            </form>
-        </div>
-    </section>
+        <section class="max-w-7xl mx-auto mb-12">
+            <div class="bg-white rounded-[1.5rem] p-8 shadow-lg border-t-4 border-indigo-600">
+                <h3 class="h-bold text-lg mb-6 flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center"><i data-lucide="plus" size="16"></i></div> ลงข้อมูลรายวัน</h3>
+                <form id="adsForm" class="grid grid-cols-2 md:grid-cols-6 gap-4">
+                    <input type="hidden" id="editId">
+                    <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="formPageId" class="w-full bg-slate-50"></select></div>
+                    <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">วันที่</label><input type="date" id="formDate" class="w-full bg-slate-50" required></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-rose-400 uppercase">ค่าแอด</label><input type="number" id="adSpend" placeholder="0" class="w-full bg-rose-50 text-rose-600 font-bold" step="any"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-emerald-500 uppercase">ยอดขาย</label><input type="number" id="sales" placeholder="0" class="w-full bg-emerald-50 text-emerald-600 font-bold" step="any"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-blue-400 uppercase">ออเดอร์</label><input type="number" id="orders" placeholder="0" class="w-full bg-blue-50 text-blue-600 font-bold"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-amber-400 uppercase">ทัก</label><input type="number" id="inquiries" placeholder="0" class="w-full bg-amber-50 text-amber-600 font-bold"></div>
+                    <div class="col-span-2 md:col-span-4 space-y-1"><input type="text" id="note" placeholder="บันทึกหมายเหตุ..." class="w-full bg-slate-50"></div>
+                    <div class="col-span-2 md:col-span-2 flex items-end gap-2"><button type="button" onclick="resetForm()" id="cancelBtn" class="hidden px-4 py-3 bg-slate-100 text-slate-500 rounded-xl"><i data-lucide="x"></i></button><button type="button" onclick="saveData()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">บันทึกข้อมูล</button></div>
+                </form>
+            </div>
+        </section>
 
-    <div class="max-w-7xl mx-auto mb-6 flex justify-between items-end">
-        <h3 class="h-bold text-xl text-slate-800">Performance Cards</h3>
-        <div class="flex items-center gap-3">
-            <span class="text-xs h-bold text-slate-400 uppercase">Show Advice:</span>
-            <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" id="adviceToggle" class="sr-only peer" onchange="toggleAdviceGlobal()">
-                <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
-            </label>
+        <div class="max-w-7xl mx-auto mb-6 flex justify-between items-end">
+            <h3 class="h-bold text-xl text-slate-800">Performance Cards</h3>
+            <div class="flex items-center gap-3">
+                <span class="text-xs h-bold text-slate-400 uppercase">Show Advice:</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="adviceToggle" class="sr-only peer" onchange="toggleAdviceGlobal()">
+                    <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                </label>
+            </div>
         </div>
+        
+        <div id="product-cards" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 items-start justify-center"></div>
+
+        <section class="max-w-7xl mx-auto mb-12">
+            <div class="portfolio-box p-8 md:p-10 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-32 bg-indigo-500/10 rounded-full blur-3xl -mr-10 -mt-10"></div>
+                <h3 class="text-center text-xs h-bold text-indigo-300 uppercase tracking-[0.3em] mb-8">Portfolio Intelligence Summary</h3>
+                <div class="grid grid-cols-2 md:grid-cols-6 gap-8 text-center relative z-10">
+                    <div><p class="text-[10px] text-slate-400 uppercase mb-2">Total Sales</p><div class="text-2xl h-bold text-emerald-400" id="sum-sales">฿0</div></div>
+                    <div><p class="text-[10px] text-slate-400 uppercase mb-2">Total Ads</p><div class="text-xl h-bold text-rose-400" id="sum-ads">฿0</div></div>
+                    <div><p class="text-[10px] text-slate-400 uppercase mb-2">% Ads</p><div class="text-2xl h-bold text-white" id="sum-pct">0%</div></div>
+                    <div><p class="text-[10px] text-slate-400 uppercase mb-2">Avg CPA</p><div class="text-xl h-bold text-indigo-400" id="sum-cpa">฿0</div></div>
+                    <div><p class="text-[10px] text-slate-400 uppercase mb-2">Avg Inq</p><div class="text-xl h-bold text-blue-400" id="sum-inq">฿0</div></div>
+                    <div><p class="text-[10px] text-slate-400 uppercase mb-2">Avg ROAS</p><div class="text-2xl h-bold text-amber-400" id="sum-roas">0.0</div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto mb-6">
+            <div class="w-full bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <div class="flex items-center gap-2 mb-4"><div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600"><i data-lucide="filter" size="16"></i></div><span class="text-sm h-bold uppercase text-slate-700">Filter Data System</span></div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">โหมดกรอง</label><select id="filterMode" onchange="toggleFilterInputs()" class="w-full"><option value="month">รายเดือน (Monthly)</option><option value="year">รายปี (Yearly)</option><option value="range">ช่วงเวลา (Date Range)</option><option value="day">วันที่เดียว (Specific Date)</option></select></div>
+                    <div id="filter-month-group" class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full"></select><select id="filterYear" class="w-full"></select></div></div>
+                    <div id="filter-range-group" class="space-y-1 hidden-force col-span-2"><label class="text-[10px] h-bold text-slate-400 uppercase">จากวันที่ - ถึงวันที่</label><div class="flex gap-2"><input type="date" id="filterStart" class="w-full"><input type="date" id="filterEnd" class="w-full"></div></div>
+                    <div id="filter-day-group" class="space-y-1 hidden-force"><label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full"></div>
+                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="filterProduct" class="w-full"><option value="all">ทุกสินค้า</option></select></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-20">
+            <div class="p-6 border-b flex justify-between items-center bg-slate-50/50"><h3 class="h-bold text-lg text-slate-800 uppercase flex items-center gap-2"><i data-lucide="list" size="18"></i> Transaction History</h3><span class="text-xs bg-slate-200 px-3 py-1 rounded-full h-bold text-slate-600" id="tx-count">0 items</span></div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-500 h-bold uppercase"><tr><th class="p-4">Date</th><th class="p-4">Product</th><th class="p-4 text-right">Sales</th><th class="p-4 text-right">Ads</th><th class="p-4 text-right">CPA</th><th class="p-4">Note</th><th class="p-4 text-center">Action</th></tr></thead><tbody id="tableBody" class="divide-y divide-slate-100"></tbody></table>
+            </div>
+            <div class="p-4 bg-white border-t flex justify-between items-center"><p class="text-xs h-medium text-slate-400" id="pageInfo">Page 1 of 1</p><div class="flex gap-2"><button onclick="changePage(-1)" id="prevPageBtn" class="px-4 py-2 bg-slate-100 rounded-lg text-slate-600 hover:bg-slate-200 disabled:opacity-50 h-medium text-xs">Previous</button><button onclick="changePage(1)" id="nextPageBtn" class="px-4 py-2 bg-slate-100 rounded-lg text-slate-600 hover:bg-slate-200 disabled:opacity-50 h-medium text-xs">Next</button></div></div>
+        </section>
     </div>
-    
-    <div id="product-cards" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 items-start justify-center"></div>
-
-    <section class="max-w-7xl mx-auto mb-12">
-        <div class="portfolio-box p-8 md:p-10 shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-32 bg-indigo-500/10 rounded-full blur-3xl -mr-10 -mt-10"></div>
-            <h3 class="text-center text-xs h-bold text-indigo-300 uppercase tracking-[0.3em] mb-8">Portfolio Intelligence Summary</h3>
-            <div class="grid grid-cols-2 md:grid-cols-6 gap-8 text-center relative z-10">
-                <div><p class="text-[10px] text-slate-400 uppercase mb-2">Total Sales</p><div class="text-2xl h-bold text-emerald-400" id="sum-sales">฿0</div></div>
-                <div><p class="text-[10px] text-slate-400 uppercase mb-2">Total Ads</p><div class="text-xl h-bold text-rose-400" id="sum-ads">฿0</div></div>
-                <div><p class="text-[10px] text-slate-400 uppercase mb-2">% Ads</p><div class="text-2xl h-bold text-white" id="sum-pct">0%</div></div>
-                <div><p class="text-[10px] text-slate-400 uppercase mb-2">Avg CPA</p><div class="text-xl h-bold text-indigo-400" id="sum-cpa">฿0</div></div>
-                <div><p class="text-[10px] text-slate-400 uppercase mb-2">Avg Inq</p><div class="text-xl h-bold text-blue-400" id="sum-inq">฿0</div></div>
-                <div><p class="text-[10px] text-slate-400 uppercase mb-2">Avg ROAS</p><div class="text-2xl h-bold text-amber-400" id="sum-roas">0.0</div></div>
-            </div>
-        </div>
-    </section>
-
-    <section class="max-w-7xl mx-auto mb-6">
-        <div class="w-full bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div class="flex items-center gap-2 mb-4"><div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600"><i data-lucide="filter" size="16"></i></div><span class="text-sm h-bold uppercase text-slate-700">Filter Data System</span></div>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">โหมดกรอง</label><select id="filterMode" onchange="toggleFilterInputs()" class="w-full"><option value="month">รายเดือน (Monthly)</option><option value="year">รายปี (Yearly)</option><option value="range">ช่วงเวลา (Date Range)</option><option value="day">วันที่เดียว (Specific Date)</option></select></div>
-                <div id="filter-month-group" class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full"></select><select id="filterYear" class="w-full"></select></div></div>
-                <div id="filter-range-group" class="space-y-1 hidden-force col-span-2"><label class="text-[10px] h-bold text-slate-400 uppercase">จากวันที่ - ถึงวันที่</label><div class="flex gap-2"><input type="date" id="filterStart" class="w-full"><input type="date" id="filterEnd" class="w-full"></div></div>
-                <div id="filter-day-group" class="space-y-1 hidden-force"><label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full"></div>
-                <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="filterProduct" class="w-full"><option value="all">ทุกสินค้า</option></select></div>
-            </div>
-        </div>
-    </section>
-
-    <section class="max-w-7xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-20">
-        <div class="p-6 border-b flex justify-between items-center bg-slate-50/50"><h3 class="h-bold text-lg text-slate-800 uppercase flex items-center gap-2"><i data-lucide="list" size="18"></i> Transaction History</h3><span class="text-xs bg-slate-200 px-3 py-1 rounded-full h-bold text-slate-600" id="tx-count">0 items</span></div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-500 h-bold uppercase"><tr><th class="p-4">Date</th><th class="p-4">Product</th><th class="p-4 text-right">Sales</th><th class="p-4 text-right">Ads</th><th class="p-4 text-right">CPA</th><th class="p-4">Note</th><th class="p-4 text-center">Action</th></tr></thead><tbody id="tableBody" class="divide-y divide-slate-100"></tbody></table>
-        </div>
-        <div class="p-4 bg-white border-t flex justify-between items-center"><p class="text-xs h-medium text-slate-400" id="pageInfo">Page 1 of 1</p><div class="flex gap-2"><button onclick="changePage(-1)" id="prevPageBtn" class="px-4 py-2 bg-slate-100 rounded-lg text-slate-600 hover:bg-slate-200 disabled:opacity-50 h-medium text-xs">Previous</button><button onclick="changePage(1)" id="nextPageBtn" class="px-4 py-2 bg-slate-100 rounded-lg text-slate-600 hover:bg-slate-200 disabled:opacity-50 h-medium text-xs">Next</button></div></div>
-    </section>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
@@ -160,13 +181,33 @@
         let allData = [], filteredData = [], config = { monthlyGoal: 1000000 }, currentPage = 1; const ITEMS_PER_PAGE = 10;
         const PRODUCTS = [ { id: "เบต้าออยล์", css: "card-betaoil" }, { id: "เบต้าไลฟ์", css: "card-betalife" }, { id: "แล็บฟาร์ม", css: "card-labfarm" } ];
 
+        // --- NEW LOCK SYSTEM LOGIC (ADDED HERE) ---
+        window.checkUnlock = () => {
+            const pass = document.getElementById('unlockPass').value;
+            if(pass === 'kjondabeat') {
+                document.getElementById('lockOverlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('lockOverlay').style.display = 'none';
+                    document.getElementById('mainContent').style.display = 'block';
+                }, 500);
+                // Auto-fill admin key for operations
+                localStorage.setItem('ads_admin_key', pass);
+                if(document.getElementById('adminKeyInput')) document.getElementById('adminKeyInput').value = pass;
+            } else {
+                document.getElementById('unlockMsg').classList.remove('hidden');
+            }
+        }
+
         window.onload = () => {
             lucide.createIcons(); document.getElementById('formDate').valueAsDate = new Date();
             const today = new Date(); const mSelect = document.getElementById('filterMonth'); ["January","February","March","April","May","June","July","August","September","October","November","December"].forEach((m,i) => mSelect.innerHTML += `<option value="${i+1}" ${i === today.getMonth() ? 'selected' : ''}>${m}</option>`);
             const ySelect = document.getElementById('filterYear'); const currentYear = today.getFullYear(); for(let y=currentYear; y>=2024; y--) ySelect.innerHTML += `<option value="${y}">${y}</option>`;
             document.getElementById('filterDate').valueAsDate = today;
             const pSelect = document.getElementById('formPageId'); const fSelect = document.getElementById('filterProduct'); PRODUCTS.forEach(p => { pSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`; fSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`; });
-            document.getElementById('adminKeyInput').value = localStorage.getItem('ads_admin_key') || '';
+            
+            // Set admin key from local storage if available (optional, but forces re-login on refresh if we don't use it. You asked for "must enter code correctly", so we rely on the overlay)
+            // document.getElementById('adminKeyInput').value = localStorage.getItem('ads_admin_key') || ''; 
+
             ['filterMode','filterMonth','filterYear','filterStart','filterEnd','filterDate','filterProduct'].forEach(id => document.getElementById(id).addEventListener('change', () => { currentPage = 1; renderApp(); }));
             onValue(ref(db, 'config'), snap => { if(snap.exists()) { config = { ...config, ...snap.val() }; document.getElementById('goalInput').value = config.monthlyGoal; renderApp(); } });
             onValue(ref(db, 'adsData'), snap => { const raw = snap.val(); allData = raw ? Object.keys(raw).map(k => ({...raw[k], id: k})) : []; renderApp(); });
