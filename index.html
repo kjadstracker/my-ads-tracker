@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V6.9.6 - Total Replace & 1 Day Login</title>
+    <title>Ads Cloud Master V6.9.7 - Deep Import</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -16,7 +16,6 @@
         
         /* LOCK SCREEN */
         #lockOverlay { position: fixed; inset: 0; background-color: #0f172a; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.5s ease; }
-        .hidden-force { display: none !important; }
         
         /* CARD STYLES */
         .card-stat { 
@@ -31,16 +30,15 @@
         .card-betalife { border-top: 8px solid #78350f; background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%); }
         .card-labfarm { border-top: 8px solid #10b981; background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%); }
 
-        /* PORTFOLIO BOX */
+        /* PORTFOLIO & PROGRESS */
         .portfolio-box { background: #0f172a; color: white; border-radius: 1.5rem; position: relative; overflow: hidden; }
-
-        /* PROGRESS BAR */
         .progress-bar-bg { background: #e2e8f0; height: 48px; border-radius: 24px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
         .progress-bar-fill { height: 100%; background-color: #10b981; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
         .progress-text-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.4); z-index: 10; pointer-events: none; }
 
         .advice-box { margin-top: 1rem; padding: 1rem; border-radius: 1rem; font-size: 0.85rem; line-height: 1.4; background: rgba(255,255,255,0.9); border: 1px solid rgba(0,0,0,0.05); }
         .advice-hidden { display: none !important; }
+        .hidden-force { display: none !important; }
         .hidden { display: none; }
         .flex { display: flex; }
         
@@ -66,7 +64,7 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V6.9.6 Total Replace</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V6.9.7 Deep Import</p></div></div>
             <div class="flex gap-2">
                 <button onclick="exportJSON()" class="px-4 py-2 bg-slate-800 text-white rounded-lg h-bold text-xs flex items-center gap-2 hover:bg-slate-900 transition"><i data-lucide="download" size="16"></i> Backup</button>
                 <label class="px-4 py-2 bg-amber-500 text-white rounded-lg h-bold text-xs flex items-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload" size="16"></i> Import (Replace) <input type="file" id="fileInput" hidden onchange="importJSON(event)"></label>
@@ -191,12 +189,11 @@
             }
         }
 
-        // --- NEW: SESSION LOGIN LOGIC (24H) ---
+        // --- SESSION LOGIC (24H) ---
         window.checkUnlock = () => {
             const pass = document.getElementById('unlockPass').value;
             if(pass === 'kjondabeat') {
                 unlockApp();
-                // Set expiry for 24 hours from now
                 const expiry = new Date().getTime() + (24 * 60 * 60 * 1000);
                 localStorage.setItem('ads_session_expiry', expiry);
                 localStorage.setItem('ads_admin_key', pass);
@@ -220,9 +217,7 @@
             
             // Check Session
             const expiry = localStorage.getItem('ads_session_expiry');
-            if(expiry && new Date().getTime() < parseInt(expiry)) {
-                unlockApp(); // Auto unlock if session valid
-            }
+            if(expiry && new Date().getTime() < parseInt(expiry)) unlockApp();
 
             ['filterMode','filterMonth','filterYear','filterStart','filterEnd','filterDate','filterProduct'].forEach(id => document.getElementById(id).addEventListener('change', () => { currentPage = 1; renderApp(); }));
             
@@ -324,31 +319,40 @@
         window.deleteEntry = async (id) => { if(!confirm("ยืนยันลบ?"))return; const k = localStorage.getItem('ads_admin_key'); try { await update(ref(db,`adsData/${id}`),{securityKey:k,sales:null}); await remove(ref(db,`adsData/${id}`)); } catch(e) { alert("❌ ลบไม่ได้: รหัส Admin ผิด!"); } };
         window.exportJSON = () => { const s = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData)); const n = document.createElement('a'); n.setAttribute("href", s); n.setAttribute("download", "backup_ads_data.json"); document.body.appendChild(n); n.click(); n.remove(); };
         
-        // --- TOTAL REPLACE IMPORT LOGIC ---
+        // --- AI DEEP IMPORT (Universal Parser) ---
+        function findRecords(obj, results = []) {
+            if (!obj || typeof obj !== 'object') return results;
+            if (obj.pageId && obj.date && (obj.sales !== undefined || obj.adSpend !== undefined)) {
+                results.push(obj); // Found a record!
+                return results;
+            }
+            if (Array.isArray(obj)) { obj.forEach(item => findRecords(item, results)); } 
+            else { Object.values(obj).forEach(val => findRecords(val, results)); }
+            return results;
+        }
+
         window.importJSON = (e) => { 
-            const f = e.target.files[0]; 
-            if(!f) return; 
+            const f = e.target.files[0]; if(!f) return; 
             const r = new FileReader(); 
             r.onload = async (ev) => { 
                 try {
-                    const j = JSON.parse(ev.target.result);
-                    // 1. แปลงทุก format ให้เป็น Array
-                    const data = Array.isArray(j) ? j : Object.values(j);
+                    const raw = JSON.parse(ev.target.result);
+                    // AI Deep Search: Find anything that looks like a record
+                    const data = findRecords(raw);
                     
                     if(data.length === 0) { alert("❌ ไม่พบข้อมูลในไฟล์"); return; }
 
-                    if(confirm(`⚠️ คำเตือน: ระบบจะลบข้อมูลเก่าทั้งหมดทิ้ง\nและแทนที่ด้วยข้อมูล ${data.length} รายการจากไฟล์นี้\n\nยืนยันหรือไม่?`)) {
+                    if(confirm(`⚠️ ระบบจะลบข้อมูลเก่าทั้งหมดทิ้ง\nและแทนที่ด้วยข้อมูล ${data.length} รายการจากไฟล์นี้\n\nยืนยันหรือไม่?`)) {
                         document.body.style.cursor = 'wait';
                         
-                        // 2. Wipe Database (ล้างบาง)
+                        // 1. Wipe Old Data
                         await set(ref(db, 'adsData'), null);
 
                         let count = 0;
                         const k = "kjondabeat";
 
-                        // 3. Loop Insert (ใส่ใหม่ทีละตัว)
+                        // 2. Insert New Data
                         for(const item of data) {
-                            if(!item) continue;
                             const {id, ...c} = item; 
                             await push(ref(db,'adsData'), {...c, securityKey: k});
                             count++;
@@ -356,11 +360,11 @@
                         
                         document.body.style.cursor = 'default';
                         alert(`✅ แทนที่ข้อมูลสำเร็จ ${count} รายการ!\n(ระบบจะรีโหลดหน้าจอใหม่)`);
-                        location.reload(); // รีเฟรชให้เห็นข้อมูลใหม่ทันที
+                        location.reload(); 
                     }
                 } catch(err) {
                     document.body.style.cursor = 'default';
-                    alert("❌ ไฟล์เสียหายหรือรูปแบบไม่ถูกต้อง");
+                    alert("❌ ไฟล์เสียหายหรืออ่านไม่ได้");
                     console.error(err);
                 }
                 document.getElementById('fileInput').value = '';
