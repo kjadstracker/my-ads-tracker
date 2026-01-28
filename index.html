@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V6.9.2 - Final Stable</title>
+    <title>Ads Cloud Master V6.9.3 - Anti-Bounce</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -66,7 +66,7 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V6.9.2 Stable</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V6.9.3 Anti-Bounce</p></div></div>
             <div class="flex gap-2">
                 <button onclick="exportJSON()" class="px-4 py-2 bg-slate-800 text-white rounded-lg h-bold text-xs flex items-center gap-2 hover:bg-slate-900 transition"><i data-lucide="download" size="16"></i> Backup</button>
                 <label class="px-4 py-2 bg-amber-500 text-white rounded-lg h-bold text-xs flex items-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload" size="16"></i> Import <input type="file" hidden onchange="importJSON(event)"></label>
@@ -166,6 +166,10 @@
         </section>
     </div>
 
+    <div id="settingsSidebar" class="sidebar flex flex-col gap-6">
+        <div class="flex justify-between border-b pb-4"><h2 class="h-bold text-xl">SETTINGS</h2><button onclick="toggleSidebar()"><i data-lucide="x"></i></button></div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
         import { getDatabase, ref, push, onValue, remove, update, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
@@ -173,6 +177,8 @@
         const app = initializeApp(firebaseConfig); const db = getDatabase(app);
         let allData = [], filteredData = [], config = { monthlyGoal: 1000000 }, currentPage = 1; const ITEMS_PER_PAGE = 10;
         const PRODUCTS = [ { id: "เบต้าออยล์", css: "card-betaoil" }, { id: "เบต้าไลฟ์", css: "card-betalife" }, { id: "แล็บฟาร์ม", css: "card-labfarm" } ];
+        
+        let ignoreRemoteGoal = false; // FLAG สำหรับกันเด้ง
 
         window.toggleGoalEdit = (show) => {
             const display = document.getElementById('goalDisplay');
@@ -185,12 +191,20 @@
         window.saveGoal = () => {
             const val = parseFloat(document.getElementById('goalInput').value);
             if(val > 0) {
-                const k = localStorage.getItem('ads_admin_key');
-                config.monthlyGoal = val; // Force local update first
-                document.getElementById('ui-goal').innerText = `฿${val.toLocaleString()}`; // UI update immediately
-                renderStats(); // Recalculate bars immediately
-                set(ref(db, 'config/monthlyGoal'), val); // Send to backend
+                // 1. LOCK: ไม่รับค่าจาก server ชั่วคราว
+                ignoreRemoteGoal = true;
+                
+                // 2. FORCE UPDATE UI: เปลี่ยนเลขหน้าจอทันที
+                config.monthlyGoal = val; 
+                document.getElementById('ui-goal').innerText = `฿${val.toLocaleString()}`; 
+                renderStats(); // คำนวณหลอดพลังงานใหม่ทันที
+                
+                // 3. SEND: ส่งค่าไป server
+                set(ref(db, 'config/monthlyGoal'), val); 
                 toggleGoalEdit(false);
+
+                // 4. UNLOCK: กลับมารับค่าปกติหลังจาก 3 วินาที (ให้ server นิ่งก่อน)
+                setTimeout(() => { ignoreRemoteGoal = false; }, 3000);
             }
         }
 
@@ -214,14 +228,20 @@
             const pSelect = document.getElementById('formPageId'); const fSelect = document.getElementById('filterProduct'); PRODUCTS.forEach(p => { pSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`; fSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`; });
             
             ['filterMode','filterMonth','filterYear','filterStart','filterEnd','filterDate','filterProduct'].forEach(id => document.getElementById(id).addEventListener('change', () => { currentPage = 1; renderApp(); }));
+            
+            // ANTI-BOUNCE LISTENER
             onValue(ref(db, 'config'), snap => { 
                 if(snap.exists()) { 
                     const data = snap.val(); 
-                    if(typeof data === 'number') config.monthlyGoal = data; 
-                    else config = { ...config, ...data }; 
-                    renderApp(); 
+                    // ถ้ากำลังล็อคอยู่ (เพิ่งกดเซฟ) อย่าเพิ่งอัปเดตค่าจาก server
+                    if(!ignoreRemoteGoal) {
+                        if(typeof data === 'number') config.monthlyGoal = data; 
+                        else config = { ...config, ...data }; 
+                        renderApp(); 
+                    }
                 } 
             });
+            
             onValue(ref(db, 'adsData'), snap => { const raw = snap.val(); allData = raw ? Object.keys(raw).map(k => ({...raw[k], id: k})) : []; renderApp(); });
         };
 
@@ -256,7 +276,6 @@
         function renderStats() {
             const s = filteredData.reduce((a,b)=>a+b.sales,0), a = filteredData.reduce((a,b)=>a+b.adSpend,0), o = filteredData.reduce((a,b)=>a+b.orders,0), i = filteredData.reduce((a,b)=>a+b.inquiries,0);
             
-            // PORTFOLIO FIX
             document.getElementById('sum-sales').innerText = `฿${s.toLocaleString()}`; 
             document.getElementById('sum-ads').innerText = `฿${a.toLocaleString()}`;
             document.getElementById('sum-pct').innerText = s > 0 ? `${((a/s)*100).toFixed(1)}%` : '0%'; 
@@ -314,6 +333,8 @@
         }
 
         window.changePage = (d) => { currentPage += d; renderTable(); };
+        window.toggleSidebar = () => document.getElementById('settingsSidebar').classList.toggle('open'); 
+        // window.updateGoal = (v) => { ... } // REMOVED: Moved to direct edit
         window.resetForm = () => { document.getElementById('adsForm').reset(); document.getElementById('editId').value = ''; document.getElementById('formDate').valueAsDate = new Date(); document.getElementById('cancelBtn').classList.add('hidden-force'); };
         window.saveData = async () => {
             const k = localStorage.getItem('ads_admin_key'), id = document.getElementById('editId').value;
