@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V6.1 - Full Restoration</title>
+    <title>Ads Cloud Master V6.2 - Precision Filter</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -11,26 +11,36 @@
     <style>
         :root { --base-fsize: 16px; }
         body { font-family: 'Kanit', sans-serif; background-color: #f8fafc; font-size: var(--base-fsize); color: #334155; }
-        .h-bold { font-weight: 700; }
+        
+        /* Typography System */
+        .h-bold { font-weight: 700; } /* หัวข้อหนา */
+        .h-medium { font-weight: 500; } /* เนื้อหาปานกลาง */
         .h-black { font-weight: 900; }
         
-        .card-stat { background: white; border-radius: 1.5rem; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.08); border: 1px solid #f1f5f9; transition: transform 0.2s; }
-        .card-stat:hover { transform: translateY(-5px); }
+        /* Card Styles V5.0 Look */
+        .card-stat { background: white; border-radius: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; transition: all 0.2s; position: relative; overflow: hidden; }
+        .card-stat:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
         
-        .card-betaoil { border-left: 6px solid #f59e0b; }
-        .card-betalife { border-left: 6px solid #78350f; }
-        .card-labfarm { border-left: 6px solid #10b981; }
+        .card-betaoil { border-top: 6px solid #f59e0b; }
+        .card-betalife { border-top: 6px solid #78350f; }
+        .card-labfarm { border-top: 6px solid #10b981; }
 
         .portfolio-box { background: #0f172a; color: white; border-radius: 1.5rem; }
         
-        input, select { border: 2px solid #e2e8f0 !important; border-radius: 0.8rem !important; padding: 0.7rem 1rem !important; font-weight: 500 !important; outline: none; transition: all 0.2s; }
+        input, select { border: 2px solid #e2e8f0 !important; border-radius: 0.8rem !important; padding: 0.6rem 1rem !important; font-weight: 500 !important; outline: none; transition: all 0.2s; font-size: 0.95rem; }
         input:focus, select:focus { border-color: #4f46e5 !important; ring: 2px solid #e0e7ff; }
 
-        .progress-bar-bg { background: #e2e8f0; height: 36px; border-radius: 18px; overflow: hidden; position: relative; }
-        .progress-bar-fill { height: 100%; transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        
+        /* Progress Bar Upgrade */
+        .progress-bar-bg { background: #e2e8f0; height: 42px; border-radius: 21px; overflow: hidden; position: relative; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); }
+        .progress-bar-fill { height: 100%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: center; }
+        .progress-text { font-size: 1.1rem; font-weight: 700; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); white-space: nowrap; padding: 0 1rem; z-index: 10; }
+        .progress-text-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 700; color: #64748b; z-index: 1; }
+
+        /* Sidebar */
         .sidebar { position: fixed; top: 0; right: 0; height: 100%; width: 320px; background: white; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transform: translateX(100%); transition: transform 0.3s ease; z-index: 2000; padding: 2rem; }
         .sidebar.open { transform: translateX(0); }
+
+        .hidden-force { display: none !important; }
     </style>
 </head>
 <body class="p-4 md:p-8 pb-32">
@@ -40,21 +50,17 @@
             <h2 class="h-black text-xl text-slate-800">ADMIN SETTINGS</h2>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-rose-500"><i data-lucide="x" size="24"></i></button>
         </div>
-        
         <div class="bg-indigo-50 p-5 rounded-2xl border border-indigo-100">
             <label class="text-xs h-bold text-indigo-600 uppercase mb-2 block">Admin Security Key</label>
             <div class="relative">
                 <input type="password" id="adminKeyInput" placeholder="กรอกรหัส kjondabeat" class="w-full pl-10 text-sm" onchange="saveAdminKey(this.value)">
                 <i data-lucide="lock" size="14" class="absolute left-3 top-3.5 text-indigo-400"></i>
             </div>
-            <p class="text-[10px] text-indigo-400 mt-2">รหัสนี้ใช้สำหรับบันทึก แก้ไข และลบข้อมูล</p>
         </div>
-
         <div class="space-y-2">
             <label class="text-xs h-bold text-slate-400 uppercase">Monthly Goal</label>
             <input type="number" id="goalInput" class="w-full" onchange="updateGoal(this.value)">
         </div>
-
         <div class="mt-auto">
             <button onclick="exportJSON()" class="w-full py-3 bg-slate-800 text-white rounded-xl h-bold text-sm flex justify-center gap-2 mb-3"><i data-lucide="download"></i> Backup Data</button>
             <label class="w-full py-3 bg-amber-500 text-white rounded-xl h-bold text-sm flex justify-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload"></i> Import Data <input type="file" hidden onchange="importJSON(event)"></label>
@@ -66,12 +72,10 @@
             <div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div>
             <div>
                 <h1 class="h-black text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1>
-                <p class="text-xs font-bold text-slate-400 tracking-widest uppercase">Full Control V6.1</p>
+                <p class="text-xs font-bold text-slate-400 tracking-widest uppercase">Precision V6.2</p>
             </div>
         </div>
-        <div class="flex gap-2">
-            <button onclick="toggleSidebar()" class="w-10 h-10 bg-white border rounded-xl flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition"><i data-lucide="settings" size="20"></i></button>
-        </div>
+        <button onclick="toggleSidebar()" class="w-10 h-10 bg-white border rounded-xl flex items-center justify-center text-slate-500 hover:text-indigo-600 transition shadow-sm"><i data-lucide="settings" size="20"></i></button>
     </header>
 
     <section class="max-w-7xl mx-auto mb-10">
@@ -86,7 +90,7 @@
                     <div class="text-4xl h-black text-emerald-500" id="ui-avg-actual">฿0</div>
                 </div>
                 <div>
-                    <div class="flex items-center gap-2 text-amber-500 mb-1"><i data-lucide="zap" size="14"></i><span class="text-xs h-bold uppercase">ยอดต้องทำ/วัน เพื่อถึงเป้า</span></div>
+                    <div class="flex items-center gap-2 text-amber-500 mb-1"><i data-lucide="zap" size="14"></i><span class="text-xs h-bold uppercase">ยอดต้องทำ/วัน</span></div>
                     <div class="text-4xl h-black text-amber-500" id="ui-avg-required">฿0</div>
                 </div>
             </div>
@@ -95,9 +99,11 @@
                     <span class="text-xs h-bold text-slate-400 uppercase tracking-widest">Progression Status</span>
                     <span class="text-2xl h-black text-slate-800" id="ui-percent">0%</span>
                 </div>
-                <div class="progress-bar-bg">
-                    <div id="ui-progress-bar" class="progress-bar-fill bg-emerald-500" style="width: 0%"></div>
-                    <div class="absolute inset-0 flex items-center justify-center text-xs h-bold text-slate-900/50 uppercase tracking-widest" id="ui-progress-text"></div>
+                <div class="progress-bar-bg relative">
+                    <div class="progress-text-overlay" id="ui-progress-text-bg">฿0 / ขาดอีก ฿0</div>
+                    <div id="ui-progress-bar" class="progress-bar-fill bg-emerald-500" style="width: 0%">
+                        <span class="progress-text" id="ui-progress-text-fg">฿0 / ขาดอีก ฿0</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -108,12 +114,12 @@
             <h3 class="h-bold text-lg mb-6 flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center"><i data-lucide="plus" size="16"></i></div> ลงข้อมูลรายวัน</h3>
             <form id="adsForm" class="grid grid-cols-2 md:grid-cols-6 gap-4">
                 <input type="hidden" id="editId">
-                <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="pageId" class="w-full bg-slate-50"></select></div>
-                <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">วันที่</label><input type="date" id="date" class="w-full bg-slate-50" required></div>
-                <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-rose-400 uppercase">ค่าแอด</label><input type="number" id="adSpend" placeholder="0" class="w-full bg-rose-50 text-rose-600" step="any"></div>
-                <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-emerald-500 uppercase">ยอดขาย</label><input type="number" id="sales" placeholder="0" class="w-full bg-emerald-50 text-emerald-600" step="any"></div>
-                <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-blue-400 uppercase">ออเดอร์</label><input type="number" id="orders" placeholder="0" class="w-full bg-blue-50 text-blue-600"></div>
-                <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-amber-400 uppercase">ทัก</label><input type="number" id="inquiries" placeholder="0" class="w-full bg-amber-50 text-amber-600"></div>
+                <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="formPageId" class="w-full bg-slate-50"></select></div>
+                <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">วันที่</label><input type="date" id="formDate" class="w-full bg-slate-50" required></div>
+                <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-rose-400 uppercase">ค่าแอด</label><input type="number" id="adSpend" placeholder="0" class="w-full bg-rose-50 text-rose-600 font-bold" step="any"></div>
+                <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-emerald-500 uppercase">ยอดขาย</label><input type="number" id="sales" placeholder="0" class="w-full bg-emerald-50 text-emerald-600 font-bold" step="any"></div>
+                <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-blue-400 uppercase">ออเดอร์</label><input type="number" id="orders" placeholder="0" class="w-full bg-blue-50 text-blue-600 font-bold"></div>
+                <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-amber-400 uppercase">ทัก</label><input type="number" id="inquiries" placeholder="0" class="w-full bg-amber-50 text-amber-600 font-bold"></div>
                 <div class="col-span-2 md:col-span-4 space-y-1"><input type="text" id="note" placeholder="บันทึกหมายเหตุ..." class="w-full bg-slate-50"></div>
                 <div class="col-span-2 md:col-span-2 flex items-end gap-2">
                     <button type="button" onclick="resetForm()" id="cancelBtn" class="hidden px-4 py-3 bg-slate-100 text-slate-500 rounded-xl"><i data-lucide="x"></i></button>
@@ -123,32 +129,70 @@
         </div>
     </section>
 
-    <section class="max-w-7xl mx-auto mb-8 flex flex-wrap gap-4 items-center justify-between bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-        <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500"><i data-lucide="filter" size="14"></i></div>
-            <span class="text-xs h-bold uppercase text-slate-400">FILTER VIEW:</span>
+    <section class="max-w-7xl mx-auto mb-6 flex flex-col md:flex-row gap-6 justify-between items-start md:items-end">
+        <div class="w-full bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <div class="flex items-center gap-2 mb-4">
+                <div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600"><i data-lucide="filter" size="16"></i></div>
+                <span class="text-sm h-bold uppercase text-slate-700">Filter Data System</span>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                <div class="space-y-1">
+                    <label class="text-[10px] h-bold text-slate-400 uppercase">โหมดกรอง</label>
+                    <select id="filterMode" onchange="toggleFilterInputs()" class="w-full">
+                        <option value="month">รายเดือน (Monthly)</option>
+                        <option value="year">รายปี (Yearly)</option>
+                        <option value="range">ช่วงเวลา (Date Range)</option>
+                        <option value="day">วันที่เดียว (Specific Date)</option>
+                    </select>
+                </div>
+
+                <div id="filter-month-group" class="space-y-1">
+                    <label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label>
+                    <div class="flex gap-2">
+                        <select id="filterMonth" class="w-full"></select>
+                        <select id="filterYear" class="w-full"></select>
+                    </div>
+                </div>
+                
+                <div id="filter-range-group" class="space-y-1 hidden-force col-span-2">
+                    <label class="text-[10px] h-bold text-slate-400 uppercase">จากวันที่ - ถึงวันที่</label>
+                    <div class="flex gap-2">
+                        <input type="date" id="filterStart" class="w-full">
+                        <input type="date" id="filterEnd" class="w-full">
+                    </div>
+                </div>
+
+                <div id="filter-day-group" class="space-y-1 hidden-force">
+                    <label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label>
+                    <input type="date" id="filterDate" class="w-full">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label>
+                    <select id="filterProduct" class="w-full"><option value="all">ทุกสินค้า</option></select>
+                </div>
+            </div>
         </div>
-        <div class="flex flex-wrap gap-3">
-            <select id="filterYear" onchange="renderApp()" class="text-sm py-2"><option value="2026">2026</option><option value="2025">2025</option></select>
-            <select id="filterMonth" onchange="renderApp()" class="text-sm py-2">
-                <option value="all">ทั้งปี</option>
-                <option value="1">มกราคม</option><option value="2">กุมภาพันธ์</option><option value="3">มีนาคม</option>
-                <option value="4">เมษายน</option><option value="5">พฤษภาคม</option><option value="6">มิถุนายน</option>
-                <option value="7">กรกฎาคม</option><option value="8">สิงหาคม</option><option value="9">กันยายน</option>
-                <option value="10">ตุลาคม</option><option value="11">พฤศจิกายน</option><option value="12">ธันวาคม</option>
-            </select>
-            <select id="filterProduct" onchange="renderApp()" class="text-sm py-2"><option value="all">ทุกสินค้า</option></select>
+
+        <div class="flex items-center gap-3">
+            <span class="text-xs h-bold text-slate-400 uppercase">SCALING ADVICE:</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="adviceToggle" class="sr-only peer" checked onchange="renderAdvice()">
+                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                <span class="ml-2 text-sm h-medium text-slate-600">Show</span>
+            </label>
         </div>
     </section>
     
-    <section id="advice-box" class="max-w-7xl mx-auto mb-8 hidden">
-        <div class="relative p-6 rounded-2xl border-l-8 shadow-sm flex items-start gap-4 transition-all" id="advice-style">
-            <div class="p-3 rounded-full bg-white/50" id="advice-icon"></div>
+    <section id="advice-box" class="max-w-7xl mx-auto mb-8 hidden transition-all duration-300">
+        <div class="relative p-6 rounded-2xl border-l-8 shadow-sm flex items-start gap-4 bg-white" id="advice-style">
+            <div class="p-3 rounded-full bg-white/80 shadow-sm" id="advice-icon"></div>
             <div class="pr-8">
                 <h4 class="h-bold text-lg" id="advice-title"></h4>
-                <p class="text-sm opacity-90 mt-1" id="advice-desc"></p>
+                <p class="text-sm h-medium opacity-90 mt-1" id="advice-desc"></p>
+                <div class="mt-2 text-xs h-bold uppercase opacity-60 flex gap-4" id="advice-stats"></div>
             </div>
-            <button onclick="closeAdvice()" class="absolute top-4 right-4 text-black/20 hover:text-black/50 transition"><i data-lucide="x" size="20"></i></button>
         </div>
     </section>
 
@@ -164,23 +208,30 @@
                 <div><p class="text-[10px] text-slate-400 uppercase mb-2">% Ads</p><div class="text-2xl h-black text-white" id="sum-pct">0%</div></div>
                 <div><p class="text-[10px] text-slate-400 uppercase mb-2">Avg CPA</p><div class="text-xl h-bold text-indigo-400" id="sum-cpa">฿0</div></div>
                 <div><p class="text-[10px] text-slate-400 uppercase mb-2">Avg Inq</p><div class="text-xl h-bold text-blue-400" id="sum-inq">฿0</div></div>
-                <div><p class="text-[10px] text-slate-400 uppercase mb-2">Avg Stat (ROAS)</p><div class="text-2xl h-black text-amber-400" id="sum-roas">0.0</div></div>
+                <div><p class="text-[10px] text-slate-400 uppercase mb-2">Avg ROAS</p><div class="text-2xl h-black text-amber-400" id="sum-roas">0.0</div></div>
             </div>
         </div>
     </section>
 
     <section class="max-w-7xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-20">
-        <div class="p-6 border-b flex justify-between items-center">
-            <h3 class="h-bold text-lg text-slate-700 uppercase">Transaction History</h3>
-            <span class="text-xs bg-slate-100 px-3 py-1 rounded-full text-slate-500" id="tx-count">0 items</span>
+        <div class="p-6 border-b flex justify-between items-center bg-slate-50/50">
+            <h3 class="h-bold text-lg text-slate-800 uppercase flex items-center gap-2"><i data-lucide="list" size="18"></i> Transaction History</h3>
+            <span class="text-xs bg-slate-200 px-3 py-1 rounded-full h-bold text-slate-600" id="tx-count">0 items</span>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
-                <thead class="bg-slate-50 text-slate-500 font-bold uppercase">
+                <thead class="bg-slate-100 text-slate-500 h-bold uppercase">
                     <tr><th class="p-4">Date</th><th class="p-4">Product</th><th class="p-4 text-right">Sales</th><th class="p-4 text-right">Ads</th><th class="p-4 text-right">CPA</th><th class="p-4">Note</th><th class="p-4 text-center">Action</th></tr>
                 </thead>
                 <tbody id="tableBody" class="divide-y divide-slate-100"></tbody>
             </table>
+        </div>
+        <div class="p-4 bg-white border-t flex justify-between items-center">
+            <p class="text-xs h-medium text-slate-400" id="pageInfo">Page 1 of 1</p>
+            <div class="flex gap-2">
+                <button onclick="changePage(-1)" id="prevPageBtn" class="px-4 py-2 bg-slate-100 rounded-lg text-slate-600 hover:bg-slate-200 disabled:opacity-50 h-medium text-xs">Previous</button>
+                <button onclick="changePage(1)" id="nextPageBtn" class="px-4 py-2 bg-slate-100 rounded-lg text-slate-600 hover:bg-slate-200 disabled:opacity-50 h-medium text-xs">Next</button>
+            </div>
         </div>
     </section>
 
@@ -201,33 +252,49 @@
         let allData = [];
         let filteredData = [];
         let config = { monthlyGoal: 1000000 };
+        let currentPage = 1;
+        const ITEMS_PER_PAGE = 10;
+
         const PRODUCTS = [
-            { id: "เบต้าออยล์", color: "border-l-amber-500", text: "text-amber-600", bg: "bg-amber-50" },
-            { id: "เบต้าไลฟ์", color: "border-l-orange-800", text: "text-orange-800", bg: "bg-orange-50" },
-            { id: "แล็บฟาร์ม", color: "border-l-emerald-500", text: "text-emerald-600", bg: "bg-emerald-50" }
+            { id: "เบต้าออยล์", css: "card-betaoil" },
+            { id: "เบต้าไลฟ์", css: "card-betalife" },
+            { id: "แล็บฟาร์ม", css: "card-labfarm" }
         ];
 
         window.onload = () => {
             lucide.createIcons();
-            document.getElementById('date').valueAsDate = new Date();
-            document.getElementById('filterMonth').value = new Date().getMonth() + 1;
-            document.getElementById('filterYear').value = new Date().getFullYear();
+            document.getElementById('formDate').valueAsDate = new Date();
+            
+            // Setup Filter Defaults
+            const today = new Date();
+            const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+            const mSelect = document.getElementById('filterMonth');
+            months.forEach((m,i) => mSelect.innerHTML += `<option value="${i+1}" ${i === today.getMonth() ? 'selected' : ''}>${m}</option>`);
+            
+            const ySelect = document.getElementById('filterYear');
+            const currentYear = today.getFullYear();
+            for(let y=currentYear; y>=2024; y--) ySelect.innerHTML += `<option value="${y}">${y}</option>`;
 
-            const pSelect = document.getElementById('pageId');
+            document.getElementById('filterDate').valueAsDate = today;
+
+            // Setup Product Selects
+            const pSelect = document.getElementById('formPageId');
             const fSelect = document.getElementById('filterProduct');
             PRODUCTS.forEach(p => {
                 pSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`;
                 fSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`;
             });
 
+            // Listeners
             document.getElementById('adminKeyInput').value = localStorage.getItem('ads_admin_key') || '';
+            
+            // Add Listeners for Filters
+            ['filterMode','filterMonth','filterYear','filterStart','filterEnd','filterDate','filterProduct'].forEach(id => {
+                document.getElementById(id).addEventListener('change', () => { currentPage = 1; renderApp(); });
+            });
 
             onValue(ref(db, 'config'), snap => {
-                if(snap.exists()) {
-                    config = { ...config, ...snap.val() };
-                    document.getElementById('goalInput').value = config.monthlyGoal;
-                    renderApp();
-                }
+                if(snap.exists()) { config = { ...config, ...snap.val() }; document.getElementById('goalInput').value = config.monthlyGoal; renderApp(); }
             });
 
             onValue(ref(db, 'adsData'), snap => {
@@ -237,19 +304,52 @@
             });
         };
 
-        window.renderApp = () => {
-            const fYear = document.getElementById('filterYear').value;
-            const fMonth = document.getElementById('filterMonth').value;
-            const fProd = document.getElementById('filterProduct').value;
+        // --- FILTER UI LOGIC ---
+        window.toggleFilterInputs = () => {
+            const mode = document.getElementById('filterMode').value;
+            const groups = ['filter-month-group', 'filter-range-group', 'filter-day-group'];
+            groups.forEach(g => document.getElementById(g).classList.add('hidden-force'));
 
+            if (mode === 'month' || mode === 'year') document.getElementById('filter-month-group').classList.remove('hidden-force');
+            if (mode === 'range') document.getElementById('filter-range-group').classList.remove('hidden-force');
+            if (mode === 'day') document.getElementById('filter-day-group').classList.remove('hidden-force');
+            
+            // Special case: if Year mode, hide month select visually but keep logic simple (or just ignore month in logic)
+            if (mode === 'year') document.getElementById('filterMonth').classList.add('hidden-force');
+            else document.getElementById('filterMonth').classList.remove('hidden-force');
+            
+            currentPage = 1;
+            renderApp();
+        };
+
+        // --- CORE LOGIC ---
+        window.renderApp = () => {
+            // 1. Apply Filters
+            const mode = document.getElementById('filterMode').value;
+            const fProd = document.getElementById('filterProduct').value;
+            
             filteredData = allData.filter(d => {
                 const date = new Date(d.date);
-                const yMatch = date.getFullYear() == fYear;
-                const mMatch = fMonth === 'all' || (date.getMonth() + 1) == fMonth;
-                const pMatch = fProd === 'all' || d.pageId === fProd;
-                return yMatch && mMatch && pMatch;
+                let dateMatch = true;
+
+                if (mode === 'month') {
+                    dateMatch = (date.getMonth() + 1) == document.getElementById('filterMonth').value && 
+                                date.getFullYear() == document.getElementById('filterYear').value;
+                } else if (mode === 'year') {
+                    dateMatch = date.getFullYear() == document.getElementById('filterYear').value;
+                } else if (mode === 'day') {
+                    dateMatch = d.date === document.getElementById('filterDate').value;
+                } else if (mode === 'range') {
+                    const start = document.getElementById('filterStart').value;
+                    const end = document.getElementById('filterEnd').value;
+                    if(start && end) dateMatch = d.date >= start && d.date <= end;
+                }
+
+                const prodMatch = fProd === 'all' || d.pageId === fProd;
+                return dateMatch && prodMatch;
             });
 
+            // 2. Render Components
             renderStats();
             renderCards();
             renderTable();
@@ -263,6 +363,7 @@
             const totalOrders = filteredData.reduce((s,i) => s + i.orders, 0);
             const totalInq = filteredData.reduce((s,i) => s + i.inquiries, 0);
             
+            // Global Stats
             document.getElementById('sum-sales').innerText = `฿${totalSales.toLocaleString()}`;
             document.getElementById('sum-ads').innerText = `฿${totalAds.toLocaleString()}`;
             document.getElementById('sum-pct').innerText = totalSales > 0 ? `${((totalAds/totalSales)*100).toFixed(1)}%` : '0%';
@@ -270,24 +371,41 @@
             document.getElementById('sum-inq').innerText = totalInq > 0 ? `฿${(totalAds/totalInq).toFixed(0)}` : '0';
             document.getElementById('sum-roas').innerText = totalAds > 0 ? (totalSales/totalAds).toFixed(2) : '0.0';
 
+            // Top Progress Logic
             const goal = config.monthlyGoal;
             const remaining = Math.max(0, goal - totalSales);
-            const now = new Date();
-            const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
-            const dayPassed = now.getDate();
-            const dayLeft = daysInMonth - dayPassed;
+            const pct = Math.min(100, (totalSales/goal)*100);
+
+            // Update Progress Bar UI
+            const bar = document.getElementById('ui-progress-bar');
+            bar.style.width = `${pct}%`;
             
-            const avgActual = dayPassed > 0 ? totalSales / dayPassed : 0;
-            const reqDaily = dayLeft > 0 ? remaining / dayLeft : 0;
+            // Dynamic Color
+            if(pct < 40) bar.className = "progress-bar-fill bg-rose-500";
+            else if(pct < 80) bar.className = "progress-bar-fill bg-amber-400";
+            else bar.className = "progress-bar-fill bg-emerald-500";
+
+            const progressText = `฿${totalSales.toLocaleString()} / ขาดอีก ฿${remaining.toLocaleString()}`;
+            document.getElementById('ui-progress-text-fg').innerText = progressText;
+            document.getElementById('ui-progress-text-bg').innerText = progressText; // for empty part
+            
+            // Only show white text if bar is wide enough, else hide
+            if(pct < 20) document.getElementById('ui-progress-text-fg').style.opacity = '0';
+            else document.getElementById('ui-progress-text-fg').style.opacity = '1';
 
             document.getElementById('ui-goal').innerText = `฿${goal.toLocaleString()}`;
-            document.getElementById('ui-avg-actual').innerText = `฿${avgActual.toLocaleString(undefined, {maximumFractionDigits:0})}`;
-            document.getElementById('ui-avg-required').innerText = `฿${reqDaily.toLocaleString(undefined, {maximumFractionDigits:0})}`;
-
-            const pct = Math.min(100, (totalSales/goal)*100);
             document.getElementById('ui-percent').innerText = `${pct.toFixed(1)}%`;
-            document.getElementById('ui-progress-bar').style.width = `${pct}%`;
-            document.getElementById('ui-progress-text').innerText = `฿${totalSales.toLocaleString()} / ขาดอีก ฿${remaining.toLocaleString()}`;
+            
+            // Simple Avg logic based on filtered items (just simplistic for now)
+            const daysCount = new Set(filteredData.map(d=>d.date)).size || 1;
+            const avgActual = totalSales / daysCount;
+            document.getElementById('ui-avg-actual').innerText = `฿${avgActual.toLocaleString(undefined, {maximumFractionDigits:0})}`;
+            
+            // Req Daily (Simple Logic)
+            const now = new Date();
+            const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+            const daysLeft = Math.max(1, daysInMonth - now.getDate());
+            document.getElementById('ui-avg-required').innerText = `฿${(remaining/daysLeft).toLocaleString(undefined, {maximumFractionDigits:0})}`;
         }
 
         function renderCards() {
@@ -304,18 +422,13 @@
                 const roas = a > 0 ? s/a : 0;
                 const cpa = o > 0 ? a/o : 0;
 
-                let cssClass = '';
-                if(p.id === 'เบต้าออยล์') cssClass = 'card-betaoil';
-                if(p.id === 'เบต้าไลฟ์') cssClass = 'card-betalife';
-                if(p.id === 'แล็บฟาร์ม') cssClass = 'card-labfarm';
-
                 container.innerHTML += `
-                <div class="card-stat p-6 ${cssClass}">
-                    <div class="flex justify-between items-start mb-4"><h3 class="h-black text-xl text-slate-800">${p.id}</h3><i data-lucide="bar-chart-2" class="text-slate-300"></i></div>
+                <div class="card-stat p-6 ${p.css}">
+                    <div class="flex justify-between items-start mb-4"><h3 class="h-bold text-xl text-slate-800">${p.id}</h3><i data-lucide="bar-chart-2" class="text-slate-300"></i></div>
                     <div class="space-y-3 mb-6">
-                        <div class="flex justify-between items-end"><span class="text-xs h-bold text-slate-400 uppercase">ยอดขาย</span><span class="text-2xl h-black text-emerald-500">฿${s.toLocaleString()}</span></div>
-                        <div class="flex justify-between items-end"><span class="text-xs h-bold text-slate-400 uppercase">ค่าแอด</span><span class="text-xl h-bold text-rose-500">฿${a.toLocaleString()}</span></div>
-                        <div class="flex justify-between items-end"><span class="text-xs h-bold text-slate-400 uppercase">CPA</span><span class="text-lg h-bold text-slate-700">฿${cpa.toFixed(0)}</span></div>
+                        <div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ยอดขาย</span><span class="text-2xl h-bold text-emerald-500">฿${s.toLocaleString()}</span></div>
+                        <div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ค่าแอด</span><span class="text-xl h-bold text-rose-500">฿${a.toLocaleString()}</span></div>
+                        <div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">CPA</span><span class="text-lg h-medium text-slate-600">฿${cpa.toFixed(0)}</span></div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">% ADS</p><p class="text-xl h-black ${pct > 30 ? 'text-rose-500' : 'text-slate-800'}">${pct.toFixed(1)}%</p></div>
@@ -325,13 +438,67 @@
             });
         }
 
+        function renderAdvice() {
+            const box = document.getElementById('advice-box');
+            const show = document.getElementById('adviceToggle').checked;
+            
+            if(!show || filteredData.length === 0) {
+                box.classList.add('hidden');
+                return;
+            }
+
+            // Calculate Metrics from FILTERED data
+            const s = filteredData.reduce((a,b)=>a+b.sales,0);
+            const a = filteredData.reduce((a,b)=>a+b.adSpend,0);
+            const pct = s > 0 ? (a/s)*100 : 0;
+            
+            box.classList.remove('hidden');
+            const title = document.getElementById('advice-title');
+            const desc = document.getElementById('advice-desc');
+            const style = document.getElementById('advice-style');
+            const icon = document.getElementById('advice-icon');
+            const stats = document.getElementById('advice-stats');
+            
+            stats.innerText = `Based on: Sales ฿${s.toLocaleString()} | Ads ฿${a.toLocaleString()} (${pct.toFixed(1)}%)`;
+
+            if(pct < 25) {
+                style.className = "relative p-6 rounded-2xl border-l-8 shadow-sm flex items-start gap-4 transition-all bg-emerald-50 border-emerald-500 text-emerald-800";
+                icon.innerHTML = `<i data-lucide="rocket" class="text-emerald-600"></i>`;
+                title.innerText = "🚀 SCALE UP OPPORTUNITY";
+                desc.innerText = "เปอร์เซ็นต์แอดดีมาก! (ต่ำกว่า 25%) คุณควรเพิ่มงบ 20% ทันที หรือขยายกลุ่มเป้าหมาย (Lookalike) ในสินค้าที่ทำยอดได้ดีที่สุดตอนนี้";
+            } else if (pct > 40) {
+                style.className = "relative p-6 rounded-2xl border-l-8 shadow-sm flex items-start gap-4 transition-all bg-rose-50 border-rose-500 text-rose-800";
+                icon.innerHTML = `<i data-lucide="alert-triangle" class="text-rose-600"></i>`;
+                title.innerText = "⚠️ CRITICAL WARNING";
+                desc.innerText = "แอดแพงเกินไป (เกิน 40%)! ให้หยุดแอดตัวที่แพงที่สุดทันที ตรวจสอบ Content และ Offer ใหม่ด่วน อย่าฝืนยิงต่อ";
+            } else {
+                style.className = "relative p-6 rounded-2xl border-l-8 shadow-sm flex items-start gap-4 transition-all bg-indigo-50 border-indigo-500 text-indigo-800";
+                icon.innerHTML = `<i data-lucide="activity" class="text-indigo-600"></i>`;
+                title.innerText = "✅ HEALTHY / STABLE";
+                desc.innerText = "สถานการณ์ปกติ (25-40%) ให้รักษาระดับนี้ไว้ โฟกัสการตอบแชทเพื่อเพิ่มปิดการขาย และมอนิเตอร์อย่าให้แอดดีด";
+            }
+        }
+
         function renderTable() {
             const sorted = [...filteredData].sort((a,b) => new Date(b.date) - new Date(a.date));
+            const totalItems = sorted.length;
+            const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1;
+            
+            if(currentPage > totalPages) currentPage = totalPages;
+            if(currentPage < 1) currentPage = 1;
+            
+            const start = (currentPage - 1) * ITEMS_PER_PAGE;
+            const paginatedItems = sorted.slice(start, start + ITEMS_PER_PAGE);
+            
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
-            document.getElementById('tx-count').innerText = `${sorted.length} items`;
             
-            sorted.slice(0, 50).forEach(item => {
+            document.getElementById('tx-count').innerText = `${totalItems} items`;
+            document.getElementById('pageInfo').innerText = `Page ${currentPage} of ${totalPages}`;
+            document.getElementById('prevPageBtn').disabled = currentPage === 1;
+            document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
+
+            paginatedItems.forEach(item => {
                 const cpa = item.orders > 0 ? (item.adSpend/item.orders).toFixed(0) : 0;
                 let color = 'border-l-slate-300';
                 if(item.pageId === 'เบต้าออยล์') color = 'border-l-amber-500';
@@ -340,12 +507,12 @@
 
                 tbody.innerHTML += `
                 <tr class="hover:bg-slate-50 transition border-l-[4px] ${color}">
-                    <td class="p-4 h-bold text-slate-700">${new Date(item.date).toLocaleDateString('th-TH')}</td>
-                    <td class="p-4"><span class="text-xs font-bold px-2 py-1 rounded border bg-white">${item.pageId}</span></td>
+                    <td class="p-4 h-medium text-slate-700">${new Date(item.date).toLocaleDateString('th-TH')}</td>
+                    <td class="p-4"><span class="text-xs font-bold px-2 py-1 rounded border bg-white text-slate-500">${item.pageId}</span></td>
                     <td class="p-4 text-right h-bold text-emerald-600">฿${item.sales.toLocaleString()}</td>
                     <td class="p-4 text-right h-bold text-rose-500">฿${item.adSpend.toLocaleString()}</td>
-                    <td class="p-4 text-right h-bold text-indigo-600">฿${cpa}</td>
-                    <td class="p-4 text-slate-500 italic truncate max-w-[150px]">${item.note || '-'}</td>
+                    <td class="p-4 text-right h-medium text-indigo-600">฿${cpa}</td>
+                    <td class="p-4 text-slate-400 italic truncate max-w-[150px] text-xs">${item.note || '-'}</td>
                     <td class="p-4 text-center flex justify-center gap-2">
                         <button onclick="window.editEntry('${item.id}')" class="text-indigo-400 hover:text-indigo-600"><i data-lucide="edit-3" size="18"></i></button>
                         <button onclick="window.deleteEntry('${item.id}')" class="text-rose-400 hover:text-rose-600"><i data-lucide="trash-2" size="18"></i></button>
@@ -353,70 +520,25 @@
                 </tr>`;
             });
         }
-        
-        function renderAdvice() {
-            const box = document.getElementById('advice-box');
-            if (box.classList.contains('manually-hidden')) return; // Check if hidden by user
 
-            const todayStr = new Date().toISOString().split('T')[0];
-            const todayData = filteredData.filter(d => d.date === todayStr);
-            
-            if(todayData.length > 0) {
-                const s = todayData.reduce((a,b)=>a+b.sales,0);
-                const a = todayData.reduce((a,b)=>a+b.adSpend,0);
-                const pct = s > 0 ? (a/s)*100 : 0;
-                
-                box.classList.remove('hidden');
-                const title = document.getElementById('advice-title');
-                const desc = document.getElementById('advice-desc');
-                const style = document.getElementById('advice-style');
-                const icon = document.getElementById('advice-icon');
-
-                if(pct < 25) {
-                    style.className = "relative p-6 rounded-2xl border-l-8 shadow-sm flex items-start gap-4 transition-all bg-emerald-50 border-emerald-500 text-emerald-800";
-                    icon.innerHTML = `<i data-lucide="rocket" class="text-emerald-600"></i>`;
-                    title.innerText = "🚀 SCALE UP SIGNAL (Ads < 25%)";
-                    desc.innerText = "กำไรดีมาก! แนะนำให้เพิ่มงบ 20-30% ในแคมเปญที่ต้นทุนถูกที่สุดทันที หรือเทสกลุ่มใหม่เพื่อขยายยอด";
-                } else if (pct > 40) {
-                    style.className = "relative p-6 rounded-2xl border-l-8 shadow-sm flex items-start gap-4 transition-all bg-rose-50 border-rose-500 text-rose-800";
-                    icon.innerHTML = `<i data-lucide="alert-triangle" class="text-rose-600"></i>`;
-                    title.innerText = "⚠️ WARNING (Ads > 40%)";
-                    desc.innerText = "แอดเริ่มแพง! เช็คด่วนว่ารูปเก่าไปไหม? หรือลองปิดแอดตัวที่กินเงินแต่ไม่มียอดขายทิ้งทันที";
-                } else {
-                    style.className = "relative p-6 rounded-2xl border-l-8 shadow-sm flex items-start gap-4 transition-all bg-indigo-50 border-indigo-500 text-indigo-800";
-                    icon.innerHTML = `<i data-lucide="activity" class="text-indigo-600"></i>`;
-                    title.innerText = "✅ STABLE (Ads Normal)";
-                    desc.innerText = "สถานการณ์ปกติ รักษามาตรฐานการตอบแชทและมอนิเตอร์อย่าให้แอดดีดขึ้น";
-                }
-            } else {
-                box.classList.add('hidden');
-            }
-        }
-
+        // --- GLOBAL ACTIONS ---
+        window.changePage = (dir) => { currentPage += dir; renderTable(); };
         window.saveAdminKey = (val) => localStorage.setItem('ads_admin_key', val);
         window.toggleSidebar = () => document.getElementById('settingsSidebar').classList.toggle('open');
-        window.closeAdvice = () => {
-            document.getElementById('advice-box').classList.add('hidden');
-            document.getElementById('advice-box').classList.add('manually-hidden');
-        }
-
-        window.updateGoal = (val) => {
-            const key = localStorage.getItem('ads_admin_key');
-            set(ref(db, 'config/monthlyGoal'), parseFloat(val));
-        };
+        window.updateGoal = (val) => { const key = localStorage.getItem('ads_admin_key'); set(ref(db, 'config/monthlyGoal'), parseFloat(val)); };
         
         window.resetForm = () => {
             document.getElementById('adsForm').reset();
             document.getElementById('editId').value = '';
-            document.getElementById('date').valueAsDate = new Date();
+            document.getElementById('formDate').valueAsDate = new Date();
             document.getElementById('cancelBtn').classList.add('hidden');
         };
 
         window.saveData = async () => {
             const key = localStorage.getItem('ads_admin_key');
             const data = {
-                pageId: document.getElementById('pageId').value,
-                date: document.getElementById('date').value,
+                pageId: document.getElementById('formPageId').value,
+                date: document.getElementById('formDate').value,
                 adSpend: parseFloat(document.getElementById('adSpend').value) || 0,
                 sales: parseFloat(document.getElementById('sales').value) || 0,
                 orders: parseInt(document.getElementById('orders').value) || 0,
@@ -431,17 +553,15 @@
                 else await push(ref(db, 'adsData'), data);
                 alert("✅ บันทึกสำเร็จ!");
                 resetForm();
-            } catch (e) {
-                alert("❌ เซฟไม่สำเร็จ: รหัส Admin ผิด!");
-            }
+            } catch (e) { alert("❌ เซฟไม่สำเร็จ: รหัส Admin ผิด!"); }
         };
         
         window.editEntry = (id) => {
             const d = allData.find(x => x.id === id);
             if(!d) return;
             document.getElementById('editId').value = id;
-            document.getElementById('pageId').value = d.pageId;
-            document.getElementById('date').value = d.date;
+            document.getElementById('formPageId').value = d.pageId;
+            document.getElementById('formDate').value = d.date;
             document.getElementById('adSpend').value = d.adSpend;
             document.getElementById('sales').value = d.sales;
             document.getElementById('orders').value = d.orders;
@@ -466,8 +586,7 @@
             node.setAttribute("href", dataStr);
             node.setAttribute("download", "backup_ads_data.json");
             document.body.appendChild(node);
-            node.click();
-            node.remove();
+            node.click(); node.remove();
         };
         
         window.importJSON = (event) => {
