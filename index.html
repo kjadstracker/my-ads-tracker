@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V7.0 - Final Reliable</title>
+    <title>Ads Cloud Master V7.1 - Compatibility Mode</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -66,7 +66,7 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V7.0 Final Reliable</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V7.1 Compatible</p></div></div>
             <div class="flex gap-2">
                 <button onclick="exportJSON()" class="px-4 py-2 bg-slate-800 text-white rounded-lg h-bold text-xs flex items-center gap-2 hover:bg-slate-900 transition"><i data-lucide="download" size="16"></i> Backup</button>
                 <label class="px-4 py-2 bg-amber-500 text-white rounded-lg h-bold text-xs flex items-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload" size="16"></i> Import (Replace) <input type="file" id="fileInput" hidden onchange="importJSON(event)"></label>
@@ -321,15 +321,34 @@
         window.deleteEntry = async (id) => { if(!confirm("ยืนยันลบ?"))return; const k = localStorage.getItem('ads_admin_key'); try { await update(ref(db,`adsData/${id}`),{securityKey:k,sales:null}); await remove(ref(db,`adsData/${id}`)); } catch(e) { alert("❌ ลบไม่ได้: รหัส Admin ผิด!"); } };
         window.exportJSON = () => { const s = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData)); const n = document.createElement('a'); n.setAttribute("href", s); n.setAttribute("download", "backup_ads_data.json"); document.body.appendChild(n); n.click(); n.remove(); };
         
-        // --- UNIVERSAL IMPORT LOGIC (Deep Search + Wipe) ---
-        function findRecords(obj, results = []) {
-            if (!obj || typeof obj !== 'object') return results;
-            if (obj.pageId && obj.date && (obj.sales !== undefined || obj.adSpend !== undefined)) {
-                results.push(obj); // เจอแล้ว! นี่คือข้อมูลยอดขาย
-                return results;
+        // --- UNIVERSAL IMPORT LOGIC (RECURSIVE SEARCH) ---
+        // ฟังก์ชันนี้จะ "ขุด" หา object ที่มีหน้าตาเหมือนข้อมูล (มี date, มี sales, มี adSpend) ไม่ว่าจะซ่อนอยู่ลึกแค่ไหน
+        function traverseAndFind(node, results = []) {
+            if (node && typeof node === 'object') {
+                // เช็คว่าเป็น Object ที่มีข้อมูลครบไหม? (เช็คแบบไม่สนตัวเล็กตัวใหญ่)
+                const keys = Object.keys(node).map(k => k.toLowerCase());
+                const hasDate = keys.some(k => k.includes('date'));
+                const hasSales = keys.some(k => k.includes('sale'));
+                const hasAds = keys.some(k => k.includes('spend') || k.includes('ads') || k.includes('cost'));
+
+                // ถ้าเจอว่าเป็นข้อมูลแน่ๆ ให้ดึงค่าออกมาเลย
+                if (hasDate && (hasSales || hasAds)) {
+                    // Normalize data (แปลงให้เป็น format มาตรฐานของเรา)
+                    const normalized = {
+                        pageId: node.pageId || node.PageId || node.product || 'General',
+                        date: node.date || node.Date || new Date().toISOString().split('T')[0],
+                        sales: parseFloat(node.sales || node.Sales || node.income || 0),
+                        adSpend: parseFloat(node.adSpend || node.adspend || node.AdSpend || node.cost || 0),
+                        orders: parseInt(node.orders || node.Orders || 0),
+                        inquiries: parseInt(node.inquiries || node.Inquiries || 0),
+                        note: node.note || node.Note || ''
+                    };
+                    results.push(normalized);
+                } else {
+                    // ถ้าไม่ใช่ข้อมูล ให้ขุดลึกลงไปอีก (Recursion)
+                    Object.values(node).forEach(child => traverseAndFind(child, results));
+                }
             }
-            if (Array.isArray(obj)) { obj.forEach(item => findRecords(item, results)); } 
-            else { Object.values(obj).forEach(val => findRecords(val, results)); }
             return results;
         }
 
@@ -340,12 +359,16 @@
             r.onload = async (ev) => { 
                 try {
                     const raw = JSON.parse(ev.target.result);
-                    // AI Deep Search: ขุดหาข้อมูลทุกซอกทุกมุม
-                    const data = findRecords(raw);
                     
-                    if(data.length === 0) { alert("❌ ไม่พบข้อมูลในไฟล์ (รูปแบบไม่ถูกต้อง)"); return; }
+                    // ใช้ระบบ "จอมดูด" (Traverse) เพื่อหาข้อมูลทั้งหมด
+                    const data = traverseAndFind(raw);
+                    
+                    if(data.length === 0) { 
+                        alert("❌ ไม่พบข้อมูลในไฟล์ (หรือโครงสร้างไม่ถูกต้อง)\nกรุณาตรวจสอบว่าไฟล์มี field: date, sales, adSpend หรือไม่"); 
+                        return; 
+                    }
 
-                    if(confirm(`⚠️ ระบบจะลบข้อมูลเก่าทั้งหมด\nและแทนที่ด้วยข้อมูล ${data.length} รายการ\nยืนยันหรือไม่?`)) {
+                    if(confirm(`⚠️ ระบบจะลบข้อมูลเก่าทั้งหมดทิ้ง\nและแทนที่ด้วยข้อมูล ${data.length} รายการ\nยืนยันหรือไม่?`)) {
                         document.body.style.cursor = 'wait';
                         
                         // 1. Wipe Old Data (ล้างบาง)
@@ -356,8 +379,7 @@
 
                         // 2. Insert New Data (ใส่ใหม่)
                         for(const item of data) {
-                            const {id, ...c} = item; 
-                            await push(ref(db,'adsData'), {...c, securityKey: k});
+                            await push(ref(db,'adsData'), {...item, securityKey: k});
                             count++;
                         }
                         
@@ -367,7 +389,7 @@
                     }
                 } catch(err) {
                     document.body.style.cursor = 'default';
-                    alert("❌ ไฟล์เสียหายหรืออ่านไม่ได้");
+                    alert(`❌ อ่านไฟล์ไม่ได้: ${err.message}`);
                     console.error(err);
                 }
                 document.getElementById('fileInput').value = '';
