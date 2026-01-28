@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V6.5 - Precision & Vertical</title>
+    <title>Ads Cloud Master V6.7 - Vertical & Logic Fix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -14,53 +14,58 @@
         .h-bold { font-weight: 700; } 
         .h-medium { font-weight: 500; } 
         
-        /* --- CARD STYLES (Vertical Fixed) --- */
+        /* --- CARD STYLES (FORCED VERTICAL) --- */
         .card-stat { 
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* จัดให้เนื้อหากระจายแนวตั้ง */
-            gap: 1.25rem;
+            justify-content: space-between;
+            /* บังคับทรงแนวตั้ง */
+            width: 100%;
+            max-width: 280px; 
+            min-height: 480px; 
+            margin: 0 auto; 
             border-radius: 1.5rem; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
             border: 1px solid #f1f5f9; 
             transition: all 0.2s ease; 
-            position: relative; 
-            overflow: hidden; 
             padding: 1.5rem;
-            min-height: 400px; /* บังคับความสูงขั้นต่ำให้เป็นการ์ดแนวตั้งสวยๆ */
+            background: white;
         }
-        .card-stat:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.1); }
+        .card-stat:hover { transform: translateY(-5px); box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.12); }
         
-        .card-betaoil { border-top: 8px solid #f59e0b; background-color: #fffbeb; }
-        .card-betalife { border-top: 8px solid #78350f; background-color: #fff7ed; }
-        .card-labfarm { border-top: 8px solid #10b981; background-color: #ecfdf5; }
+        /* Tint Colors */
+        .card-betaoil { border-top: 8px solid #f59e0b; background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%); }
+        .card-betalife { border-top: 8px solid #78350f; background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%); }
+        .card-labfarm { border-top: 8px solid #10b981; background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%); }
 
         .portfolio-box { background: #0f172a; color: white; border-radius: 1.5rem; }
         
         input, select { border: 2px solid #e2e8f0 !important; border-radius: 0.8rem !important; padding: 0.6rem 1rem !important; font-weight: 500 !important; outline: none; transition: all 0.2s; font-size: 0.95rem; }
         input:focus, select:focus { border-color: #4f46e5 !important; ring: 2px solid #e0e7ff; }
 
-        /* --- PROGRESS BAR (Segmented Hard Cuts) --- */
+        /* --- PROGRESS BAR (SOLID GREEN) --- */
         .progress-bar-bg { 
             background: #e2e8f0; height: 48px; border-radius: 24px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); 
         }
         .progress-bar-fill { 
             height: 100%; 
-            /* สีตัดกันชัดเจน 4 ระดับ: แดง(0-30%) -> เหลือง(30-60%) -> เขียว(60-90%) -> ม่วง(90-100+) */
-            background: linear-gradient(to right, 
-                #ef4444 0%, #ef4444 30%, 
-                #facc15 30%, #facc15 60%, 
-                #22c55e 60%, #22c55e 90%, 
-                #a855f7 90%, #a855f7 100%
-            );
+            background-color: #10b981; /* Solid Green Only */
             transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); 
         }
         .progress-text-overlay { 
-            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.5); z-index: 10; pointer-events: none;
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.4); z-index: 10; pointer-events: none;
         }
 
-        /* --- ADVICE VISIBILITY CONTROL --- */
-        .advice-container { margin-top: auto; transition: all 0.3s ease; }
+        /* --- ADVICE VISIBILITY --- */
+        .advice-box { 
+            margin-top: 1rem; 
+            padding: 1rem;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            background: rgba(255,255,255,0.8);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
         .advice-hidden { display: none !important; }
 
         .sidebar { position: fixed; top: 0; right: 0; height: 100%; width: 320px; background: white; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transform: translateX(100%); transition: transform 0.3s ease; z-index: 2000; padding: 2rem; }
@@ -78,7 +83,7 @@
     </div>
 
     <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V6.5 Precision</p></div></div>
+        <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V6.7 Logic Fix</p></div></div>
         <button onclick="toggleSidebar()" class="w-10 h-10 bg-white border rounded-xl flex items-center justify-center text-slate-500 hover:text-indigo-600 transition shadow-sm"><i data-lucide="settings" size="20"></i></button>
     </header>
 
@@ -121,12 +126,13 @@
         <div class="flex items-center gap-3">
             <span class="text-xs h-bold text-slate-400 uppercase">Show Advice:</span>
             <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" id="adviceToggle" class="sr-only peer" onchange="renderCards()">
-                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                <input type="checkbox" id="adviceToggle" class="sr-only peer" checked onchange="renderCards()">
+                <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
             </label>
         </div>
     </div>
-    <div id="product-cards" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 items-stretch"></div>
+    
+    <div id="product-cards" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 items-start justify-center"></div>
 
     <section class="max-w-7xl mx-auto mb-12">
         <div class="portfolio-box p-8 md:p-10 shadow-2xl relative overflow-hidden">
@@ -214,13 +220,7 @@
             document.getElementById('sum-inq').innerText = i > 0 ? `฿${(a/i).toFixed(0)}` : '0'; document.getElementById('sum-roas').innerText = a > 0 ? (s/a).toFixed(2) : '0.0';
             
             const goal = config.monthlyGoal, remain = Math.max(0, goal - s), pct = (s/goal)*100;
-            const bar = document.getElementById('ui-progress-bar');
-            bar.style.width = `${Math.min(100, pct)}%`;
-            
-            // Hard Cut Colors Logic
-            // Note: The gradient is fixed via CSS, we just adjust width. 
-            // Users sees the colors "revealed" as width increases.
-
+            document.getElementById('ui-progress-bar').style.width = `${Math.min(100, pct)}%`;
             document.getElementById('ui-progress-text').innerText = `฿${s.toLocaleString()} / ขาดอีก ฿${remain.toLocaleString()}`;
             document.getElementById('ui-goal').innerText = `฿${goal.toLocaleString()}`; document.getElementById('ui-percent').innerText = `${pct.toFixed(1)}%`;
             const days = new Set(filteredData.map(d=>d.date)).size || 1; document.getElementById('ui-avg-actual').innerText = `฿${(s/days).toLocaleString(undefined,{maximumFractionDigits:0})}`;
@@ -235,37 +235,36 @@
                 const s = pData.reduce((a,b)=>a+b.sales,0);
                 const a = pData.reduce((a,b)=>a+b.adSpend,0);
                 const o = pData.reduce((a,b)=>a+b.orders,0);
+                const inq = pData.reduce((a,b)=>a+b.inquiries,0);
                 
-                // Precision Calculation
                 const pct = s > 0 ? (a/s)*100 : 0;
                 const roas = a > 0 ? s/a : 0;
                 const cpa = o > 0 ? a/o : 0;
+                const closeRate = inq > 0 ? (o/inq)*100 : 0;
 
-                // Precision Advice Logic (Strict Rules)
+                // --- NEW 70-80% LOGIC ---
                 let adviceHTML = '', adviceClass = '';
-                // Rule 1: Sales > 0 but Ads very high (>50%) -> Critical
-                if(s > 0 && pct > 50) { 
-                    adviceClass = 'bg-rose-50 text-rose-800 border border-rose-100'; 
-                    adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="x-octagon" class="text-rose-600"></i><span class="h-bold">CRITICAL (${pct.toFixed(1)}%)</span></div><p class="text-xs">แอดกินทุนหนักมาก! ปิดแอดด่วน หรือรื้อโครงสร้างใหม่</p>`; 
-                }
-                // Rule 2: Sales > 0 and Ads High (30-50%) -> Warning
-                else if(s > 0 && pct > 30) {
-                    adviceClass = 'bg-orange-50 text-orange-800 border border-orange-100'; 
-                    adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" class="text-orange-600"></i><span class="h-bold">WARNING (${pct.toFixed(1)}%)</span></div><p class="text-xs">แอดเริ่มแพง เช็คคอนเทนต์/กลุ่มเป้าหมาย</p>`; 
-                }
-                // Rule 3: Sales > 0 and Ads Good (<30%) -> Scale
-                else if(s > 0 && pct <= 30) {
-                    adviceClass = 'bg-emerald-50 text-emerald-800 border border-emerald-100'; 
-                    adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="rocket" class="text-emerald-600"></i><span class="h-bold">SCALE UP (${pct.toFixed(1)}%)</span></div><p class="text-xs">กำไรดี! เพิ่มงบ 20% หรือขยายกลุ่มด่วน</p>`; 
-                }
-                // Rule 4: No Sales but spent money -> Stop
-                else if(s === 0 && a > 0) {
-                    adviceClass = 'bg-slate-100 text-slate-600 border border-slate-200';
-                    adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="pause-circle" class="text-slate-500"></i><span class="h-bold">NO SALES</span></div><p class="text-xs">ยังไม่มียอดขาย หยุดดูสถานการณ์ก่อน</p>`;
-                }
-                else {
-                    adviceClass = 'bg-slate-50 text-slate-400 border border-slate-100';
-                    adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="minus" class="text-slate-400"></i><span class="h-bold">NO DATA</span></div><p class="text-xs">ยังไม่มีข้อมูลสำหรับช่วงเวลานี้</p>`;
+                
+                if (s === 0 && a === 0) {
+                    adviceClass = 'text-slate-400';
+                    adviceHTML = '<span>รอข้อมูล...</span>';
+                } else if (pct < 70) {
+                    // Under Budget (<70%) -> Scale Up
+                    adviceClass = 'bg-emerald-50 text-emerald-800 border-emerald-100'; 
+                    adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="rocket" size="18" class="text-emerald-600"></i><span class="h-bold">กำไรดีมาก (${pct.toFixed(1)}%)</span></div><p class="text-xs">แอดถูกกว่าเป้าเยอะ! เพิ่มงบยิงแอดได้เลย</p>`;
+                } else if (pct >= 70 && pct <= 80) {
+                    // On Target (70-80%) -> Maintain
+                    adviceClass = 'bg-indigo-50 text-indigo-800 border-indigo-100'; 
+                    adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="check-circle" size="18" class="text-indigo-600"></i><span class="h-bold">ตามเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs">อยู่ในเกณฑ์ดี คุมงบและรักษาระดับไว้</p>`;
+                } else {
+                    // Over Budget (>80%) -> Optimize
+                    adviceClass = 'bg-rose-50 text-rose-800 border-rose-100';
+                    // Analyze WHY (Ads or Admin?)
+                    if (closeRate < 15) { // สมมติถ้าปิดการขายต่ำกว่า 15% คือแอดมินหลุด
+                         adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" size="18" class="text-rose-600"></i><span class="h-bold">เกินเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs"><strong>ปรับแอดมินด่วน:</strong> อัตราปิดการขายต่ำ (${closeRate.toFixed(1)}%)</p>`;
+                    } else {
+                         adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" size="18" class="text-rose-600"></i><span class="h-bold">เกินเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs"><strong>ปรับแอด:</strong> ต้นทุนแอดสูงเกินไป ปิดตัวแพง</p>`;
+                    }
                 }
 
                 container.innerHTML += `
@@ -278,11 +277,11 @@
                             <div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">CPA</span><span class="text-lg h-medium text-slate-600">฿${cpa.toFixed(0)}</span></div>
                         </div>
                         <div class="grid grid-cols-2 gap-3">
-                            <div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">% ADS</p><p class="text-xl h-bold ${pct>30?'text-rose-500':'text-slate-800'}">${pct.toFixed(1)}%</p></div>
+                            <div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">% ADS</p><p class="text-xl h-bold ${pct>80?'text-rose-500':'text-slate-800'}">${pct.toFixed(1)}%</p></div>
                             <div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">STAT</p><p class="text-xl h-bold text-amber-500">${roas.toFixed(1)}</p></div>
                         </div>
                     </div>
-                    <div class="advice-container p-3 rounded-xl mt-4 border ${adviceClass} ${showAdvice ? '' : 'advice-hidden'}">
+                    <div class="advice-box ${adviceClass} ${showAdvice ? '' : 'advice-hidden'}">
                         ${adviceHTML}
                     </div>
                 </div>`;
