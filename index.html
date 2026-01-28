@@ -3,21 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Tracker V5.3 - Full Control</title>
+    <title>Ads Tracker V5.4 - Precision Master Security</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         :root { --base-fsize: 16px; --accent-color: #4f46e5; }
         body { font-family: 'Kanit', sans-serif; background-color: #f1f5f9; font-size: var(--base-fsize); color: #334155; }
         .h-bold { font-weight: 700; color: #0f172a; }
+        .h-medium { font-weight: 500; color: #475569; }
         .card-pro { background: #ffffff; border-radius: 1.5rem; border: 1px solid #e2e8f0; }
         input, select { border: 2.5px solid #cbd5e1 !important; border-radius: 1rem !important; padding: 0.8rem 1.2rem !important; font-weight: 600 !important; }
-        .progress-container { height: 52px; background: #e2e8f0; border-radius: 26px; overflow: hidden; position: relative; border: 4px solid #fff; }
-        .progress-fill { height: 100%; transition: width 1s ease-in-out; }
+        
+        /* Progress Bar Styling */
+        .progress-container { height: 52px; background: #e2e8f0; border-radius: 26px; overflow: hidden; position: relative; border: 4px solid #fff; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .progress-fill { height: 100%; transition: width 1s ease-in-out, background-color 0.5s; }
         .progress-text-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-weight: 500; pointer-events: none; }
-        .sidebar { position: fixed; top: 0; right: 0; height: 100%; width: 320px; background: white; shadow: 2xl; border-left: 1px solid #e2e8f0; transform: translateX(100%); transition: transform 0.3s ease; z-index: 1000; padding: 2rem; display: flex; flex-direction: column; gap: 2rem; }
+
+        /* Advice Box Scaling Logic */
+        .advice-box { border-radius: 1rem; border-left: 8px solid; padding: 1.25rem; transition: all 0.3s ease; }
+        .advice-hidden { display: none !important; }
+
+        .sidebar { transform: translateX(100%); transition: transform 0.3s ease; z-index: 1000; }
         .sidebar.open { transform: translateX(0); }
+        
+        /* Row Colors */
         .row-เบต้าออยล์ { background-color: #fffbeb; }
         .row-เบต้าไลฟ์ { background-color: #fff9f2; }
         .row-แล็บฟาร์ม { background-color: #f0fdf4; }
@@ -25,59 +36,72 @@
 </head>
 <body class="p-4 md:p-10">
 
-    <div id="styleSidebar" class="sidebar shadow-2xl">
+    <div id="styleSidebar" class="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl border-l sidebar p-8 flex flex-col gap-8">
         <h3 class="h-bold text-2xl border-b pb-4 text-black text-center">ADMIN SETTINGS</h3>
+        
         <div class="space-y-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
             <label class="text-xs h-bold uppercase text-indigo-600">Admin Security Key</label>
             <input type="password" id="adminKeyInput" placeholder="กรอกรหัส kjondabeat" class="w-full text-sm!" onchange="saveAdminKey(this.value)">
+            <p class="text-[10px] text-slate-400 leading-tight">ระบบจะจำรหัสนี้ไว้ในเครื่องนี้ หากเปลี่ยนเครื่องต้องกรอกใหม่</p>
         </div>
+
         <div class="space-y-4">
             <label class="text-xs h-bold text-slate-400 uppercase">ขนาดตัวอักษร</label>
             <input type="range" min="14" max="22" value="16" oninput="liveUpdateFontSize(this.value)" class="w-full accent-indigo-600">
         </div>
+
         <button onclick="saveStyleToCloud()" class="mt-auto w-full bg-slate-900 text-white py-4 rounded-2xl h-bold shadow-lg">Save Config</button>
     </div>
 
     <header class="max-w-[1600px] mx-auto mb-10 flex flex-col md:flex-row justify-between items-center gap-6">
         <div class="flex items-center gap-5">
-            <div class="p-3.5 rounded-2xl text-white shadow-xl" id="ui-accent-box" style="background: #4f46e5;"><i data-lucide="shield-check" size="32"></i></div>
+            <div class="p-3.5 rounded-2xl text-white shadow-xl shadow-indigo-100" id="ui-accent-box" style="background: #4f46e5;"><i data-lucide="shield-check" size="32"></i></div>
             <div>
                 <h1 class="text-3xl h-bold uppercase tracking-tighter text-black">ADS CLOUD MASTER</h1>
-                <p class="text-[10px] h-medium uppercase tracking-[0.4em] text-slate-400">Full Control V5.3</p>
+                <p class="text-[10px] h-medium uppercase tracking-[0.4em] text-slate-400">V5.4 Precision + Security</p>
             </div>
         </div>
         <div class="flex flex-wrap justify-center gap-3">
             <button onclick="toggleSidebar()" class="p-3 rounded-xl bg-white border border-slate-200 text-slate-500 shadow-sm"><i data-lucide="settings" size="20"></i></button>
-            <button onclick="exportProject()" class="px-6 py-3 rounded-xl bg-slate-800 text-white h-bold text-xs flex items-center gap-2 shadow-lg"><i data-lucide="save" size="18"></i> BACKUP</button>
+            <button onclick="exportProject()" class="px-6 py-3 rounded-xl bg-slate-800 text-white h-bold text-xs flex items-center gap-2 shadow-lg"><i data-lucide="save" size="18"></i> BACKUP JSON</button>
+            <label class="px-6 py-3 rounded-xl bg-amber-500 text-white h-bold text-xs flex items-center gap-2 cursor-pointer shadow-lg hover:bg-amber-600 transition"><i data-lucide="upload" size="18"></i> IMPORT <input type="file" id="importFile" class="hidden" onchange="window.importToCloud(event)"></label>
         </div>
     </header>
 
     <main class="max-w-[1600px] mx-auto space-y-8">
+        
         <section class="card-pro p-8 md:p-10 shadow-sm border-2 border-white">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10 text-center md:text-left">
-                <div><p class="text-xs h-bold text-slate-400 uppercase tracking-widest">เป้าหมายเดือนนี้</p><span id="label-monthly-goal" class="text-5xl h-bold text-black">฿0</span></div>
-                <div><p class="text-xs h-bold text-slate-400 uppercase tracking-widest">ยอดปัจจุบัน</p><span id="stat-total-sales" class="text-5xl h-bold text-emerald-600">฿0</span></div>
-                <div><p class="text-xs h-bold text-amber-600 uppercase tracking-widest italic">ยอดที่ต้องทำเพิ่ม</p><span id="stat-remaining" class="text-5xl h-bold text-amber-500">฿0</span></div>
+                <div>
+                    <div class="flex items-center justify-center md:justify-start gap-2 mb-2">
+                        <p class="text-xs h-bold text-slate-400 uppercase tracking-widest">เป้าหมายเดือนนี้</p>
+                        <button onclick="editGoalValue()" class="text-indigo-300 hover:text-indigo-600 transition"><i data-lucide="pencil" size="14"></i></button>
+                    </div>
+                    <span id="label-monthly-goal" class="text-5xl h-bold text-black">฿0</span>
+                </div>
+                <div><p class="text-xs h-bold text-slate-400 uppercase tracking-widest mb-2">ยอดขายปัจจุบัน</p><span id="stat-total-sales" class="text-5xl h-bold text-emerald-600">฿0</span></div>
+                <div><p class="text-xs h-bold text-amber-600 uppercase tracking-widest mb-2 italic">ยอดขาดอีก / ต้องทำเพิ่ม</p><span id="stat-remaining" class="text-5xl h-bold text-amber-500">฿0</span></div>
             </div>
+            
             <div class="progress-container shadow-inner">
                 <div id="progress-bar" class="progress-fill" style="width: 0%"></div>
-                <div class="progress-text-overlay text-lg md:text-xl" id="progress-percent-text">0%</div>
+                <div class="progress-text-overlay text-lg md:text-xl" id="progress-value-text">฿0 / ขาดอีก ฿0</div>
             </div>
         </section>
 
         <section class="card-pro p-8 shadow-2xl border-t-[10px] border-t-indigo-600">
-            <h2 id="form-title" class="text-xl h-bold mb-8 text-black uppercase">ลงข้อมูลรายวัน</h2>
+            <h2 id="form-title" class="text-xl h-bold mb-8 text-black uppercase flex items-center gap-2"><i data-lucide="plus-circle" class="text-indigo-600"></i> ลงข้อมูลรายวัน</h2>
             <form id="adsForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
                 <input type="hidden" id="editId">
                 <div class="flex flex-col gap-2"><label class="text-xs h-bold text-slate-500 uppercase">สินค้า</label><select id="pageId"></select></div>
                 <div class="flex flex-col gap-2"><label class="text-xs h-bold text-slate-500 uppercase">วันที่</label><input type="date" id="date" required></div>
-                <div class="flex flex-col gap-2"><label class="text-xs h-bold text-rose-500 uppercase">ค่าแอด</label><input type="number" id="adSpend" placeholder="0.00" step="any"></div>
-                <div class="flex flex-col gap-2"><label class="text-xs h-bold text-emerald-600 uppercase">ยอดขาย</label><input type="number" id="sales" placeholder="0.00" step="any"></div>
+                <div class="flex flex-col gap-2"><label class="text-xs h-bold text-rose-500 uppercase">ค่าแอด (Ads)</label><input type="number" id="adSpend" placeholder="0.00" step="any"></div>
+                <div class="flex flex-col gap-2"><label class="text-xs h-bold text-emerald-600 uppercase">ยอดขาย (Sales)</label><input type="number" id="sales" placeholder="0.00" step="any"></div>
                 <div class="flex flex-col gap-2"><label class="text-xs h-bold text-blue-500 uppercase">ออเดอร์</label><input type="number" id="orders" placeholder="0"></div>
                 <div class="flex flex-col gap-2"><label class="text-xs h-bold text-amber-500 uppercase">ยอดทัก</label><input type="number" id="inquiries" placeholder="0"></div>
-                <div class="lg:col-span-4 flex flex-col gap-2"><input type="text" id="note" placeholder="บันทึกเทคนิคหรือประเด็นวันนี้..." class="text-lg!"></div>
+                <div class="lg:col-span-4 flex flex-col gap-2"><input type="text" id="note" placeholder="บันทึกเทคนิค ปัญหา หรือสาเหตุที่แอดแพง/ถูก..." class="text-lg!"></div>
                 <div class="lg:col-span-2 flex items-end gap-3">
-                    <button type="button" onclick="confirmSaveWithCheck()" class="flex-1 bg-indigo-600 text-white py-4 rounded-2xl h-bold text-lg shadow-lg">บันทึกข้อมูล</button>
+                    <button type="button" onclick="confirmSaveWithCheck()" class="flex-1 bg-indigo-600 text-white py-4 rounded-2xl h-bold text-lg shadow-lg hover:bg-indigo-700 transition transform active:scale-95">บันทึกข้อมูลคลาวด์</button>
                     <button type="button" id="cancelEditBtn" onclick="resetForm()" class="hidden bg-slate-200 text-slate-600 p-4 rounded-2xl hover:bg-slate-300 transition"><i data-lucide="x-circle" size="24"></i></button>
                 </div>
             </form>
@@ -85,8 +109,19 @@
 
         <div id="product-cards" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
 
+        <div id="advice-section" class="advice-box advice-hidden bg-white border-l-8 shadow-lg">
+            <div class="flex justify-between items-start mb-2">
+                <h3 class="h-bold text-lg uppercase flex items-center gap-2" id="advice-title"></h3>
+                <button onclick="toggleAdvice()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" size="18"></i></button>
+            </div>
+            <p id="advice-content" class="text-slate-600 leading-relaxed"></p>
+        </div>
+
         <section class="card-pro overflow-hidden shadow-xl border-2 border-white">
-            <div class="p-6 bg-white border-b border-slate-200 h-bold text-3xl text-black uppercase tracking-widest">History Data Log</div>
+            <div class="p-6 bg-white border-b border-slate-200 h-bold text-3xl text-black uppercase tracking-widest flex justify-between items-center">
+                <span>History Data Log</span>
+                <span class="text-xs bg-slate-100 text-slate-500 px-3 py-1 rounded-full" id="total-count-badge">0 items</span>
+            </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left font-medium">
                     <thead class="bg-slate-50 text-slate-600 uppercase h-bold border-b">
@@ -95,14 +130,23 @@
                     <tbody id="dataTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
                 </table>
             </div>
+            <div class="p-6 bg-slate-50 flex justify-between items-center border-t">
+                <p class="text-[11px] h-bold text-slate-400 uppercase tracking-widest" id="paginationInfo"></p>
+                <div class="flex gap-2" id="paginationControls"></div>
+            </div>
         </section>
     </main>
 
     <div id="confirmModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md hidden z-[1500] flex items-center justify-center p-4">
-        <div class="bg-white p-10 max-w-md w-full rounded-[3rem] text-center border-4 border-slate-900 shadow-2xl">
-            <h3 class="h-bold text-2xl mb-6 text-black uppercase">ยืนยันบันทึก?</h3>
-            <div id="confirmDetails" class="mb-8 p-6 bg-slate-50 rounded-[2rem] text-left text-xl font-medium border border-slate-200"></div>
-            <div class="flex gap-4"><button onclick="closeModal()" class="flex-1 py-4 rounded-2xl bg-slate-100 h-bold text-slate-400">แก้ไข</button><button onclick="saveData()" class="flex-1 py-4 rounded-2xl bg-slate-900 text-white h-bold shadow-xl">ยืนยัน</button></div>
+        <div class="bg-white p-10 max-w-md w-full rounded-[3rem] text-center border-4 border-slate-900 shadow-2xl transform transition-all scale-100">
+            <h3 class="h-bold text-2xl mb-6 text-black uppercase" id="confirmTitle">ยืนยันการบันทึก?</h3>
+            
+            <div id="confirmDetails" class="mb-8 p-6 bg-slate-50 rounded-[2rem] text-left text-lg font-medium border border-slate-200 space-y-2"></div>
+            
+            <div class="flex gap-4">
+                <button onclick="closeModal()" class="flex-1 py-4 rounded-2xl bg-slate-100 h-bold text-slate-400 hover:bg-slate-200 transition">แก้ไข</button>
+                <button onclick="saveData()" class="flex-1 py-4 rounded-2xl bg-slate-900 text-white h-bold shadow-xl hover:bg-black transition transform hover:scale-105">ยืนยัน (Save)</button>
+            </div>
         </div>
     </div>
 
@@ -119,17 +163,26 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        
         let adsData = [], uiConfig = { monthlyGoal: 1000000 };
+        let currentPage = 1;
+        const ITEMS_PER_PAGE = 10;
         const PRODUCTS = [{ name: "เบต้าออยล์", color: "#f59e0b" },{ name: "เบต้าไลฟ์", color: "#78350f" },{ name: "แล็บฟาร์ม", color: "#10b981" }];
 
         window.onload = () => {
             lucide.createIcons(); document.getElementById('date').valueAsDate = new Date();
             PRODUCTS.forEach(p => document.getElementById('pageId').innerHTML += `<option value="${p.name}">${p.name}</option>`);
+            
+            // ดึง Key จากเครื่อง (ถ้าเคยใส่ไว้แล้ว)
             document.getElementById('adminKeyInput').value = localStorage.getItem('ads_admin_key') || '';
             
             onValue(ref(db, 'config'), (snap) => {
-                if(snap.exists()) uiConfig = snap.val();
-                document.getElementById('label-monthly-goal').innerText = `฿${(uiConfig.monthlyGoal || 0).toLocaleString()}`;
+                if(snap.exists()) {
+                    const val = snap.val();
+                    uiConfig.monthlyGoal = val.monthlyGoal || 1000000;
+                    if(val.style) applyLoadedStyle(val.style);
+                }
+                document.getElementById('label-monthly-goal').innerText = `฿${uiConfig.monthlyGoal.toLocaleString()}`;
                 renderApp();
             });
 
@@ -140,10 +193,11 @@
             });
         };
 
+        // --- Security Logic ---
         window.saveAdminKey = (val) => localStorage.setItem('ads_admin_key', val);
 
         window.saveData = async () => {
-            const key = localStorage.getItem('ads_admin_key');
+            const key = localStorage.getItem('ads_admin_key'); // ดึงกุญแจอัตโนมัติ
             const entry = { 
                 pageId: document.getElementById('pageId').value, 
                 date: document.getElementById('date').value, 
@@ -152,17 +206,181 @@
                 orders: parseInt(document.getElementById('orders').value) || 0, 
                 inquiries: parseInt(document.getElementById('inquiries').value) || 0, 
                 note: document.getElementById('note').value,
-                securityKey: key, 
+                securityKey: key, // ส่งกุญแจลับ
                 timestamp: Date.now() 
             };
             const editId = document.getElementById('editId').value;
+            
             try {
                 if(editId) await update(ref(db, `adsData/${editId}`), entry); 
                 else await push(ref(db, 'adsData'), entry);
                 closeModal(); resetForm();
-            } catch (e) { alert("❌ ปฏิเสธการบันทึก: รหัส Admin ไม่ถูกต้อง!"); }
+            } catch (e) { 
+                alert("❌ ปฏิเสธการบันทึก: รหัส Admin ในเครื่องไม่ถูกต้อง! กรุณาตรวจสอบในตั้งค่า"); 
+            }
         };
 
+        window.deleteEntry = async (id) => {
+            if(!confirm("ต้องการลบประวัตินี้ออกจากคลาวด์ถาวร?")) return;
+            const key = localStorage.getItem('ads_admin_key');
+            try {
+                await update(ref(db, `adsData/${id}`), { securityKey: key, sales: null, adSpend: null }); // Trick for Rules
+                await remove(ref(db, `adsData/${id}`));
+            } catch (e) { 
+                alert("❌ ลบไม่สำเร็จ: รหัส Admin ไม่ถูกต้อง!"); 
+            }
+        };
+
+        // --- Core Rendering (V5.0 Logic Restored) ---
+        function renderApp() {
+            // 1. Progress Logic
+            const totalS = adsData.reduce((s, i) => s + i.sales, 0);
+            const remain = Math.max(0, uiConfig.monthlyGoal - totalS);
+            const pct = Math.min(100, (totalS / uiConfig.monthlyGoal) * 100);
+            
+            document.getElementById('stat-total-sales').innerText = `฿${totalS.toLocaleString()}`;
+            document.getElementById('stat-remaining').innerText = `฿${remain.toLocaleString()}`;
+            
+            const bar = document.getElementById('progress-bar');
+            bar.style.width = `${pct}%`;
+            // Logic สีหลอดพลังงาน
+            bar.className = `progress-fill ${pct < 40 ? 'bg-rose-500' : pct < 75 ? 'bg-amber-400' : 'bg-emerald-500'}`;
+            document.getElementById('progress-value-text').innerText = `฿${totalS.toLocaleString()} / ขาดอีก ฿${remain.toLocaleString()}`;
+
+            // 2. Product Cards Logic
+            const cardGrid = document.getElementById('product-cards'); cardGrid.innerHTML = '';
+            PRODUCTS.forEach(p => {
+                const pData = adsData.filter(d => d.pageId === p.name);
+                const pSales = pData.reduce((s,i)=>s+i.sales,0);
+                const pAds = pData.reduce((s,i)=>s+i.adSpend,0);
+                const pPct = pSales > 0 ? (pAds/pSales)*100 : 0;
+                
+                cardGrid.innerHTML += `
+                <div class="card-pro p-6 shadow-lg border-t-4 relative overflow-hidden" style="border-top-color: ${p.color}">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="h-bold text-xl text-black">${p.name}</h3>
+                        <span class="text-xs h-bold px-2 py-1 rounded bg-slate-100 text-slate-500">${pData.length} records</span>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-sm"><span class="text-slate-400">Sales</span><span class="h-bold text-emerald-600">฿${pSales.toLocaleString()}</span></div>
+                        <div class="flex justify-between text-sm"><span class="text-slate-400">Ads</span><span class="h-bold text-rose-500">฿${pAds.toLocaleString()}</span></div>
+                        <div class="flex justify-between text-sm"><span class="text-slate-400">%Ads</span><span class="h-bold ${pPct>30?'text-rose-600':'text-indigo-600'}">${pPct.toFixed(1)}%</span></div>
+                    </div>
+                </div>`;
+            });
+
+            // 3. History Pagination
+            const sorted = adsData.sort((a,b) => new Date(b.date) - new Date(a.date));
+            document.getElementById('total-count-badge').innerText = `${sorted.length} items`;
+            
+            const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+            
+            const start = (currentPage - 1) * ITEMS_PER_PAGE;
+            const paginated = sorted.slice(start, start + ITEMS_PER_PAGE);
+            
+            const tbody = document.getElementById('dataTableBody'); tbody.innerHTML = '';
+            paginated.forEach(i => {
+                const color = PRODUCTS.find(p=>p.name===i.pageId)?.color || '#ccc';
+                const cpa = i.orders > 0 ? (i.adSpend/i.orders).toFixed(0) : 0;
+                tbody.innerHTML += `<tr class="hover:bg-slate-50 transition border-l-[6px] row-${i.pageId}" style="border-left-color: ${color}">
+                    <td class="p-6 h-bold text-black">${new Date(i.date).toLocaleDateString('th-TH')}</td>
+                    <td class="p-6"><span class="text-xs h-bold px-2 py-1 bg-white border rounded text-black">${i.pageId}</span></td>
+                    <td class="p-6 text-right h-bold text-emerald-600">฿${i.sales.toLocaleString()}</td>
+                    <td class="p-6 text-right h-bold text-rose-500">฿${i.adSpend.toLocaleString()}</td>
+                    <td class="p-6 text-right h-bold text-indigo-600">฿${cpa}</td>
+                    <td class="p-6 text-sm italic text-slate-600 max-w-[200px] truncate">${i.note || '-'}</td>
+                    <td class="p-6 text-center">
+                        <div class="flex gap-2 justify-center">
+                            <button onclick="window.editEntry('${i.cloudId}')" class="text-indigo-400 hover:text-indigo-600"><i data-lucide="edit-3" size="20"></i></button>
+                            <button onclick="window.deleteEntry('${i.cloudId}')" class="text-rose-400 hover:text-rose-600"><i data-lucide="trash-2" size="20"></i></button>
+                        </div>
+                    </td>
+                </tr>`;
+            });
+            
+            // Render Pagination Controls
+            document.getElementById('paginationInfo').innerText = `PAGE ${currentPage} OF ${totalPages}`;
+            let controls = '';
+            if(currentPage > 1) controls += `<button onclick="changePage(-1)" class="p-2 bg-white border rounded hover:bg-slate-100"><i data-lucide="chevron-left" size="16"></i></button>`;
+            if(currentPage < totalPages) controls += `<button onclick="changePage(1)" class="p-2 bg-white border rounded hover:bg-slate-100"><i data-lucide="chevron-right" size="16"></i></button>`;
+            document.getElementById('paginationControls').innerHTML = controls;
+
+            lucide.createIcons();
+            
+            // เรียกใช้ Logic Advice (แบบ V5.0)
+            renderScalingAdvice(sorted);
+        }
+
+        function renderScalingAdvice(data) {
+            const today = new Date().toISOString().split('T')[0];
+            const todayData = data.filter(d => d.date === today);
+            const box = document.getElementById('advice-section');
+            const title = document.getElementById('advice-title');
+            const content = document.getElementById('advice-content');
+            
+            if(todayData.length > 0) {
+                const totalAds = todayData.reduce((s,i)=>s+i.adSpend,0);
+                const totalSales = todayData.reduce((s,i)=>s+i.sales,0);
+                const pct = totalSales > 0 ? (totalAds/totalSales)*100 : 0;
+                
+                box.classList.remove('advice-hidden');
+                if(pct < 20) {
+                    box.className = "advice-box bg-emerald-50 border-emerald-500 mb-8";
+                    title.innerHTML = `<i data-lucide="trending-up"></i> สถานการณ์: ดีเยี่ยม (Ads ${pct.toFixed(1)}%)`;
+                    title.className = "h-bold text-lg text-emerald-700 flex items-center gap-2";
+                    content.innerText = "แอดถูกมาก! กำไรเนื้อๆ แนะนำให้ลองเพิ่มงบทีละ 20% ในแคมเปญที่วิ่งดี หรือเทสกลุ่มเป้าหมายใหม่ (Scale Up) ทันที!";
+                } else if (pct > 40) {
+                    box.className = "advice-box bg-rose-50 border-rose-500 mb-8";
+                    title.innerHTML = `<i data-lucide="alert-triangle"></i> สถานการณ์: น่าเป็นห่วง (Ads ${pct.toFixed(1)}%)`;
+                    title.className = "h-bold text-lg text-rose-700 flex items-center gap-2";
+                    content.innerText = "แอดเริ่มกินทุน! ให้รีบเช็ค CPA รายแอดด่วน ถ้าตัวไหนแพงเกินปิดทิ้งทันที อย่าฝืนยิงต่อ เปลี่ยนรูปหรือคอนเทนต์ใหม่บ้าง";
+                } else {
+                    box.className = "advice-box bg-indigo-50 border-indigo-500 mb-8";
+                    title.innerHTML = `<i data-lucide="activity"></i> สถานการณ์: ทรงตัว (Ads ${pct.toFixed(1)}%)`;
+                    title.className = "h-bold text-lg text-indigo-700 flex items-center gap-2";
+                    content.innerText = "ประคองตัวได้ดี! คอยมอนิเตอร์อย่าให้ % แอดดีดขึ้น พยายามรักษามาตรฐานการตอบแชทปิดการขายให้คม";
+                }
+                lucide.createIcons();
+            } else {
+                box.classList.add('advice-hidden');
+            }
+        }
+
+        // --- Utility Functions ---
+        window.changePage = (dir) => { currentPage += dir; renderApp(); };
+        window.toggleSidebar = () => document.getElementById('styleSidebar').classList.toggle('open');
+        window.toggleAdvice = () => document.getElementById('advice-section').classList.add('advice-hidden');
+        window.liveUpdateFontSize = (v) => document.documentElement.style.setProperty('--base-fsize', `${v}px`);
+        function applyLoadedStyle(s) { liveUpdateFontSize(s.fontSize.replace('px','')); }
+        
+        window.confirmSaveWithCheck = () => { 
+            // เอาข้อมูลมาแสดงใน Modal เหมือน V5.0
+            const ads = parseFloat(document.getElementById('adSpend').value) || 0;
+            const sales = parseFloat(document.getElementById('sales').value) || 0;
+            const pct = sales > 0 ? (ads/sales)*100 : 0;
+            const page = document.getElementById('pageId').value;
+            
+            const html = `
+                <div class="flex justify-between border-b pb-2"><span class="text-slate-500">เพจ:</span> <span class="h-bold text-black">${page}</span></div>
+                <div class="flex justify-between border-b py-2"><span class="text-slate-500">ค่าแอด:</span> <span class="h-bold text-rose-500">฿${ads.toLocaleString()}</span></div>
+                <div class="flex justify-between border-b py-2"><span class="text-slate-500">ยอดขาย:</span> <span class="h-bold text-emerald-600">฿${sales.toLocaleString()}</span></div>
+                <div class="flex justify-between pt-2"><span class="text-slate-500">%Ads:</span> <span class="h-bold ${pct>30?'text-rose-600':'text-indigo-600'}">${pct.toFixed(2)}%</span></div>
+            `;
+            document.getElementById('confirmDetails').innerHTML = html;
+            document.getElementById('confirmModal').classList.remove('hidden'); 
+        };
+        
+        window.closeModal = () => document.getElementById('confirmModal').classList.add('hidden');
+        window.resetForm = () => { 
+            document.getElementById('adsForm').reset(); 
+            document.getElementById('editId').value = ''; 
+            document.getElementById('form-title').innerHTML = `<i data-lucide="plus-circle" class="text-indigo-600"></i> ลงข้อมูลรายวัน`;
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+            document.getElementById('date').valueAsDate = new Date(); 
+            lucide.createIcons();
+        };
+        
         window.editEntry = (id) => {
             const e = adsData.find(d => d.cloudId === id);
             if(!e) return;
@@ -174,71 +392,59 @@
             document.getElementById('orders').value = e.orders;
             document.getElementById('inquiries').value = e.inquiries;
             document.getElementById('note').value = e.note || '';
+            
             document.getElementById('form-title').innerText = "แก้ไขข้อมูลรายการ";
             document.getElementById('cancelEditBtn').classList.remove('hidden');
             window.scrollTo({ top: 300, behavior: 'smooth' });
         };
-
-        window.deleteEntry = async (id) => {
-            if(!confirm("ต้องการลบประวัตินี้ออกจากคลาวด์ถาวร?")) return;
-            const key = localStorage.getItem('ads_admin_key');
-            try {
-                await update(ref(db, `adsData/${id}`), { securityKey: key, sales: null, adSpend: null, timestamp: null });
-                await remove(ref(db, `adsData/${id}`));
-            } catch (e) { alert("❌ ลบไม่สำเร็จ: รหัส Admin ไม่ถูกต้อง!"); }
+        
+        window.editGoalValue = () => { 
+            const g = prompt("กำหนดเป้าหมายยอดขายเดือนนี้ (บาท):", uiConfig.monthlyGoal); 
+            if(g) {
+                const key = localStorage.getItem('ads_admin_key');
+                set(ref(db, 'config/monthlyGoal'), parseFloat(g)); // ตรงนี้อาจต้องใช้ Key ถ้า Rules config บังคับ
+            }
         };
 
-        function renderApp() {
-            const sorted = adsData.sort((a,b) => new Date(b.date) - new Date(a.date));
-            const totalS = sorted.reduce((s, i) => s + i.sales, 0);
-            const remain = Math.max(0, uiConfig.monthlyGoal - totalS);
-            const pct = Math.min(100, (totalS / uiConfig.monthlyGoal) * 100);
-            
-            document.getElementById('stat-total-sales').innerText = `฿${totalS.toLocaleString()}`;
-            document.getElementById('stat-remaining').innerText = `฿${remain.toLocaleString()}`;
-            document.getElementById('progress-bar').style.width = `${pct}%`;
-            document.getElementById('progress-percent-text').innerText = `${pct.toFixed(1)}%`;
-            
-            const tbody = document.getElementById('dataTableBody'); tbody.innerHTML = '';
-            sorted.forEach(i => {
-                const color = PRODUCTS.find(p=>p.name===i.pageId)?.color || '#ccc';
-                tbody.innerHTML += `<tr class="hover:bg-slate-50 transition border-l-[12px] row-${i.pageId}" style="border-left-color: ${color}">
-                    <td class="p-6 h-bold text-2xl text-black">${new Date(i.date).toLocaleDateString('th-TH')}</td>
-                    <td class="p-6 text-center"><span class="text-sm h-bold px-3 py-1 bg-white border rounded-lg shadow-sm text-black font-black">${i.pageId}</span></td>
-                    <td class="p-6 text-right text-3xl h-bold text-emerald-600">฿${i.sales.toLocaleString()}</td>
-                    <td class="p-6 text-right text-2xl h-bold text-rose-500">฿${i.adSpend.toLocaleString()}</td>
-                    <td class="p-6 text-right text-4xl h-bold text-indigo-600">฿${i.orders > 0 ? (i.adSpend/i.orders).toFixed(0) : 0}</td>
-                    <td class="p-6 text-lg h-medium text-black break-words max-w-[300px] italic leading-tight">${i.note || '-'}</td>
-                    <td class="p-6 text-center">
-                        <div class="flex gap-2 justify-center">
-                            <button onclick="window.editEntry('${i.cloudId}')" class="text-indigo-300 hover:text-indigo-600 p-2 transition"><i data-lucide="edit-3" size="28"></i></button>
-                            <button onclick="window.deleteEntry('${i.cloudId}')" class="text-rose-300 hover:text-rose-600 p-2 transition"><i data-lucide="trash-2" size="28"></i></button>
-                        </div>
-                    </td>
-                </tr>`;
-            });
-            lucide.createIcons();
-        }
-
-        window.toggleSidebar = () => document.getElementById('styleSidebar').classList.toggle('open');
-        window.liveUpdateFontSize = (v) => document.documentElement.style.setProperty('--base-fsize', `${v}px`);
         window.saveStyleToCloud = () => {
             const key = localStorage.getItem('ads_admin_key');
             set(ref(db, 'config/style'), { 
                 fontSize: getComputedStyle(document.documentElement).getPropertyValue('--base-fsize'),
                 securityKey: key 
-            }).catch(() => alert("❌ เซฟไม่สำเร็จ: รหัส Admin ผิด!"));
+            }).then(() => alert("✅ บันทึกตั้งค่าเรียบร้อย"))
+              .catch(() => alert("❌ รหัส Admin ผิด!"));
         };
-        window.confirmSaveWithCheck = () => { document.getElementById('confirmModal').classList.remove('hidden'); };
-        window.closeModal = () => document.getElementById('confirmModal').classList.add('hidden');
-        window.resetForm = () => { 
-            document.getElementById('adsForm').reset(); 
-            document.getElementById('editId').value = ''; 
-            document.getElementById('form-title').innerText = "ลงข้อมูลรายวัน";
-            document.getElementById('cancelEditBtn').classList.add('hidden');
-            document.getElementById('date').valueAsDate = new Date(); 
+
+        window.exportProject = () => { const b = new Blob([JSON.stringify({data: adsData})], {type: 'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `Backup_KJ_${new Date().toISOString().split('T')[0]}.json`; a.click(); };
+        
+        window.importToCloud = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            if(!confirm("⚠️ คำเตือน: การ Import จะนำข้อมูลเข้าสู่คลาวด์ คุณแน่ใจหรือไม่?")) return;
+            
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const json = JSON.parse(e.target.result);
+                    const data = json.data || json; 
+                    const key = localStorage.getItem('ads_admin_key');
+                    
+                    if (Array.isArray(data)) {
+                        for (const item of data) {
+                           // ลบ ID เก่าออกเพื่อให้สร้างใหม่
+                           const { cloudId, ...cleanItem } = item;
+                           await push(ref(db, 'adsData'), { ...cleanItem, securityKey: key });
+                        }
+                        alert(`✅ นำเข้าข้อมูลสำเร็จ ${data.length} รายการ`);
+                    } else {
+                        alert("❌ รูปแบบไฟล์ไม่ถูกต้อง");
+                    }
+                } catch (err) {
+                    alert("❌ เกิดข้อผิดพลาด: " + err);
+                }
+            };
+            reader.readAsText(file);
         };
-        window.exportProject = () => { const b = new Blob([JSON.stringify({data: adsData})], {type: 'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `Backup_KJ.json`; a.click(); };
     </script>
 </body>
 </html>
