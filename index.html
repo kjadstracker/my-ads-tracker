@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V6.9.4 - Freedom Import</title>
+    <title>Ads Cloud Master V6.9.5 - Smart Import</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -30,10 +30,8 @@
         .card-betalife { border-top: 8px solid #78350f; background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%); }
         .card-labfarm { border-top: 8px solid #10b981; background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%); }
 
-        /* PORTFOLIO BOX */
+        /* PORTFOLIO & PROGRESS */
         .portfolio-box { background: #0f172a; color: white; border-radius: 1.5rem; position: relative; overflow: hidden; }
-
-        /* PROGRESS BAR */
         .progress-bar-bg { background: #e2e8f0; height: 48px; border-radius: 24px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
         .progress-bar-fill { height: 100%; background-color: #10b981; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
         .progress-text-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.4); z-index: 10; pointer-events: none; }
@@ -66,10 +64,10 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V6.9.4 Freedom Import</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V6.9.5 Smart Import</p></div></div>
             <div class="flex gap-2">
                 <button onclick="exportJSON()" class="px-4 py-2 bg-slate-800 text-white rounded-lg h-bold text-xs flex items-center gap-2 hover:bg-slate-900 transition"><i data-lucide="download" size="16"></i> Backup</button>
-                <label class="px-4 py-2 bg-amber-500 text-white rounded-lg h-bold text-xs flex items-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload" size="16"></i> Import <input type="file" hidden onchange="importJSON(event)"></label>
+                <label class="px-4 py-2 bg-amber-500 text-white rounded-lg h-bold text-xs flex items-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload" size="16"></i> Import <input type="file" id="fileInput" hidden onchange="importJSON(event)"></label>
             </div>
         </header>
 
@@ -88,16 +86,12 @@
                             <button onclick="toggleGoalEdit(false)" class="p-2 bg-slate-200 text-slate-500 rounded-lg hover:bg-slate-300 transition"><i data-lucide="x" size="20"></i></button>
                         </div>
                     </div>
-
                     <div><div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="trending-up" size="14"></i><span class="text-xs h-bold uppercase">เฉลี่ยต่อวันจริง</span></div><div class="text-4xl h-bold text-emerald-500" id="ui-avg-actual">฿0</div></div>
                     <div><div class="flex items-center gap-2 text-amber-500 mb-1"><i data-lucide="zap" size="14"></i><span class="text-xs h-bold uppercase">ยอดต้องทำ/วัน</span></div><div class="text-4xl h-bold text-amber-500" id="ui-avg-required">฿0</div></div>
                 </div>
                 <div class="space-y-3">
                     <div class="flex justify-between items-end"><span class="text-xs h-bold text-slate-400 uppercase tracking-widest">Progression Status</span><span class="text-2xl h-bold text-slate-800" id="ui-percent">0%</span></div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-text-overlay" id="ui-progress-text">฿0 / ขาดอีก ฿0</div>
-                        <div id="ui-progress-bar" class="progress-bar-fill" style="width: 0%"></div>
-                    </div>
+                    <div class="progress-bar-bg"><div class="progress-text-overlay" id="ui-progress-text">฿0 / ขาดอีก ฿0</div><div id="ui-progress-bar" class="progress-bar-fill" style="width: 0%"></div></div>
                 </div>
             </div>
         </section>
@@ -121,13 +115,7 @@
 
         <div class="max-w-7xl mx-auto mb-6 flex justify-between items-end">
             <h3 class="h-bold text-xl text-slate-800">Performance Cards</h3>
-            <div class="flex items-center gap-3">
-                <span class="text-xs h-bold text-slate-400 uppercase">Show Advice:</span>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" id="adviceToggle" class="sr-only peer" onchange="toggleAdviceGlobal()">
-                    <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
-                </label>
-            </div>
+            <div class="flex items-center gap-3"><span class="text-xs h-bold text-slate-400 uppercase">Show Advice:</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="adviceToggle" class="sr-only peer" onchange="toggleAdviceGlobal()"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div></label></div>
         </div>
         <div id="product-cards" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 items-start justify-center"></div>
 
@@ -321,24 +309,42 @@
         window.deleteEntry = async (id) => { if(!confirm("ยืนยันลบ?"))return; const k = localStorage.getItem('ads_admin_key'); try { await update(ref(db,`adsData/${id}`),{securityKey:k,sales:null}); await remove(ref(db,`adsData/${id}`)); } catch(e) { alert("❌ ลบไม่ได้: รหัส Admin ผิด!"); } };
         window.exportJSON = () => { const s = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData)); const n = document.createElement('a'); n.setAttribute("href", s); n.setAttribute("download", "backup_ads_data.json"); document.body.appendChild(n); n.click(); n.remove(); };
         
-        // --- FIXED IMPORT LOGIC ---
+        // --- FIXED IMPORT LOGIC (SMART V2) ---
         window.importJSON = (e) => { 
             const f = e.target.files[0]; 
             if(!f) return; 
             const r = new FileReader(); 
             r.onload = async (ev) => { 
-                const j = JSON.parse(ev.target.result);
-                // Fix: Convert Object to Array if needed to solve 'undefined' length
-                const dataToImport = Array.isArray(j) ? j : Object.values(j); 
-                
-                if(confirm(`ยืนยันนำเข้าข้อมูล ${dataToImport.length} รายการ?`)) { 
-                    const k = "kjondabeat"; // Auto-sign since locked screen passed
-                    for(const i of dataToImport) { 
-                        const {id, ...c} = i; 
-                        await push(ref(db,'adsData'), {...c, securityKey: k}); 
-                    } 
-                    alert("✅ Import เสร็จสิ้น"); 
-                } 
+                try {
+                    const j = JSON.parse(ev.target.result);
+                    // 1. แปลงข้อมูลให้เป็น Array เสมอ (ไม่ว่าต้นฉบับจะเป็น Object ก้อนๆ หรือ Array)
+                    const data = Array.isArray(j) ? j : Object.values(j);
+                    
+                    if(data.length === 0) { alert("❌ ไม่พบข้อมูลในไฟล์"); return; }
+
+                    if(confirm(`พบข้อมูล ${data.length} รายการ\nยืนยันการนำเข้า?`)) {
+                        document.body.style.cursor = 'wait'; // เปลี่ยนเมาส์เป็นรูปนาฬิกาทราย
+                        let count = 0;
+                        const k = "kjondabeat"; // Auto-sign (ใส่กุญแจให้อัตโนมัติ)
+
+                        for(const item of data) {
+                            if(!item) continue;
+                            // 2. ล้างค่า ID เก่าทิ้ง เพื่อให้ Firebase สร้าง ID ใหม่ (ป้องกันการทับ)
+                            const {id, ...c} = item; 
+                            // 3. ยัดเข้า Database ทีละรายการ
+                            await push(ref(db,'adsData'), {...c, securityKey: k});
+                            count++;
+                        }
+                        document.body.style.cursor = 'default';
+                        alert(`✅ นำเข้าสำเร็จ ${count} รายการ!\n(⚠️ หากยอดไม่ขึ้น ให้เช็คที่ตัวกรองวันที่ ว่าตรงกับข้อมูลที่นำเข้าหรือไม่)`);
+                    }
+                } catch(err) {
+                    document.body.style.cursor = 'default';
+                    alert("❌ ไฟล์เสียหายหรือรูปแบบไม่ถูกต้อง");
+                    console.error(err);
+                }
+                // Reset ปุ่มให้กดซ้ำได้
+                document.getElementById('fileInput').value = '';
             }; 
             r.readAsText(f); 
         };
