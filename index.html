@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V6.9.7 - Deep Import</title>
+    <title>Ads Cloud Master V7.0 - Final Reliable</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -30,8 +30,10 @@
         .card-betalife { border-top: 8px solid #78350f; background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%); }
         .card-labfarm { border-top: 8px solid #10b981; background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%); }
 
-        /* PORTFOLIO & PROGRESS */
+        /* PORTFOLIO BOX */
         .portfolio-box { background: #0f172a; color: white; border-radius: 1.5rem; position: relative; overflow: hidden; }
+
+        /* PROGRESS BAR */
         .progress-bar-bg { background: #e2e8f0; height: 48px; border-radius: 24px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
         .progress-bar-fill { height: 100%; background-color: #10b981; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
         .progress-text-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.4); z-index: 10; pointer-events: none; }
@@ -64,7 +66,7 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V6.9.7 Deep Import</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V7.0 Final Reliable</p></div></div>
             <div class="flex gap-2">
                 <button onclick="exportJSON()" class="px-4 py-2 bg-slate-800 text-white rounded-lg h-bold text-xs flex items-center gap-2 hover:bg-slate-900 transition"><i data-lucide="download" size="16"></i> Backup</button>
                 <label class="px-4 py-2 bg-amber-500 text-white rounded-lg h-bold text-xs flex items-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload" size="16"></i> Import (Replace) <input type="file" id="fileInput" hidden onchange="importJSON(event)"></label>
@@ -319,11 +321,11 @@
         window.deleteEntry = async (id) => { if(!confirm("ยืนยันลบ?"))return; const k = localStorage.getItem('ads_admin_key'); try { await update(ref(db,`adsData/${id}`),{securityKey:k,sales:null}); await remove(ref(db,`adsData/${id}`)); } catch(e) { alert("❌ ลบไม่ได้: รหัส Admin ผิด!"); } };
         window.exportJSON = () => { const s = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData)); const n = document.createElement('a'); n.setAttribute("href", s); n.setAttribute("download", "backup_ads_data.json"); document.body.appendChild(n); n.click(); n.remove(); };
         
-        // --- AI DEEP IMPORT (Universal Parser) ---
+        // --- UNIVERSAL IMPORT LOGIC (Deep Search + Wipe) ---
         function findRecords(obj, results = []) {
             if (!obj || typeof obj !== 'object') return results;
             if (obj.pageId && obj.date && (obj.sales !== undefined || obj.adSpend !== undefined)) {
-                results.push(obj); // Found a record!
+                results.push(obj); // เจอแล้ว! นี่คือข้อมูลยอดขาย
                 return results;
             }
             if (Array.isArray(obj)) { obj.forEach(item => findRecords(item, results)); } 
@@ -332,26 +334,27 @@
         }
 
         window.importJSON = (e) => { 
-            const f = e.target.files[0]; if(!f) return; 
+            const f = e.target.files[0]; 
+            if(!f) return; 
             const r = new FileReader(); 
             r.onload = async (ev) => { 
                 try {
                     const raw = JSON.parse(ev.target.result);
-                    // AI Deep Search: Find anything that looks like a record
+                    // AI Deep Search: ขุดหาข้อมูลทุกซอกทุกมุม
                     const data = findRecords(raw);
                     
-                    if(data.length === 0) { alert("❌ ไม่พบข้อมูลในไฟล์"); return; }
+                    if(data.length === 0) { alert("❌ ไม่พบข้อมูลในไฟล์ (รูปแบบไม่ถูกต้อง)"); return; }
 
-                    if(confirm(`⚠️ ระบบจะลบข้อมูลเก่าทั้งหมดทิ้ง\nและแทนที่ด้วยข้อมูล ${data.length} รายการจากไฟล์นี้\n\nยืนยันหรือไม่?`)) {
+                    if(confirm(`⚠️ ระบบจะลบข้อมูลเก่าทั้งหมด\nและแทนที่ด้วยข้อมูล ${data.length} รายการ\nยืนยันหรือไม่?`)) {
                         document.body.style.cursor = 'wait';
                         
-                        // 1. Wipe Old Data
+                        // 1. Wipe Old Data (ล้างบาง)
                         await set(ref(db, 'adsData'), null);
 
                         let count = 0;
                         const k = "kjondabeat";
 
-                        // 2. Insert New Data
+                        // 2. Insert New Data (ใส่ใหม่)
                         for(const item of data) {
                             const {id, ...c} = item; 
                             await push(ref(db,'adsData'), {...c, securityKey: k});
@@ -359,7 +362,7 @@
                         }
                         
                         document.body.style.cursor = 'default';
-                        alert(`✅ แทนที่ข้อมูลสำเร็จ ${count} รายการ!\n(ระบบจะรีโหลดหน้าจอใหม่)`);
+                        alert(`✅ แทนที่ข้อมูลสำเร็จ ${count} รายการ!\n(กำลังรีโหลดหน้าจอ...)`);
                         location.reload(); 
                     }
                 } catch(err) {
