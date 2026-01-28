@@ -3,40 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V6.2 - Precision Filter</title>
+    <title>Ads Cloud Master V6.3 - Perfect Polish</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         :root { --base-fsize: 16px; }
         body { font-family: 'Kanit', sans-serif; background-color: #f8fafc; font-size: var(--base-fsize); color: #334155; }
         
-        /* Typography System */
-        .h-bold { font-weight: 700; } /* หัวข้อหนา */
-        .h-medium { font-weight: 500; } /* เนื้อหาปานกลาง */
-        .h-black { font-weight: 900; }
+        /* Typography - No Black Weight */
+        .h-bold { font-weight: 700; } 
+        .h-medium { font-weight: 500; } 
         
-        /* Card Styles V5.0 Look */
-        .card-stat { background: white; border-radius: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; transition: all 0.2s; position: relative; overflow: hidden; }
-        .card-stat:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        /* Card Styles V5.0 Authentic Look */
+        .card-stat { 
+            background: white; 
+            border-radius: 1.2rem; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid #f1f5f9; 
+            transition: all 0.2s ease; 
+            position: relative; 
+            overflow: hidden; 
+        }
+        .card-stat:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         
+        /* Card Top Borders */
         .card-betaoil { border-top: 6px solid #f59e0b; }
         .card-betalife { border-top: 6px solid #78350f; }
         .card-labfarm { border-top: 6px solid #10b981; }
 
         .portfolio-box { background: #0f172a; color: white; border-radius: 1.5rem; }
         
-        input, select { border: 2px solid #e2e8f0 !important; border-radius: 0.8rem !important; padding: 0.6rem 1rem !important; font-weight: 500 !important; outline: none; transition: all 0.2s; font-size: 0.95rem; }
+        input, select { 
+            border: 2px solid #e2e8f0 !important; 
+            border-radius: 0.8rem !important; 
+            padding: 0.6rem 1rem !important; 
+            font-weight: 500 !important; 
+            outline: none; 
+            transition: all 0.2s; 
+            font-size: 0.95rem; 
+        }
         input:focus, select:focus { border-color: #4f46e5 !important; ring: 2px solid #e0e7ff; }
 
-        /* Progress Bar Upgrade */
-        .progress-bar-bg { background: #e2e8f0; height: 42px; border-radius: 21px; overflow: hidden; position: relative; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); }
-        .progress-bar-fill { height: 100%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: center; }
-        .progress-text { font-size: 1.1rem; font-weight: 700; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); white-space: nowrap; padding: 0 1rem; z-index: 10; }
-        .progress-text-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 700; color: #64748b; z-index: 1; }
+        /* Progress Bar Fixed */
+        .progress-bar-bg { 
+            background: #e2e8f0; 
+            height: 48px; 
+            border-radius: 24px; 
+            overflow: hidden; 
+            position: relative; 
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); 
+        }
+        .progress-bar-fill { 
+            height: 100%; 
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.5s ease; 
+        }
+        .progress-text-overlay { 
+            position: absolute; 
+            inset: 0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.25rem; 
+            font-weight: 700; 
+            color: white; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+            z-index: 10; 
+            pointer-events: none;
+        }
 
-        /* Sidebar */
+        /* Advice Badge in Card */
+        .advice-badge {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.8rem;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .advice-badge.show {
+            opacity: 1;
+            max-height: 100px;
+            margin-top: 1rem;
+        }
+
         .sidebar { position: fixed; top: 0; right: 0; height: 100%; width: 320px; background: white; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transform: translateX(100%); transition: transform 0.3s ease; z-index: 2000; padding: 2rem; }
         .sidebar.open { transform: translateX(0); }
 
@@ -47,7 +103,7 @@
 
     <div id="settingsSidebar" class="sidebar flex flex-col gap-6">
         <div class="flex justify-between items-center border-b pb-4">
-            <h2 class="h-black text-xl text-slate-800">ADMIN SETTINGS</h2>
+            <h2 class="h-bold text-xl text-slate-800">ADMIN SETTINGS</h2>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-rose-500"><i data-lucide="x" size="24"></i></button>
         </div>
         <div class="bg-indigo-50 p-5 rounded-2xl border border-indigo-100">
@@ -71,8 +127,8 @@
         <div class="flex items-center gap-4">
             <div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div>
             <div>
-                <h1 class="h-black text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1>
-                <p class="text-xs font-bold text-slate-400 tracking-widest uppercase">Precision V6.2</p>
+                <h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1>
+                <p class="text-xs font-bold text-slate-400 tracking-widest uppercase">Precision V6.3</p>
             </div>
         </div>
         <button onclick="toggleSidebar()" class="w-10 h-10 bg-white border rounded-xl flex items-center justify-center text-slate-500 hover:text-indigo-600 transition shadow-sm"><i data-lucide="settings" size="20"></i></button>
@@ -83,27 +139,25 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
                 <div>
                     <div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="target" size="14"></i><span class="text-xs h-bold uppercase">เป้าหมายเดือนนี้</span></div>
-                    <div class="text-4xl h-black text-slate-800" id="ui-goal">฿0</div>
+                    <div class="text-4xl h-bold text-slate-800" id="ui-goal">฿0</div>
                 </div>
                 <div>
                     <div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="trending-up" size="14"></i><span class="text-xs h-bold uppercase">เฉลี่ยต่อวันจริง</span></div>
-                    <div class="text-4xl h-black text-emerald-500" id="ui-avg-actual">฿0</div>
+                    <div class="text-4xl h-bold text-emerald-500" id="ui-avg-actual">฿0</div>
                 </div>
                 <div>
                     <div class="flex items-center gap-2 text-amber-500 mb-1"><i data-lucide="zap" size="14"></i><span class="text-xs h-bold uppercase">ยอดต้องทำ/วัน</span></div>
-                    <div class="text-4xl h-black text-amber-500" id="ui-avg-required">฿0</div>
+                    <div class="text-4xl h-bold text-amber-500" id="ui-avg-required">฿0</div>
                 </div>
             </div>
-            <div class="space-y-2">
+            <div class="space-y-3">
                 <div class="flex justify-between items-end">
                     <span class="text-xs h-bold text-slate-400 uppercase tracking-widest">Progression Status</span>
-                    <span class="text-2xl h-black text-slate-800" id="ui-percent">0%</span>
+                    <span class="text-2xl h-bold text-slate-800" id="ui-percent">0%</span>
                 </div>
-                <div class="progress-bar-bg relative">
-                    <div class="progress-text-overlay" id="ui-progress-text-bg">฿0 / ขาดอีก ฿0</div>
-                    <div id="ui-progress-bar" class="progress-bar-fill bg-emerald-500" style="width: 0%">
-                        <span class="progress-text" id="ui-progress-text-fg">฿0 / ขาดอีก ฿0</span>
-                    </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-text-overlay" id="ui-progress-text">฿0 / ขาดอีก ฿0</div>
+                    <div id="ui-progress-bar" class="progress-bar-fill bg-emerald-500" style="width: 0%"></div>
                 </div>
             </div>
         </div>
@@ -129,13 +183,40 @@
         </div>
     </section>
 
-    <section class="max-w-7xl mx-auto mb-6 flex flex-col md:flex-row gap-6 justify-between items-start md:items-end">
+    <div class="max-w-7xl mx-auto mb-6 flex justify-between items-end">
+        <h3 class="h-bold text-xl text-slate-800">Performance Cards</h3>
+        <div class="flex items-center gap-3">
+            <span class="text-xs h-bold text-slate-400 uppercase">Show Advice:</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="adviceToggle" class="sr-only peer" checked onchange="renderCards()">
+                <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+            </label>
+        </div>
+    </div>
+    
+    <div id="product-cards" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"></div>
+
+    <section class="max-w-7xl mx-auto mb-12">
+        <div class="portfolio-box p-8 md:p-10 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-32 bg-indigo-500/10 rounded-full blur-3xl -mr-10 -mt-10"></div>
+            <h3 class="text-center text-xs h-bold text-indigo-300 uppercase tracking-[0.3em] mb-8">Portfolio Intelligence Summary</h3>
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-8 text-center relative z-10">
+                <div><p class="text-[10px] text-slate-400 uppercase mb-2">Total Sales</p><div class="text-2xl h-bold text-emerald-400" id="sum-sales">฿0</div></div>
+                <div><p class="text-[10px] text-slate-400 uppercase mb-2">Total Ads</p><div class="text-xl h-bold text-rose-400" id="sum-ads">฿0</div></div>
+                <div><p class="text-[10px] text-slate-400 uppercase mb-2">% Ads</p><div class="text-2xl h-bold text-white" id="sum-pct">0%</div></div>
+                <div><p class="text-[10px] text-slate-400 uppercase mb-2">Avg CPA</p><div class="text-xl h-bold text-indigo-400" id="sum-cpa">฿0</div></div>
+                <div><p class="text-[10px] text-slate-400 uppercase mb-2">Avg Inq</p><div class="text-xl h-bold text-blue-400" id="sum-inq">฿0</div></div>
+                <div><p class="text-[10px] text-slate-400 uppercase mb-2">Avg ROAS</p><div class="text-2xl h-bold text-amber-400" id="sum-roas">0.0</div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="max-w-7xl mx-auto mb-6">
         <div class="w-full bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <div class="flex items-center gap-2 mb-4">
                 <div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600"><i data-lucide="filter" size="16"></i></div>
                 <span class="text-sm h-bold uppercase text-slate-700">Filter Data System</span>
             </div>
-            
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                 <div class="space-y-1">
                     <label class="text-[10px] h-bold text-slate-400 uppercase">โหมดกรอง</label>
@@ -146,69 +227,10 @@
                         <option value="day">วันที่เดียว (Specific Date)</option>
                     </select>
                 </div>
-
-                <div id="filter-month-group" class="space-y-1">
-                    <label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label>
-                    <div class="flex gap-2">
-                        <select id="filterMonth" class="w-full"></select>
-                        <select id="filterYear" class="w-full"></select>
-                    </div>
-                </div>
-                
-                <div id="filter-range-group" class="space-y-1 hidden-force col-span-2">
-                    <label class="text-[10px] h-bold text-slate-400 uppercase">จากวันที่ - ถึงวันที่</label>
-                    <div class="flex gap-2">
-                        <input type="date" id="filterStart" class="w-full">
-                        <input type="date" id="filterEnd" class="w-full">
-                    </div>
-                </div>
-
-                <div id="filter-day-group" class="space-y-1 hidden-force">
-                    <label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label>
-                    <input type="date" id="filterDate" class="w-full">
-                </div>
-
-                <div class="space-y-1">
-                    <label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label>
-                    <select id="filterProduct" class="w-full"><option value="all">ทุกสินค้า</option></select>
-                </div>
-            </div>
-        </div>
-
-        <div class="flex items-center gap-3">
-            <span class="text-xs h-bold text-slate-400 uppercase">SCALING ADVICE:</span>
-            <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" id="adviceToggle" class="sr-only peer" checked onchange="renderAdvice()">
-                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                <span class="ml-2 text-sm h-medium text-slate-600">Show</span>
-            </label>
-        </div>
-    </section>
-    
-    <section id="advice-box" class="max-w-7xl mx-auto mb-8 hidden transition-all duration-300">
-        <div class="relative p-6 rounded-2xl border-l-8 shadow-sm flex items-start gap-4 bg-white" id="advice-style">
-            <div class="p-3 rounded-full bg-white/80 shadow-sm" id="advice-icon"></div>
-            <div class="pr-8">
-                <h4 class="h-bold text-lg" id="advice-title"></h4>
-                <p class="text-sm h-medium opacity-90 mt-1" id="advice-desc"></p>
-                <div class="mt-2 text-xs h-bold uppercase opacity-60 flex gap-4" id="advice-stats"></div>
-            </div>
-        </div>
-    </section>
-
-    <div id="product-cards" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"></div>
-
-    <section class="max-w-7xl mx-auto mb-12">
-        <div class="portfolio-box p-8 md:p-10 shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-32 bg-indigo-500/10 rounded-full blur-3xl -mr-10 -mt-10"></div>
-            <h3 class="text-center text-xs h-bold text-indigo-300 uppercase tracking-[0.3em] mb-8">Portfolio Intelligence Summary</h3>
-            <div class="grid grid-cols-2 md:grid-cols-6 gap-8 text-center relative z-10">
-                <div><p class="text-[10px] text-slate-400 uppercase mb-2">Total Sales</p><div class="text-2xl h-black text-emerald-400" id="sum-sales">฿0</div></div>
-                <div><p class="text-[10px] text-slate-400 uppercase mb-2">Total Ads</p><div class="text-xl h-bold text-rose-400" id="sum-ads">฿0</div></div>
-                <div><p class="text-[10px] text-slate-400 uppercase mb-2">% Ads</p><div class="text-2xl h-black text-white" id="sum-pct">0%</div></div>
-                <div><p class="text-[10px] text-slate-400 uppercase mb-2">Avg CPA</p><div class="text-xl h-bold text-indigo-400" id="sum-cpa">฿0</div></div>
-                <div><p class="text-[10px] text-slate-400 uppercase mb-2">Avg Inq</p><div class="text-xl h-bold text-blue-400" id="sum-inq">฿0</div></div>
-                <div><p class="text-[10px] text-slate-400 uppercase mb-2">Avg ROAS</p><div class="text-2xl h-black text-amber-400" id="sum-roas">0.0</div></div>
+                <div id="filter-month-group" class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full"></select><select id="filterYear" class="w-full"></select></div></div>
+                <div id="filter-range-group" class="space-y-1 hidden-force col-span-2"><label class="text-[10px] h-bold text-slate-400 uppercase">จากวันที่ - ถึงวันที่</label><div class="flex gap-2"><input type="date" id="filterStart" class="w-full"><input type="date" id="filterEnd" class="w-full"></div></div>
+                <div id="filter-day-group" class="space-y-1 hidden-force"><label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full"></div>
+                <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="filterProduct" class="w-full"><option value="all">ทุกสินค้า</option></select></div>
             </div>
         </div>
     </section>
@@ -265,7 +287,7 @@
             lucide.createIcons();
             document.getElementById('formDate').valueAsDate = new Date();
             
-            // Setup Filter Defaults
+            // Filter Defaults
             const today = new Date();
             const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
             const mSelect = document.getElementById('filterMonth');
@@ -274,10 +296,9 @@
             const ySelect = document.getElementById('filterYear');
             const currentYear = today.getFullYear();
             for(let y=currentYear; y>=2024; y--) ySelect.innerHTML += `<option value="${y}">${y}</option>`;
-
             document.getElementById('filterDate').valueAsDate = today;
 
-            // Setup Product Selects
+            // Product Selects
             const pSelect = document.getElementById('formPageId');
             const fSelect = document.getElementById('filterProduct');
             PRODUCTS.forEach(p => {
@@ -285,10 +306,8 @@
                 fSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`;
             });
 
-            // Listeners
             document.getElementById('adminKeyInput').value = localStorage.getItem('ads_admin_key') || '';
             
-            // Add Listeners for Filters
             ['filterMode','filterMonth','filterYear','filterStart','filterEnd','filterDate','filterProduct'].forEach(id => {
                 document.getElementById(id).addEventListener('change', () => { currentPage = 1; renderApp(); });
             });
@@ -304,56 +323,40 @@
             });
         };
 
-        // --- FILTER UI LOGIC ---
         window.toggleFilterInputs = () => {
             const mode = document.getElementById('filterMode').value;
-            const groups = ['filter-month-group', 'filter-range-group', 'filter-day-group'];
-            groups.forEach(g => document.getElementById(g).classList.add('hidden-force'));
-
+            ['filter-month-group', 'filter-range-group', 'filter-day-group'].forEach(g => document.getElementById(g).classList.add('hidden-force'));
             if (mode === 'month' || mode === 'year') document.getElementById('filter-month-group').classList.remove('hidden-force');
             if (mode === 'range') document.getElementById('filter-range-group').classList.remove('hidden-force');
             if (mode === 'day') document.getElementById('filter-day-group').classList.remove('hidden-force');
-            
-            // Special case: if Year mode, hide month select visually but keep logic simple (or just ignore month in logic)
             if (mode === 'year') document.getElementById('filterMonth').classList.add('hidden-force');
             else document.getElementById('filterMonth').classList.remove('hidden-force');
-            
             currentPage = 1;
             renderApp();
         };
 
-        // --- CORE LOGIC ---
         window.renderApp = () => {
-            // 1. Apply Filters
+            // Apply Filter
             const mode = document.getElementById('filterMode').value;
             const fProd = document.getElementById('filterProduct').value;
-            
             filteredData = allData.filter(d => {
                 const date = new Date(d.date);
                 let dateMatch = true;
-
-                if (mode === 'month') {
-                    dateMatch = (date.getMonth() + 1) == document.getElementById('filterMonth').value && 
-                                date.getFullYear() == document.getElementById('filterYear').value;
-                } else if (mode === 'year') {
-                    dateMatch = date.getFullYear() == document.getElementById('filterYear').value;
-                } else if (mode === 'day') {
-                    dateMatch = d.date === document.getElementById('filterDate').value;
-                } else if (mode === 'range') {
+                if (mode === 'month') dateMatch = (date.getMonth() + 1) == document.getElementById('filterMonth').value && date.getFullYear() == document.getElementById('filterYear').value;
+                else if (mode === 'year') dateMatch = date.getFullYear() == document.getElementById('filterYear').value;
+                else if (mode === 'day') dateMatch = d.date === document.getElementById('filterDate').value;
+                else if (mode === 'range') {
                     const start = document.getElementById('filterStart').value;
                     const end = document.getElementById('filterEnd').value;
                     if(start && end) dateMatch = d.date >= start && d.date <= end;
                 }
-
                 const prodMatch = fProd === 'all' || d.pageId === fProd;
                 return dateMatch && prodMatch;
             });
 
-            // 2. Render Components
             renderStats();
-            renderCards();
+            renderCards(); // Advice logic is now inside here
             renderTable();
-            renderAdvice();
             lucide.createIcons();
         };
 
@@ -363,7 +366,6 @@
             const totalOrders = filteredData.reduce((s,i) => s + i.orders, 0);
             const totalInq = filteredData.reduce((s,i) => s + i.inquiries, 0);
             
-            // Global Stats
             document.getElementById('sum-sales').innerText = `฿${totalSales.toLocaleString()}`;
             document.getElementById('sum-ads').innerText = `฿${totalAds.toLocaleString()}`;
             document.getElementById('sum-pct').innerText = totalSales > 0 ? `${((totalAds/totalSales)*100).toFixed(1)}%` : '0%';
@@ -371,37 +373,28 @@
             document.getElementById('sum-inq').innerText = totalInq > 0 ? `฿${(totalAds/totalInq).toFixed(0)}` : '0';
             document.getElementById('sum-roas').innerText = totalAds > 0 ? (totalSales/totalAds).toFixed(2) : '0.0';
 
-            // Top Progress Logic
             const goal = config.monthlyGoal;
             const remaining = Math.max(0, goal - totalSales);
-            const pct = Math.min(100, (totalSales/goal)*100);
+            const pct = Math.min(999, (totalSales/goal)*100); // Allow >100
 
-            // Update Progress Bar UI
+            // Progress Bar Logic
             const bar = document.getElementById('ui-progress-bar');
-            bar.style.width = `${pct}%`;
+            bar.style.width = `${Math.min(100, pct)}%`;
             
-            // Dynamic Color
-            if(pct < 40) bar.className = "progress-bar-fill bg-rose-500";
+            if(pct < 50) bar.className = "progress-bar-fill bg-rose-500";
             else if(pct < 80) bar.className = "progress-bar-fill bg-amber-400";
-            else bar.className = "progress-bar-fill bg-emerald-500";
+            else if(pct < 100) bar.className = "progress-bar-fill bg-emerald-500";
+            else bar.className = "progress-bar-fill bg-purple-600"; // >100% Purple
 
-            const progressText = `฿${totalSales.toLocaleString()} / ขาดอีก ฿${remaining.toLocaleString()}`;
-            document.getElementById('ui-progress-text-fg').innerText = progressText;
-            document.getElementById('ui-progress-text-bg').innerText = progressText; // for empty part
-            
-            // Only show white text if bar is wide enough, else hide
-            if(pct < 20) document.getElementById('ui-progress-text-fg').style.opacity = '0';
-            else document.getElementById('ui-progress-text-fg').style.opacity = '1';
+            document.getElementById('ui-progress-text').innerText = `฿${totalSales.toLocaleString()} / ขาดอีก ฿${remaining.toLocaleString()}`;
 
             document.getElementById('ui-goal').innerText = `฿${goal.toLocaleString()}`;
             document.getElementById('ui-percent').innerText = `${pct.toFixed(1)}%`;
             
-            // Simple Avg logic based on filtered items (just simplistic for now)
             const daysCount = new Set(filteredData.map(d=>d.date)).size || 1;
             const avgActual = totalSales / daysCount;
             document.getElementById('ui-avg-actual').innerText = `฿${avgActual.toLocaleString(undefined, {maximumFractionDigits:0})}`;
             
-            // Req Daily (Simple Logic)
             const now = new Date();
             const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
             const daysLeft = Math.max(1, daysInMonth - now.getDate());
@@ -410,6 +403,7 @@
 
         function renderCards() {
             const container = document.getElementById('product-cards');
+            const showAdvice = document.getElementById('adviceToggle').checked;
             container.innerHTML = '';
             
             PRODUCTS.forEach(p => {
@@ -422,6 +416,20 @@
                 const roas = a > 0 ? s/a : 0;
                 const cpa = o > 0 ? a/o : 0;
 
+                // Advice Logic Per Product
+                let adviceHTML = '';
+                let adviceClass = '';
+                if(pct < 25) {
+                    adviceClass = 'bg-emerald-50 text-emerald-800 border border-emerald-100';
+                    adviceHTML = `<i data-lucide="rocket" size="16" class="text-emerald-600"></i><span><b>Scale Up:</b> เพิ่มงบ 20% แอดถูกมาก!</span>`;
+                } else if(pct > 40) {
+                    adviceClass = 'bg-rose-50 text-rose-800 border border-rose-100';
+                    adviceHTML = `<i data-lucide="alert-triangle" size="16" class="text-rose-600"></i><span><b>Warning:</b> ปิดแอดตัวแพง ด่วน!</span>`;
+                } else {
+                    adviceClass = 'bg-indigo-50 text-indigo-800 border border-indigo-100';
+                    adviceHTML = `<i data-lucide="check-circle" size="16" class="text-indigo-600"></i><span><b>Stable:</b> รักษาระดับ ตอบแชทให้ไว</span>`;
+                }
+
                 container.innerHTML += `
                 <div class="card-stat p-6 ${p.css}">
                     <div class="flex justify-between items-start mb-4"><h3 class="h-bold text-xl text-slate-800">${p.id}</h3><i data-lucide="bar-chart-2" class="text-slate-300"></i></div>
@@ -431,52 +439,14 @@
                         <div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">CPA</span><span class="text-lg h-medium text-slate-600">฿${cpa.toFixed(0)}</span></div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">% ADS</p><p class="text-xl h-black ${pct > 30 ? 'text-rose-500' : 'text-slate-800'}">${pct.toFixed(1)}%</p></div>
-                        <div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">STAT</p><p class="text-xl h-black text-amber-500">${roas.toFixed(1)}</p></div>
+                        <div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">% ADS</p><p class="text-xl h-bold ${pct > 30 ? 'text-rose-500' : 'text-slate-800'}">${pct.toFixed(1)}%</p></div>
+                        <div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">STAT</p><p class="text-xl h-bold text-amber-500">${roas.toFixed(1)}</p></div>
+                    </div>
+                    <div class="advice-badge ${showAdvice ? 'show' : ''} ${adviceClass}">
+                        ${adviceHTML}
                     </div>
                 </div>`;
             });
-        }
-
-        function renderAdvice() {
-            const box = document.getElementById('advice-box');
-            const show = document.getElementById('adviceToggle').checked;
-            
-            if(!show || filteredData.length === 0) {
-                box.classList.add('hidden');
-                return;
-            }
-
-            // Calculate Metrics from FILTERED data
-            const s = filteredData.reduce((a,b)=>a+b.sales,0);
-            const a = filteredData.reduce((a,b)=>a+b.adSpend,0);
-            const pct = s > 0 ? (a/s)*100 : 0;
-            
-            box.classList.remove('hidden');
-            const title = document.getElementById('advice-title');
-            const desc = document.getElementById('advice-desc');
-            const style = document.getElementById('advice-style');
-            const icon = document.getElementById('advice-icon');
-            const stats = document.getElementById('advice-stats');
-            
-            stats.innerText = `Based on: Sales ฿${s.toLocaleString()} | Ads ฿${a.toLocaleString()} (${pct.toFixed(1)}%)`;
-
-            if(pct < 25) {
-                style.className = "relative p-6 rounded-2xl border-l-8 shadow-sm flex items-start gap-4 transition-all bg-emerald-50 border-emerald-500 text-emerald-800";
-                icon.innerHTML = `<i data-lucide="rocket" class="text-emerald-600"></i>`;
-                title.innerText = "🚀 SCALE UP OPPORTUNITY";
-                desc.innerText = "เปอร์เซ็นต์แอดดีมาก! (ต่ำกว่า 25%) คุณควรเพิ่มงบ 20% ทันที หรือขยายกลุ่มเป้าหมาย (Lookalike) ในสินค้าที่ทำยอดได้ดีที่สุดตอนนี้";
-            } else if (pct > 40) {
-                style.className = "relative p-6 rounded-2xl border-l-8 shadow-sm flex items-start gap-4 transition-all bg-rose-50 border-rose-500 text-rose-800";
-                icon.innerHTML = `<i data-lucide="alert-triangle" class="text-rose-600"></i>`;
-                title.innerText = "⚠️ CRITICAL WARNING";
-                desc.innerText = "แอดแพงเกินไป (เกิน 40%)! ให้หยุดแอดตัวที่แพงที่สุดทันที ตรวจสอบ Content และ Offer ใหม่ด่วน อย่าฝืนยิงต่อ";
-            } else {
-                style.className = "relative p-6 rounded-2xl border-l-8 shadow-sm flex items-start gap-4 transition-all bg-indigo-50 border-indigo-500 text-indigo-800";
-                icon.innerHTML = `<i data-lucide="activity" class="text-indigo-600"></i>`;
-                title.innerText = "✅ HEALTHY / STABLE";
-                desc.innerText = "สถานการณ์ปกติ (25-40%) ให้รักษาระดับนี้ไว้ โฟกัสการตอบแชทเพื่อเพิ่มปิดการขาย และมอนิเตอร์อย่าให้แอดดีด";
-            }
         }
 
         function renderTable() {
@@ -521,7 +491,6 @@
             });
         }
 
-        // --- GLOBAL ACTIONS ---
         window.changePage = (dir) => { currentPage += dir; renderTable(); };
         window.saveAdminKey = (val) => localStorage.setItem('ads_admin_key', val);
         window.toggleSidebar = () => document.getElementById('settingsSidebar').classList.toggle('open');
