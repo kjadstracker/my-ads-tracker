@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V6.8 - Secured Lock</title>
+    <title>Ads Cloud Master V6.9 - Goal Editor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -15,9 +15,9 @@
         .h-medium { font-weight: 500; } 
         
         /* LOCK SCREEN STYLE */
-        #lockOverlay { position: fixed; inset: 0; background-color: #0f172a; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.5s; }
+        #lockOverlay { position: fixed; inset: 0; background-color: #0f172a; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.5s ease; }
         
-        /* CARD STYLES (Vertical Fixed) */
+        /* CARD STYLES */
         .card-stat { 
             display: flex; flex-direction: column; justify-content: space-between;
             width: 100%; max-width: 280px; min-height: 500px; 
@@ -26,43 +26,32 @@
             transition: all 0.2s ease; padding: 1.5rem; background: white;
         }
         .card-stat:hover { transform: translateY(-5px); box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.12); }
-        
         .card-betaoil { border-top: 8px solid #f59e0b; background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%); }
         .card-betalife { border-top: 8px solid #78350f; background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%); }
         .card-labfarm { border-top: 8px solid #10b981; background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%); }
 
-        .portfolio-box { background: #0f172a; color: white; border-radius: 1.5rem; }
-        
-        input, select { border: 2px solid #e2e8f0 !important; border-radius: 0.8rem !important; padding: 0.6rem 1rem !important; font-weight: 500 !important; outline: none; transition: all 0.2s; font-size: 0.95rem; }
-        input:focus, select:focus { border-color: #4f46e5 !important; ring: 2px solid #e0e7ff; }
-
-        /* PROGRESS BAR (Solid Green) */
+        /* PROGRESS BAR */
         .progress-bar-bg { background: #e2e8f0; height: 48px; border-radius: 24px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
         .progress-bar-fill { height: 100%; background-color: #10b981; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
         .progress-text-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.4); z-index: 10; pointer-events: none; }
 
-        /* ADVICE VISIBILITY */
         .advice-box { margin-top: 1rem; padding: 1rem; border-radius: 1rem; font-size: 0.85rem; line-height: 1.4; background: rgba(255,255,255,0.9); border: 1px solid rgba(0,0,0,0.05); }
         .advice-hidden { display: none !important; }
         .hidden-force { display: none !important; }
+        .sidebar { position: fixed; top: 0; right: 0; height: 100%; width: 320px; background: white; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transform: translateX(100%); transition: transform 0.3s ease; z-index: 2000; padding: 2rem; }
+        .sidebar.open { transform: translateX(0); }
+        
+        input, select { outline: none; transition: all 0.2s; }
     </style>
 </head>
 <body class="p-4 md:p-8 pb-32">
 
     <div id="lockOverlay">
         <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-sm text-center space-y-6">
-            <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto text-white shadow-lg">
-                <i data-lucide="lock" size="32"></i>
-            </div>
-            <div>
-                <h2 class="text-2xl h-bold text-slate-800">SYSTEM LOCKED</h2>
-                <p class="text-slate-400 text-sm mt-1">Access Restricted</p>
-            </div>
-            
+            <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto text-white shadow-lg"><i data-lucide="lock" size="32"></i></div>
+            <div><h2 class="text-2xl h-bold text-slate-800">SYSTEM LOCKED</h2><p class="text-slate-400 text-sm mt-1">Access Restricted</p></div>
             <div class="space-y-4">
-                <div class="relative">
-                    <input type="password" id="unlockPass" placeholder="ใบ้: kj" class="w-full text-center text-lg py-3 bg-slate-50 border-none focus:ring-2 focus:ring-indigo-500 rounded-xl" onkeyup="if(event.key==='Enter') checkUnlock()">
-                </div>
+                <input type="password" id="unlockPass" placeholder="ใบ้: kj" class="w-full text-center text-lg py-3 bg-slate-50 border-2 border-slate-100 focus:border-indigo-500 rounded-xl" onkeyup="if(event.key==='Enter') checkUnlock()">
                 <button onclick="checkUnlock()" class="w-full py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg hover:bg-indigo-700 transition transform active:scale-95">UNLOCK</button>
                 <p id="unlockMsg" class="text-rose-500 text-sm font-bold hidden">รหัสผ่านผิด!</p>
             </div>
@@ -72,7 +61,7 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V6.8 Final Logic</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V6.9 Goal Editor</p></div></div>
             <div class="flex gap-2">
                 <button onclick="exportJSON()" class="px-4 py-2 bg-slate-800 text-white rounded-lg h-bold text-xs flex items-center gap-2 hover:bg-slate-900 transition"><i data-lucide="download" size="16"></i> Backup</button>
                 <label class="px-4 py-2 bg-amber-500 text-white rounded-lg h-bold text-xs flex items-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload" size="16"></i> Import <input type="file" hidden onchange="importJSON(event)"></label>
@@ -84,11 +73,19 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
                     <div>
                         <div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="target" size="14"></i><span class="text-xs h-bold uppercase">เป้าหมายเดือนนี้</span></div>
-                        <div class="flex items-center">
-                            <span class="text-2xl h-bold text-slate-800 mr-1">฿</span>
-                            <input type="number" id="goalInput" class="text-2xl h-bold text-slate-800 bg-transparent border-none focus:ring-0 p-0 w-full" onchange="updateGoal(this.value)">
+                        
+                        <div id="goalDisplay" class="flex items-center gap-3 group cursor-pointer" onclick="toggleGoalEdit(true)">
+                            <div class="text-4xl h-bold text-slate-800" id="ui-goal">฿0</div>
+                            <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-indigo-50 group-hover:text-indigo-500 transition"><i data-lucide="edit-2" size="16"></i></div>
+                        </div>
+
+                        <div id="goalEdit" class="hidden flex items-center gap-2">
+                            <input type="number" id="goalInput" class="w-full text-xl h-bold text-slate-800 bg-slate-50 border-2 border-indigo-100 rounded-lg px-3 py-1 focus:border-indigo-500" placeholder="ตั้งเป้าหมาย...">
+                            <button onclick="saveGoal()" class="p-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 shadow-sm transition"><i data-lucide="check" size="20"></i></button>
+                            <button onclick="toggleGoalEdit(false)" class="p-2 bg-slate-200 text-slate-500 rounded-lg hover:bg-slate-300 transition"><i data-lucide="x" size="20"></i></button>
                         </div>
                     </div>
+
                     <div><div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="trending-up" size="14"></i><span class="text-xs h-bold uppercase">เฉลี่ยต่อวันจริง</span></div><div class="text-4xl h-bold text-emerald-500" id="ui-avg-actual">฿0</div></div>
                     <div><div class="flex items-center gap-2 text-amber-500 mb-1"><i data-lucide="zap" size="14"></i><span class="text-xs h-bold uppercase">ยอดต้องทำ/วัน</span></div><div class="text-4xl h-bold text-amber-500" id="ui-avg-required">฿0</div></div>
                 </div>
@@ -107,14 +104,14 @@
                 <h3 class="h-bold text-lg mb-6 flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center"><i data-lucide="plus" size="16"></i></div> ลงข้อมูลรายวัน</h3>
                 <form id="adsForm" class="grid grid-cols-2 md:grid-cols-6 gap-4">
                     <input type="hidden" id="editId">
-                    <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="formPageId" class="w-full bg-slate-50"></select></div>
-                    <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">วันที่</label><input type="date" id="formDate" class="w-full bg-slate-50" required></div>
-                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-rose-400 uppercase">ค่าแอด</label><input type="number" id="adSpend" placeholder="0" class="w-full bg-rose-50 text-rose-600 font-bold" step="any"></div>
-                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-emerald-500 uppercase">ยอดขาย</label><input type="number" id="sales" placeholder="0" class="w-full bg-emerald-50 text-emerald-600 font-bold" step="any"></div>
-                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-blue-400 uppercase">ออเดอร์</label><input type="number" id="orders" placeholder="0" class="w-full bg-blue-50 text-blue-600 font-bold"></div>
-                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-amber-400 uppercase">ทัก</label><input type="number" id="inquiries" placeholder="0" class="w-full bg-amber-50 text-amber-600 font-bold"></div>
-                    <div class="col-span-2 md:col-span-4 space-y-1"><input type="text" id="note" placeholder="บันทึกหมายเหตุ..." class="w-full bg-slate-50"></div>
-                    <div class="col-span-2 md:col-span-2 flex items-end gap-2"><button type="button" onclick="resetForm()" id="cancelBtn" class="hidden px-4 py-3 bg-slate-100 text-slate-500 rounded-xl"><i data-lucide="x"></i></button><button type="button" onclick="saveData()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">บันทึกข้อมูล</button></div>
+                    <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="formPageId" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-slate-50"></select></div>
+                    <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">วันที่</label><input type="date" id="formDate" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-slate-50" required></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-rose-400 uppercase">ค่าแอด</label><input type="number" id="adSpend" placeholder="0" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-rose-50 text-rose-600 font-bold" step="any"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-emerald-500 uppercase">ยอดขาย</label><input type="number" id="sales" placeholder="0" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-emerald-50 text-emerald-600 font-bold" step="any"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-blue-400 uppercase">ออเดอร์</label><input type="number" id="orders" placeholder="0" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-blue-50 text-blue-600 font-bold"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-amber-400 uppercase">ทัก</label><input type="number" id="inquiries" placeholder="0" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-amber-50 text-amber-600 font-bold"></div>
+                    <div class="col-span-2 md:col-span-4 space-y-1"><input type="text" id="note" placeholder="บันทึกหมายเหตุ..." class="w-full border-2 border-slate-200 rounded-xl p-2 bg-slate-50"></div>
+                    <div class="col-span-2 md:col-span-2 flex items-end gap-2"><button type="button" onclick="resetForm()" id="cancelBtn" class="hidden-force px-4 py-3 bg-slate-100 text-slate-500 rounded-xl"><i data-lucide="x"></i></button><button type="button" onclick="saveData()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">บันทึกข้อมูล</button></div>
                 </form>
             </div>
         </section>
@@ -151,11 +148,11 @@
             <div class="w-full bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                 <div class="flex items-center gap-2 mb-4"><div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600"><i data-lucide="filter" size="16"></i></div><span class="text-sm h-bold uppercase text-slate-700">Filter Data System</span></div>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">โหมดกรอง</label><select id="filterMode" onchange="toggleFilterInputs()" class="w-full"><option value="month">รายเดือน (Monthly)</option><option value="year">รายปี (Yearly)</option><option value="range">ช่วงเวลา (Date Range)</option><option value="day">วันที่เดียว (Specific Date)</option></select></div>
-                    <div id="filter-month-group" class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full"></select><select id="filterYear" class="w-full"></select></div></div>
-                    <div id="filter-range-group" class="space-y-1 hidden-force col-span-2"><label class="text-[10px] h-bold text-slate-400 uppercase">จากวันที่ - ถึงวันที่</label><div class="flex gap-2"><input type="date" id="filterStart" class="w-full"><input type="date" id="filterEnd" class="w-full"></div></div>
-                    <div id="filter-day-group" class="space-y-1 hidden-force"><label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full"></div>
-                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="filterProduct" class="w-full"><option value="all">ทุกสินค้า</option></select></div>
+                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">โหมดกรอง</label><select id="filterMode" onchange="toggleFilterInputs()" class="w-full border-2 border-slate-200 rounded-xl p-2"><option value="month">รายเดือน (Monthly)</option><option value="year">รายปี (Yearly)</option><option value="range">ช่วงเวลา (Date Range)</option><option value="day">วันที่เดียว (Specific Date)</option></select></div>
+                    <div id="filter-month-group" class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full border-2 border-slate-200 rounded-xl p-2"></select><select id="filterYear" class="w-full border-2 border-slate-200 rounded-xl p-2"></select></div></div>
+                    <div id="filter-range-group" class="space-y-1 hidden-force col-span-2"><label class="text-[10px] h-bold text-slate-400 uppercase">จากวันที่ - ถึงวันที่</label><div class="flex gap-2"><input type="date" id="filterStart" class="w-full border-2 border-slate-200 rounded-xl p-2"><input type="date" id="filterEnd" class="w-full border-2 border-slate-200 rounded-xl p-2"></div></div>
+                    <div id="filter-day-group" class="space-y-1 hidden-force"><label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full border-2 border-slate-200 rounded-xl p-2"></div>
+                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="filterProduct" class="w-full border-2 border-slate-200 rounded-xl p-2"><option value="all">ทุกสินค้า</option></select></div>
                 </div>
             </div>
         </section>
@@ -163,7 +160,7 @@
         <section class="max-w-7xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-20">
             <div class="p-6 border-b flex justify-between items-center bg-slate-50/50"><h3 class="h-bold text-lg text-slate-800 uppercase flex items-center gap-2"><i data-lucide="list" size="18"></i> Transaction History</h3><span class="text-xs bg-slate-200 px-3 py-1 rounded-full h-bold text-slate-600" id="tx-count">0 items</span></div>
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-500 h-bold uppercase"><tr><th class="p-4">Date</th><th class="p-4">Product</th><th class="p-4 text-right">Sales</th><th class="p-4 text-right">Ads</th><th class="p-4 text-right">CPA</th><th class="p-4">Note</th><th class="p-4 text-center">Action</th></tr></thead><tbody id="tableBody" class="divide-y divide-slate-100"></tbody></table>
+                <table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-500 h-bold uppercase"><tr><th class="p-4">Date</th><th class="p-4">Product</th><th class="p-4 text-right">Sales</th><th class="p-4 text-right">Ads</th><th class="p-4 text-right">CPA</th><th class="p-4">By</th><th class="p-4 text-center">Action</th></tr></thead><tbody id="tableBody" class="divide-y divide-slate-100"></tbody></table>
             </div>
             <div class="p-4 bg-white border-t flex justify-between items-center"><p class="text-xs h-medium text-slate-400" id="pageInfo">Page 1 of 1</p><div class="flex gap-2"><button onclick="changePage(-1)" id="prevPageBtn" class="px-4 py-2 bg-slate-100 rounded-lg text-slate-600 hover:bg-slate-200 disabled:opacity-50 h-medium text-xs">Previous</button><button onclick="changePage(1)" id="nextPageBtn" class="px-4 py-2 bg-slate-100 rounded-lg text-slate-600 hover:bg-slate-200 disabled:opacity-50 h-medium text-xs">Next</button></div></div>
         </section>
@@ -177,7 +174,34 @@
         let allData = [], filteredData = [], config = { monthlyGoal: 1000000 }, currentPage = 1; const ITEMS_PER_PAGE = 10;
         const PRODUCTS = [ { id: "เบต้าออยล์", css: "card-betaoil" }, { id: "เบต้าไลฟ์", css: "card-betalife" }, { id: "แล็บฟาร์ม", css: "card-labfarm" } ];
 
-        // --- LOCK SYSTEM LOGIC ---
+        // --- GOAL EDITOR LOGIC ---
+        window.toggleGoalEdit = (show) => {
+            const display = document.getElementById('goalDisplay');
+            const edit = document.getElementById('goalEdit');
+            const input = document.getElementById('goalInput');
+            if(show) {
+                display.classList.add('hidden');
+                edit.classList.remove('hidden');
+                edit.classList.add('flex');
+                input.value = config.monthlyGoal;
+                input.focus();
+            } else {
+                display.classList.remove('hidden');
+                edit.classList.add('hidden');
+                edit.classList.remove('flex');
+            }
+        }
+
+        window.saveGoal = () => {
+            const val = parseFloat(document.getElementById('goalInput').value);
+            if(val > 0) {
+                const k = localStorage.getItem('ads_admin_key');
+                set(ref(db, 'config/monthlyGoal'), val);
+                toggleGoalEdit(false);
+            }
+        }
+
+        // --- LOCK LOGIC ---
         window.checkUnlock = () => {
             const pass = document.getElementById('unlockPass').value;
             if(pass === 'kjondabeat') {
@@ -200,7 +224,7 @@
             const pSelect = document.getElementById('formPageId'); const fSelect = document.getElementById('filterProduct'); PRODUCTS.forEach(p => { pSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`; fSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`; });
             
             ['filterMode','filterMonth','filterYear','filterStart','filterEnd','filterDate','filterProduct'].forEach(id => document.getElementById(id).addEventListener('change', () => { currentPage = 1; renderApp(); }));
-            onValue(ref(db, 'config'), snap => { if(snap.exists()) { config = { ...config, ...snap.val() }; document.getElementById('goalInput').value = config.monthlyGoal; renderApp(); } });
+            onValue(ref(db, 'config'), snap => { if(snap.exists()) { config = { ...config, ...snap.val() }; renderApp(); } }); // Removed goal input value setting here as it's now dynamic
             onValue(ref(db, 'adsData'), snap => { const raw = snap.val(); allData = raw ? Object.keys(raw).map(k => ({...raw[k], id: k})) : []; renderApp(); });
         };
 
@@ -216,11 +240,7 @@
 
         window.toggleAdviceGlobal = () => {
             const isChecked = document.getElementById('adviceToggle').checked;
-            const boxes = document.querySelectorAll('.advice-box');
-            boxes.forEach(box => {
-                if(isChecked) box.classList.remove('advice-hidden');
-                else box.classList.add('advice-hidden');
-            });
+            document.querySelectorAll('.advice-box').forEach(b => b.classList.toggle('advice-hidden', !isChecked));
         };
 
         window.renderApp = () => {
@@ -242,6 +262,7 @@
             document.getElementById('sum-pct').innerText = s > 0 ? `${((a/s)*100).toFixed(1)}%` : '0%'; document.getElementById('sum-cpa').innerText = o > 0 ? `฿${(a/o).toFixed(0)}` : '0';
             document.getElementById('sum-inq').innerText = i > 0 ? `฿${(a/i).toFixed(0)}` : '0'; document.getElementById('sum-roas').innerText = a > 0 ? (s/a).toFixed(2) : '0.0';
             const goal = config.monthlyGoal, remain = Math.max(0, goal - s), pct = (s/goal)*100;
+            document.getElementById('ui-goal').innerText = `฿${goal.toLocaleString()}`; // Update Display Text
             document.getElementById('ui-progress-bar').style.width = `${Math.min(100, pct)}%`;
             document.getElementById('ui-progress-text').innerText = `฿${s.toLocaleString()} / ขาดอีก ฿${remain.toLocaleString()}`;
             document.getElementById('ui-percent').innerText = `${pct.toFixed(1)}%`;
@@ -315,20 +336,19 @@
             paginated.forEach(i => {
                 const cpa = i.orders>0 ? (i.adSpend/i.orders).toFixed(0) : 0; let color = 'border-l-slate-300';
                 if(i.pageId==='เบต้าออยล์') color='border-l-amber-500'; if(i.pageId==='เบต้าไลฟ์') color='border-l-orange-800'; if(i.pageId==='แล็บฟาร์ม') color='border-l-emerald-500';
-                tbody.innerHTML += `<tr class="hover:bg-slate-50 transition border-l-[4px] ${color}"><td class="p-4 h-medium text-slate-700">${new Date(i.date).toLocaleDateString('th-TH')}</td><td class="p-4"><span class="text-xs font-bold px-2 py-1 rounded border bg-white text-slate-500">${i.pageId}</span></td><td class="p-4 text-right h-bold text-emerald-600">฿${i.sales.toLocaleString()}</td><td class="p-4 text-right h-bold text-rose-500">฿${i.adSpend.toLocaleString()}</td><td class="p-4 text-right h-medium text-indigo-600">฿${cpa}</td><td class="p-4 text-slate-400 italic truncate max-w-[150px] text-xs">${i.note||'-'}</td><td class="p-4 text-center flex justify-center gap-2"><button onclick="window.editEntry('${i.id}')" class="text-indigo-400 hover:text-indigo-600"><i data-lucide="edit-3" size="18"></i></button><button onclick="window.deleteEntry('${i.id}')" class="text-rose-400 hover:text-rose-600"><i data-lucide="trash-2" size="18"></i></button></td></tr>`;
+                tbody.innerHTML += `<tr class="hover:bg-slate-50 transition border-l-[4px] ${color}"><td class="p-4 h-medium text-slate-700">${new Date(i.date).toLocaleDateString('th-TH')}</td><td class="p-4"><span class="text-xs font-bold px-2 py-1 rounded border bg-white text-slate-500">${i.pageId}</span></td><td class="p-4 text-right h-bold text-emerald-600">฿${i.sales.toLocaleString()}</td><td class="p-4 text-right h-bold text-rose-500">฿${i.adSpend.toLocaleString()}</td><td class="p-4 text-right h-medium text-indigo-600">฿${cpa}</td><td class="p-4 text-slate-400 italic truncate max-w-[150px] text-xs">${i.note||'-'}</td><td class="p-4 text-center flex justify-center gap-2"><button onclick="window.editEntry('${i.id}')" class="text-indigo-400 hover:text-indigo-600 mr-2"><i data-lucide="edit-3" size="16"></i></button><button onclick="window.deleteEntry('${i.id}')" class="text-rose-400 hover:text-rose-600"><i data-lucide="trash-2" size="16"></i></button></td></tr>`;
             });
             lucide.createIcons();
         }
 
         window.changePage = (d) => { currentPage += d; renderTable(); };
-        window.updateGoal = (v) => { const k = localStorage.getItem('ads_admin_key'); set(ref(db, 'config/monthlyGoal'), parseFloat(v)); };
-        window.resetForm = () => { document.getElementById('adsForm').reset(); document.getElementById('editId').value = ''; document.getElementById('formDate').valueAsDate = new Date(); document.getElementById('cancelBtn').classList.add('hidden'); };
+        window.resetForm = () => { document.getElementById('adsForm').reset(); document.getElementById('editId').value = ''; document.getElementById('formDate').valueAsDate = new Date(); document.getElementById('cancelBtn').classList.add('hidden-force'); };
         window.saveData = async () => {
             const k = localStorage.getItem('ads_admin_key'), id = document.getElementById('editId').value;
             const d = { pageId: document.getElementById('formPageId').value, date: document.getElementById('formDate').value, adSpend: parseFloat(document.getElementById('adSpend').value)||0, sales: parseFloat(document.getElementById('sales').value)||0, orders: parseInt(document.getElementById('orders').value)||0, inquiries: parseInt(document.getElementById('inquiries').value)||0, note: document.getElementById('note').value, securityKey: k, timestamp: Date.now() };
             try { if(id) await update(ref(db, `adsData/${id}`), d); else await push(ref(db, 'adsData'), d); alert("✅ บันทึกสำเร็จ!"); resetForm(); } catch(e) { alert("❌ เซฟไม่สำเร็จ: รหัส Admin ผิด!"); }
         };
-        window.editEntry = (id) => { const d = allData.find(x=>x.id===id); if(!d)return; document.getElementById('editId').value=id; document.getElementById('formPageId').value=d.pageId; document.getElementById('formDate').value=d.date; document.getElementById('adSpend').value=d.adSpend; document.getElementById('sales').value=d.sales; document.getElementById('orders').value=d.orders; document.getElementById('inquiries').value=d.inquiries; document.getElementById('note').value=d.note||''; document.getElementById('cancelBtn').classList.remove('hidden'); window.scrollTo({top:0,behavior:'smooth'}); };
+        window.editEntry = (id) => { const d = allData.find(x=>x.id===id); if(!d)return; document.getElementById('editId').value=id; document.getElementById('formPageId').value=d.pageId; document.getElementById('formDate').value=d.date; document.getElementById('adSpend').value=d.adSpend; document.getElementById('sales').value=d.sales; document.getElementById('orders').value=d.orders; document.getElementById('inquiries').value=d.inquiries; document.getElementById('note').value=d.note||''; document.getElementById('cancelBtn').classList.remove('hidden-force'); window.scrollTo({top:0,behavior:'smooth'}); };
         window.deleteEntry = async (id) => { if(!confirm("ยืนยันลบ?"))return; const k = localStorage.getItem('ads_admin_key'); try { await update(ref(db,`adsData/${id}`),{securityKey:k,sales:null}); await remove(ref(db,`adsData/${id}`)); } catch(e) { alert("❌ ลบไม่ได้: รหัส Admin ผิด!"); } };
         window.exportJSON = () => { const s = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData)); const n = document.createElement('a'); n.setAttribute("href", s); n.setAttribute("download", "backup_ads_data.json"); document.body.appendChild(n); n.click(); n.remove(); };
         window.importJSON = (e) => { const f = e.target.files[0]; if(!f)return; const r = new FileReader(); r.onload = async (ev) => { const j = JSON.parse(ev.target.result), k = localStorage.getItem('ads_admin_key'); if(confirm(`นำเข้า ${j.length} รายการ? (ต้องมี Admin Key)`)) { for(const i of j) { const {id,...c}=i; await push(ref(db,'adsData'),{...c,securityKey:k}); } alert("✅ Import เสร็จสิ้น"); } }; r.readAsText(f); };
