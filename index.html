@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V6.4 - Gradient & Vertical</title>
+    <title>Ads Cloud Master V6.5 - Precision & Vertical</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -14,56 +14,53 @@
         .h-bold { font-weight: 700; } 
         .h-medium { font-weight: 500; } 
         
-        /* --- NEW CARD STYLES (Vertical & Minimal Color) --- */
+        /* --- CARD STYLES (Vertical Fixed) --- */
         .card-stat { 
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-            border-radius: 1.2rem; 
+            justify-content: space-between; /* จัดให้เนื้อหากระจายแนวตั้ง */
+            gap: 1.25rem;
+            border-radius: 1.5rem; 
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             border: 1px solid #f1f5f9; 
             transition: all 0.2s ease; 
             position: relative; 
             overflow: hidden; 
             padding: 1.5rem;
+            min-height: 400px; /* บังคับความสูงขั้นต่ำให้เป็นการ์ดแนวตั้งสวยๆ */
         }
-        .card-stat:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .card-stat:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.1); }
         
-        /* Minimalist Background Tints */
-        .card-betaoil { border-top: 6px solid #f59e0b; background-color: #fffbeb; } /* Amber tint */
-        .card-betalife { border-top: 6px solid #78350f; background-color: #fff7ed; } /* Orange tint */
-        .card-labfarm { border-top: 6px solid #10b981; background-color: #ecfdf5; } /* Emerald tint */
+        .card-betaoil { border-top: 8px solid #f59e0b; background-color: #fffbeb; }
+        .card-betalife { border-top: 8px solid #78350f; background-color: #fff7ed; }
+        .card-labfarm { border-top: 8px solid #10b981; background-color: #ecfdf5; }
 
         .portfolio-box { background: #0f172a; color: white; border-radius: 1.5rem; }
         
         input, select { border: 2px solid #e2e8f0 !important; border-radius: 0.8rem !important; padding: 0.6rem 1rem !important; font-weight: 500 !important; outline: none; transition: all 0.2s; font-size: 0.95rem; }
         input:focus, select:focus { border-color: #4f46e5 !important; ring: 2px solid #e0e7ff; }
 
-        /* --- NEW PROGRESS BAR GRADIENT --- */
+        /* --- PROGRESS BAR (Segmented Hard Cuts) --- */
         .progress-bar-bg { 
             background: #e2e8f0; height: 48px; border-radius: 24px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); 
         }
         .progress-bar-fill { 
             height: 100%; 
-            /* ไล่สีรุ้ง แดง->ส้ม->เหลือง->เขียว->ม่วง */
-            background: linear-gradient(to right, #ef4444, #f97316, #eab308, #22c55e, #a855f7);
+            /* สีตัดกันชัดเจน 4 ระดับ: แดง(0-30%) -> เหลือง(30-60%) -> เขียว(60-90%) -> ม่วง(90-100+) */
+            background: linear-gradient(to right, 
+                #ef4444 0%, #ef4444 30%, 
+                #facc15 30%, #facc15 60%, 
+                #22c55e 60%, #22c55e 90%, 
+                #a855f7 90%, #a855f7 100%
+            );
             transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); 
         }
         .progress-text-overlay { 
-            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.4); z-index: 10; pointer-events: none;
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.5); z-index: 10; pointer-events: none;
         }
 
-        /* --- ADVICE BADGE FIX --- */
-        .advice-badge {
-            margin-top: auto; /* Push to bottom */
-            padding: 0.75rem;
-            border-radius: 0.8rem;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            border: 1px solid transparent;
-        }
+        /* --- ADVICE VISIBILITY CONTROL --- */
+        .advice-container { margin-top: auto; transition: all 0.3s ease; }
         .advice-hidden { display: none !important; }
 
         .sidebar { position: fixed; top: 0; right: 0; height: 100%; width: 320px; background: white; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transform: translateX(100%); transition: transform 0.3s ease; z-index: 2000; padding: 2rem; }
@@ -81,7 +78,7 @@
     </div>
 
     <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V6.4 Gradient & Vertical</p></div></div>
+        <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V6.5 Precision</p></div></div>
         <button onclick="toggleSidebar()" class="w-10 h-10 bg-white border rounded-xl flex items-center justify-center text-slate-500 hover:text-indigo-600 transition shadow-sm"><i data-lucide="settings" size="20"></i></button>
     </header>
 
@@ -124,12 +121,12 @@
         <div class="flex items-center gap-3">
             <span class="text-xs h-bold text-slate-400 uppercase">Show Advice:</span>
             <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" id="adviceToggle" class="sr-only peer" checked onchange="renderCards()">
-                <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                <input type="checkbox" id="adviceToggle" class="sr-only peer" onchange="renderCards()">
+                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
             </label>
         </div>
     </div>
-    <div id="product-cards" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 items-start"></div>
+    <div id="product-cards" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 items-stretch"></div>
 
     <section class="max-w-7xl mx-auto mb-12">
         <div class="portfolio-box p-8 md:p-10 shadow-2xl relative overflow-hidden">
@@ -177,8 +174,7 @@
 
         window.onload = () => {
             lucide.createIcons(); document.getElementById('formDate').valueAsDate = new Date();
-            const today = new Date(); const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-            const mSelect = document.getElementById('filterMonth'); months.forEach((m,i) => mSelect.innerHTML += `<option value="${i+1}" ${i === today.getMonth() ? 'selected' : ''}>${m}</option>`);
+            const today = new Date(); const mSelect = document.getElementById('filterMonth'); ["January","February","March","April","May","June","July","August","September","October","November","December"].forEach((m,i) => mSelect.innerHTML += `<option value="${i+1}" ${i === today.getMonth() ? 'selected' : ''}>${m}</option>`);
             const ySelect = document.getElementById('filterYear'); const currentYear = today.getFullYear(); for(let y=currentYear; y>=2024; y--) ySelect.innerHTML += `<option value="${y}">${y}</option>`;
             document.getElementById('filterDate').valueAsDate = today;
             const pSelect = document.getElementById('formPageId'); const fSelect = document.getElementById('filterProduct'); PRODUCTS.forEach(p => { pSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`; fSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`; });
@@ -218,10 +214,15 @@
             document.getElementById('sum-inq').innerText = i > 0 ? `฿${(a/i).toFixed(0)}` : '0'; document.getElementById('sum-roas').innerText = a > 0 ? (s/a).toFixed(2) : '0.0';
             
             const goal = config.monthlyGoal, remain = Math.max(0, goal - s), pct = (s/goal)*100;
-            document.getElementById('ui-progress-bar').style.width = `${Math.min(100, pct)}%`;
+            const bar = document.getElementById('ui-progress-bar');
+            bar.style.width = `${Math.min(100, pct)}%`;
+            
+            // Hard Cut Colors Logic
+            // Note: The gradient is fixed via CSS, we just adjust width. 
+            // Users sees the colors "revealed" as width increases.
+
             document.getElementById('ui-progress-text').innerText = `฿${s.toLocaleString()} / ขาดอีก ฿${remain.toLocaleString()}`;
             document.getElementById('ui-goal').innerText = `฿${goal.toLocaleString()}`; document.getElementById('ui-percent').innerText = `${pct.toFixed(1)}%`;
-            
             const days = new Set(filteredData.map(d=>d.date)).size || 1; document.getElementById('ui-avg-actual').innerText = `฿${(s/days).toLocaleString(undefined,{maximumFractionDigits:0})}`;
             const now = new Date(), daysInM = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate(), daysLeft = Math.max(1, daysInM - now.getDate());
             document.getElementById('ui-avg-required').innerText = `฿${(remain/daysLeft).toLocaleString(undefined,{maximumFractionDigits:0})}`;
@@ -230,29 +231,63 @@
         function renderCards() {
             const container = document.getElementById('product-cards'), showAdvice = document.getElementById('adviceToggle').checked; container.innerHTML = '';
             PRODUCTS.forEach(p => {
-                const pData = filteredData.filter(d => d.pageId === p.id), s = pData.reduce((a,b)=>a+b.sales,0), a = pData.reduce((a,b)=>a+b.adSpend,0), o = pData.reduce((a,b)=>a+b.orders,0);
-                const pct = s > 0 ? (a/s)*100 : 0, roas = a > 0 ? s/a : 0, cpa = o > 0 ? a/o : 0;
+                const pData = filteredData.filter(d => d.pageId === p.id);
+                const s = pData.reduce((a,b)=>a+b.sales,0);
+                const a = pData.reduce((a,b)=>a+b.adSpend,0);
+                const o = pData.reduce((a,b)=>a+b.orders,0);
                 
+                // Precision Calculation
+                const pct = s > 0 ? (a/s)*100 : 0;
+                const roas = a > 0 ? s/a : 0;
+                const cpa = o > 0 ? a/o : 0;
+
+                // Precision Advice Logic (Strict Rules)
                 let adviceHTML = '', adviceClass = '';
-                if(pct < 25) { adviceClass = 'bg-emerald-50 text-emerald-800 border-emerald-100'; adviceHTML = `<i data-lucide="rocket" size="16" class="text-emerald-600"></i><span><b>Scale Up:</b> เพิ่มงบ 20% แอดถูกมาก!</span>`; }
-                else if(pct > 40) { adviceClass = 'bg-rose-50 text-rose-800 border-rose-100'; adviceHTML = `<i data-lucide="alert-triangle" size="16" class="text-rose-600"></i><span><b>Warning:</b> ปิดแอดตัวแพง ด่วน!</span>`; }
-                else { adviceClass = 'bg-indigo-50 text-indigo-800 border-indigo-100'; adviceHTML = `<i data-lucide="check-circle" size="16" class="text-indigo-600"></i><span><b>Stable:</b> รักษาระดับ ตอบแชทให้ไว</span>`; }
+                // Rule 1: Sales > 0 but Ads very high (>50%) -> Critical
+                if(s > 0 && pct > 50) { 
+                    adviceClass = 'bg-rose-50 text-rose-800 border border-rose-100'; 
+                    adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="x-octagon" class="text-rose-600"></i><span class="h-bold">CRITICAL (${pct.toFixed(1)}%)</span></div><p class="text-xs">แอดกินทุนหนักมาก! ปิดแอดด่วน หรือรื้อโครงสร้างใหม่</p>`; 
+                }
+                // Rule 2: Sales > 0 and Ads High (30-50%) -> Warning
+                else if(s > 0 && pct > 30) {
+                    adviceClass = 'bg-orange-50 text-orange-800 border border-orange-100'; 
+                    adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" class="text-orange-600"></i><span class="h-bold">WARNING (${pct.toFixed(1)}%)</span></div><p class="text-xs">แอดเริ่มแพง เช็คคอนเทนต์/กลุ่มเป้าหมาย</p>`; 
+                }
+                // Rule 3: Sales > 0 and Ads Good (<30%) -> Scale
+                else if(s > 0 && pct <= 30) {
+                    adviceClass = 'bg-emerald-50 text-emerald-800 border border-emerald-100'; 
+                    adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="rocket" class="text-emerald-600"></i><span class="h-bold">SCALE UP (${pct.toFixed(1)}%)</span></div><p class="text-xs">กำไรดี! เพิ่มงบ 20% หรือขยายกลุ่มด่วน</p>`; 
+                }
+                // Rule 4: No Sales but spent money -> Stop
+                else if(s === 0 && a > 0) {
+                    adviceClass = 'bg-slate-100 text-slate-600 border border-slate-200';
+                    adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="pause-circle" class="text-slate-500"></i><span class="h-bold">NO SALES</span></div><p class="text-xs">ยังไม่มียอดขาย หยุดดูสถานการณ์ก่อน</p>`;
+                }
+                else {
+                    adviceClass = 'bg-slate-50 text-slate-400 border border-slate-100';
+                    adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="minus" class="text-slate-400"></i><span class="h-bold">NO DATA</span></div><p class="text-xs">ยังไม่มีข้อมูลสำหรับช่วงเวลานี้</p>`;
+                }
 
                 container.innerHTML += `
                 <div class="card-stat ${p.css}">
-                    <div class="flex justify-between items-start"><h3 class="h-bold text-xl text-slate-800">${p.id}</h3><i data-lucide="bar-chart-2" class="text-slate-300"></i></div>
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ยอดขาย</span><span class="text-2xl h-bold text-emerald-500">฿${s.toLocaleString()}</span></div>
-                        <div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ค่าแอด</span><span class="text-xl h-bold text-rose-500">฿${a.toLocaleString()}</span></div>
-                        <div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">CPA</span><span class="text-lg h-medium text-slate-600">฿${cpa.toFixed(0)}</span></div>
+                    <div>
+                        <div class="flex justify-between items-start mb-6"><h3 class="h-bold text-xl text-slate-800">${p.id}</h3><i data-lucide="bar-chart-2" class="text-slate-300"></i></div>
+                        <div class="space-y-4 mb-6">
+                            <div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ยอดขาย</span><span class="text-2xl h-bold text-emerald-500">฿${s.toLocaleString()}</span></div>
+                            <div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ค่าแอด</span><span class="text-xl h-bold text-rose-500">฿${a.toLocaleString()}</span></div>
+                            <div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">CPA</span><span class="text-lg h-medium text-slate-600">฿${cpa.toFixed(0)}</span></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">% ADS</p><p class="text-xl h-bold ${pct>30?'text-rose-500':'text-slate-800'}">${pct.toFixed(1)}%</p></div>
+                            <div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">STAT</p><p class="text-xl h-bold text-amber-500">${roas.toFixed(1)}</p></div>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-3 mt-auto">
-                        <div class="bg-white/60 rounded-xl p-3 text-center border border-slate-100"><p class="text-[10px] h-bold text-slate-400 uppercase">% ADS</p><p class="text-xl h-bold ${pct>30?'text-rose-500':'text-slate-800'}">${pct.toFixed(1)}%</p></div>
-                        <div class="bg-white/60 rounded-xl p-3 text-center border border-slate-100"><p class="text-[10px] h-bold text-slate-400 uppercase">STAT</p><p class="text-xl h-bold text-amber-500">${roas.toFixed(1)}</p></div>
+                    <div class="advice-container p-3 rounded-xl mt-4 border ${adviceClass} ${showAdvice ? '' : 'advice-hidden'}">
+                        ${adviceHTML}
                     </div>
-                    <div class="advice-badge ${adviceClass} ${showAdvice && s>0 ?'':'advice-hidden'}">${adviceHTML}</div>
                 </div>`;
             });
+            lucide.createIcons();
         }
 
         function renderTable() {
@@ -266,6 +301,7 @@
                 if(i.pageId==='เบต้าออยล์') color='border-l-amber-500'; if(i.pageId==='เบต้าไลฟ์') color='border-l-orange-800'; if(i.pageId==='แล็บฟาร์ม') color='border-l-emerald-500';
                 tbody.innerHTML += `<tr class="hover:bg-slate-50 transition border-l-[4px] ${color}"><td class="p-4 h-medium text-slate-700">${new Date(i.date).toLocaleDateString('th-TH')}</td><td class="p-4"><span class="text-xs font-bold px-2 py-1 rounded border bg-white text-slate-500">${i.pageId}</span></td><td class="p-4 text-right h-bold text-emerald-600">฿${i.sales.toLocaleString()}</td><td class="p-4 text-right h-bold text-rose-500">฿${i.adSpend.toLocaleString()}</td><td class="p-4 text-right h-medium text-indigo-600">฿${cpa}</td><td class="p-4 text-slate-400 italic truncate max-w-[150px] text-xs">${i.note||'-'}</td><td class="p-4 text-center flex justify-center gap-2"><button onclick="window.editEntry('${i.id}')" class="text-indigo-400 hover:text-indigo-600"><i data-lucide="edit-3" size="18"></i></button><button onclick="window.deleteEntry('${i.id}')" class="text-rose-400 hover:text-rose-600"><i data-lucide="trash-2" size="18"></i></button></td></tr>`;
             });
+            lucide.createIcons();
         }
 
         window.changePage = (d) => { currentPage += d; renderTable(); }; window.saveAdminKey = (v) => localStorage.setItem('ads_admin_key', v);
