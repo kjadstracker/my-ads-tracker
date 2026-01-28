@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V6.8 - Secured</title>
+    <title>Ads Cloud Master V6.8 - Secured Lock</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -14,21 +14,16 @@
         .h-bold { font-weight: 700; } 
         .h-medium { font-weight: 500; } 
         
+        /* LOCK SCREEN STYLE */
+        #lockOverlay { position: fixed; inset: 0; background-color: #0f172a; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.5s; }
+        
         /* CARD STYLES (Vertical Fixed) */
         .card-stat { 
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 280px; /* บังคับแนวตั้ง */
-            min-height: 500px; 
-            margin: 0 auto; 
-            border-radius: 1.5rem; 
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
-            border: 1px solid #f1f5f9; 
-            transition: all 0.2s ease; 
-            padding: 1.5rem;
-            background: white;
+            display: flex; flex-direction: column; justify-content: space-between;
+            width: 100%; max-width: 280px; min-height: 500px; 
+            margin: 0 auto; border-radius: 1.5rem; 
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08); border: 1px solid #f1f5f9; 
+            transition: all 0.2s ease; padding: 1.5rem; background: white;
         }
         .card-stat:hover { transform: translateY(-5px); box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.12); }
         
@@ -49,27 +44,25 @@
         /* ADVICE VISIBILITY */
         .advice-box { margin-top: 1rem; padding: 1rem; border-radius: 1rem; font-size: 0.85rem; line-height: 1.4; background: rgba(255,255,255,0.9); border: 1px solid rgba(0,0,0,0.05); }
         .advice-hidden { display: none !important; }
-
-        .sidebar { position: fixed; top: 0; right: 0; height: 100%; width: 320px; background: white; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transform: translateX(100%); transition: transform 0.3s ease; z-index: 2000; padding: 2rem; }
-        .sidebar.open { transform: translateX(0); }
         .hidden-force { display: none !important; }
-        
-        /* LOCK SCREEN STYLE */
-        #lockOverlay { position: fixed; inset: 0; background-color: #0f172a; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s ease; }
     </style>
 </head>
 <body class="p-4 md:p-8 pb-32">
 
     <div id="lockOverlay">
-        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-sm text-center">
-            <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 text-white">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-sm text-center space-y-6">
+            <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto text-white shadow-lg">
                 <i data-lucide="lock" size="32"></i>
             </div>
-            <h2 class="text-2xl h-bold text-slate-800 mb-2">SYSTEM LOCKED</h2>
-            <p class="text-slate-400 text-sm mb-6">กรุณาใส่รหัสผ่านเพื่อเข้าใช้งาน</p>
+            <div>
+                <h2 class="text-2xl h-bold text-slate-800">SYSTEM LOCKED</h2>
+                <p class="text-slate-400 text-sm mt-1">Access Restricted</p>
+            </div>
             
             <div class="space-y-4">
-                <input type="password" id="unlockPass" placeholder="ใบ้: kj" class="w-full text-center text-lg bg-slate-50 border-none focus:ring-2 focus:ring-indigo-500" onkeyup="if(event.key==='Enter') checkUnlock()">
+                <div class="relative">
+                    <input type="password" id="unlockPass" placeholder="ใบ้: kj" class="w-full text-center text-lg py-3 bg-slate-50 border-none focus:ring-2 focus:ring-indigo-500 rounded-xl" onkeyup="if(event.key==='Enter') checkUnlock()">
+                </div>
                 <button onclick="checkUnlock()" class="w-full py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg hover:bg-indigo-700 transition transform active:scale-95">UNLOCK</button>
                 <p id="unlockMsg" class="text-rose-500 text-sm font-bold hidden">รหัสผ่านผิด!</p>
             </div>
@@ -77,22 +70,25 @@
     </div>
 
     <div id="mainContent" style="display: none;">
-        <div id="settingsSidebar" class="sidebar flex flex-col gap-6">
-            <div class="flex justify-between items-center border-b pb-4"><h2 class="h-bold text-xl text-slate-800">ADMIN SETTINGS</h2><button onclick="toggleSidebar()" class="text-slate-400 hover:text-rose-500"><i data-lucide="x" size="24"></i></button></div>
-            <div class="bg-indigo-50 p-5 rounded-2xl border border-indigo-100"><label class="text-xs h-bold text-indigo-600 uppercase mb-2 block">Admin Security Key</label><div class="relative"><input type="password" id="adminKeyInput" placeholder="กรอกรหัส kjondabeat" class="w-full pl-10 text-sm" onchange="saveAdminKey(this.value)"><i data-lucide="lock" size="14" class="absolute left-3 top-3.5 text-indigo-400"></i></div></div>
-            <div class="space-y-2"><label class="text-xs h-bold text-slate-400 uppercase">Monthly Goal</label><input type="number" id="goalInput" class="w-full" onchange="updateGoal(this.value)"></div>
-            <div class="mt-auto"><button onclick="exportJSON()" class="w-full py-3 bg-slate-800 text-white rounded-xl h-bold text-sm flex justify-center gap-2 mb-3"><i data-lucide="download"></i> Backup Data</button><label class="w-full py-3 bg-amber-500 text-white rounded-xl h-bold text-sm flex justify-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload"></i> Import Data <input type="file" hidden onchange="importJSON(event)"></label></div>
-        </div>
-
+        
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
             <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V6.8 Final Logic</p></div></div>
-            <button onclick="toggleSidebar()" class="w-10 h-10 bg-white border rounded-xl flex items-center justify-center text-slate-500 hover:text-indigo-600 transition shadow-sm"><i data-lucide="settings" size="20"></i></button>
+            <div class="flex gap-2">
+                <button onclick="exportJSON()" class="px-4 py-2 bg-slate-800 text-white rounded-lg h-bold text-xs flex items-center gap-2 hover:bg-slate-900 transition"><i data-lucide="download" size="16"></i> Backup</button>
+                <label class="px-4 py-2 bg-amber-500 text-white rounded-lg h-bold text-xs flex items-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload" size="16"></i> Import <input type="file" hidden onchange="importJSON(event)"></label>
+            </div>
         </header>
 
         <section class="max-w-7xl mx-auto mb-10">
             <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 relative overflow-hidden">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                    <div><div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="target" size="14"></i><span class="text-xs h-bold uppercase">เป้าหมายเดือนนี้</span></div><div class="text-4xl h-bold text-slate-800" id="ui-goal">฿0</div></div>
+                    <div>
+                        <div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="target" size="14"></i><span class="text-xs h-bold uppercase">เป้าหมายเดือนนี้</span></div>
+                        <div class="flex items-center">
+                            <span class="text-2xl h-bold text-slate-800 mr-1">฿</span>
+                            <input type="number" id="goalInput" class="text-2xl h-bold text-slate-800 bg-transparent border-none focus:ring-0 p-0 w-full" onchange="updateGoal(this.value)">
+                        </div>
+                    </div>
                     <div><div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="trending-up" size="14"></i><span class="text-xs h-bold uppercase">เฉลี่ยต่อวันจริง</span></div><div class="text-4xl h-bold text-emerald-500" id="ui-avg-actual">฿0</div></div>
                     <div><div class="flex items-center gap-2 text-amber-500 mb-1"><i data-lucide="zap" size="14"></i><span class="text-xs h-bold uppercase">ยอดต้องทำ/วัน</span></div><div class="text-4xl h-bold text-amber-500" id="ui-avg-required">฿0</div></div>
                 </div>
@@ -181,7 +177,7 @@
         let allData = [], filteredData = [], config = { monthlyGoal: 1000000 }, currentPage = 1; const ITEMS_PER_PAGE = 10;
         const PRODUCTS = [ { id: "เบต้าออยล์", css: "card-betaoil" }, { id: "เบต้าไลฟ์", css: "card-betalife" }, { id: "แล็บฟาร์ม", css: "card-labfarm" } ];
 
-        // --- NEW LOCK SYSTEM LOGIC (ADDED HERE) ---
+        // --- LOCK SYSTEM LOGIC ---
         window.checkUnlock = () => {
             const pass = document.getElementById('unlockPass').value;
             if(pass === 'kjondabeat') {
@@ -190,9 +186,7 @@
                     document.getElementById('lockOverlay').style.display = 'none';
                     document.getElementById('mainContent').style.display = 'block';
                 }, 500);
-                // Auto-fill admin key for operations
                 localStorage.setItem('ads_admin_key', pass);
-                if(document.getElementById('adminKeyInput')) document.getElementById('adminKeyInput').value = pass;
             } else {
                 document.getElementById('unlockMsg').classList.remove('hidden');
             }
@@ -205,9 +199,6 @@
             document.getElementById('filterDate').valueAsDate = today;
             const pSelect = document.getElementById('formPageId'); const fSelect = document.getElementById('filterProduct'); PRODUCTS.forEach(p => { pSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`; fSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`; });
             
-            // Set admin key from local storage if available (optional, but forces re-login on refresh if we don't use it. You asked for "must enter code correctly", so we rely on the overlay)
-            // document.getElementById('adminKeyInput').value = localStorage.getItem('ads_admin_key') || ''; 
-
             ['filterMode','filterMonth','filterYear','filterStart','filterEnd','filterDate','filterProduct'].forEach(id => document.getElementById(id).addEventListener('change', () => { currentPage = 1; renderApp(); }));
             onValue(ref(db, 'config'), snap => { if(snap.exists()) { config = { ...config, ...snap.val() }; document.getElementById('goalInput').value = config.monthlyGoal; renderApp(); } });
             onValue(ref(db, 'adsData'), snap => { const raw = snap.val(); allData = raw ? Object.keys(raw).map(k => ({...raw[k], id: k})) : []; renderApp(); });
@@ -224,7 +215,6 @@
         };
 
         window.toggleAdviceGlobal = () => {
-            // Function for Instant Toggle without re-rendering
             const isChecked = document.getElementById('adviceToggle').checked;
             const boxes = document.querySelectorAll('.advice-box');
             boxes.forEach(box => {
@@ -254,7 +244,7 @@
             const goal = config.monthlyGoal, remain = Math.max(0, goal - s), pct = (s/goal)*100;
             document.getElementById('ui-progress-bar').style.width = `${Math.min(100, pct)}%`;
             document.getElementById('ui-progress-text').innerText = `฿${s.toLocaleString()} / ขาดอีก ฿${remain.toLocaleString()}`;
-            document.getElementById('ui-goal').innerText = `฿${goal.toLocaleString()}`; document.getElementById('ui-percent').innerText = `${pct.toFixed(1)}%`;
+            document.getElementById('ui-percent').innerText = `${pct.toFixed(1)}%`;
             const days = new Set(filteredData.map(d=>d.date)).size || 1; document.getElementById('ui-avg-actual').innerText = `฿${(s/days).toLocaleString(undefined,{maximumFractionDigits:0})}`;
             const now = new Date(), daysInM = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate(), daysLeft = Math.max(1, daysInM - now.getDate());
             document.getElementById('ui-avg-required').innerText = `฿${(remain/daysLeft).toLocaleString(undefined,{maximumFractionDigits:0})}`;
@@ -274,24 +264,19 @@
                 const cpa = o > 0 ? a/o : 0;
                 const closeRate = inq > 0 ? (o/inq)*100 : 0;
 
-                // --- PRECISION 70-80% LOGIC ---
                 let adviceHTML = '', adviceClass = '';
                 
                 if (s === 0 && a === 0) {
                     adviceClass = 'text-slate-400 bg-slate-50';
                     adviceHTML = '<span>รอข้อมูล...</span>';
                 } else if (pct < 70) {
-                    // <70% = ดีมาก (ถูกกว่าเป้า) -> Scale Up
                     adviceClass = 'bg-emerald-50 text-emerald-800 border-emerald-100'; 
                     adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="rocket" size="18" class="text-emerald-600"></i><span class="h-bold">กำไรดี (${pct.toFixed(1)}%)</span></div><p class="text-xs">แอดถูกกว่าเป้า 70%! เพิ่มงบยิงแอดได้เลย</p>`;
                 } else if (pct >= 70 && pct <= 80) {
-                    // 70-80% = ตามเป้า -> Maintain
                     adviceClass = 'bg-indigo-50 text-indigo-800 border-indigo-100'; 
                     adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="check-circle" size="18" class="text-indigo-600"></i><span class="h-bold">ตามเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs">อยู่ในเกณฑ์ 70-80% คุมงบและรักษาระดับไว้</p>`;
                 } else {
-                    // >80% = แพง -> Warning
                     adviceClass = 'bg-rose-50 text-rose-800 border-rose-100';
-                    // วิเคราะห์สาเหตุ: ถ้าปิดการขายต่ำกว่า 15% โทษแอดมิน, ถ้าปิดดีแต่แอดยังแพง โทษต้นทุนแอด
                     if (closeRate < 15) { 
                          adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" size="18" class="text-rose-600"></i><span class="h-bold">เกินเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs"><strong>ปรับแอดมินด่วน:</strong> อัตราปิดการขายต่ำ (${closeRate.toFixed(1)}%) ลูกค้าทักเยอะแต่ไม่ซื้อ</p>`;
                     } else {
@@ -335,8 +320,8 @@
             lucide.createIcons();
         }
 
-        window.changePage = (d) => { currentPage += d; renderTable(); }; window.saveAdminKey = (v) => localStorage.setItem('ads_admin_key', v);
-        window.toggleSidebar = () => document.getElementById('settingsSidebar').classList.toggle('open'); window.updateGoal = (v) => { const k = localStorage.getItem('ads_admin_key'); set(ref(db, 'config/monthlyGoal'), parseFloat(v)); };
+        window.changePage = (d) => { currentPage += d; renderTable(); };
+        window.updateGoal = (v) => { const k = localStorage.getItem('ads_admin_key'); set(ref(db, 'config/monthlyGoal'), parseFloat(v)); };
         window.resetForm = () => { document.getElementById('adsForm').reset(); document.getElementById('editId').value = ''; document.getElementById('formDate').valueAsDate = new Date(); document.getElementById('cancelBtn').classList.add('hidden'); };
         window.saveData = async () => {
             const k = localStorage.getItem('ads_admin_key'), id = document.getElementById('editId').value;
