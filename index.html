@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V7.1 - Compatibility Mode</title>
+    <title>Ads Cloud Master V7.1.1 - Soft Wipe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -66,7 +66,7 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V7.1 Compatible</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V7.1.1 Permission Fix</p></div></div>
             <div class="flex gap-2">
                 <button onclick="exportJSON()" class="px-4 py-2 bg-slate-800 text-white rounded-lg h-bold text-xs flex items-center gap-2 hover:bg-slate-900 transition"><i data-lucide="download" size="16"></i> Backup</button>
                 <label class="px-4 py-2 bg-amber-500 text-white rounded-lg h-bold text-xs flex items-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload" size="16"></i> Import (Replace) <input type="file" id="fileInput" hidden onchange="importJSON(event)"></label>
@@ -217,7 +217,6 @@
             document.getElementById('filterDate').valueAsDate = today;
             const pSelect = document.getElementById('formPageId'); const fSelect = document.getElementById('filterProduct'); PRODUCTS.forEach(p => { pSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`; fSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`; });
             
-            // Check Session
             const expiry = localStorage.getItem('ads_session_expiry');
             if(expiry && new Date().getTime() < parseInt(expiry)) unlockApp();
 
@@ -266,20 +265,17 @@
 
         function renderStats() {
             const s = filteredData.reduce((a,b)=>a+b.sales,0), a = filteredData.reduce((a,b)=>a+b.adSpend,0), o = filteredData.reduce((a,b)=>a+b.orders,0), i = filteredData.reduce((a,b)=>a+b.inquiries,0);
-            
             document.getElementById('sum-sales').innerText = `฿${s.toLocaleString()}`; 
             document.getElementById('sum-ads').innerText = `฿${a.toLocaleString()}`;
             document.getElementById('sum-pct').innerText = s > 0 ? `${((a/s)*100).toFixed(1)}%` : '0%'; 
             document.getElementById('sum-cpa').innerText = o > 0 ? `฿${(a/o).toFixed(0)}` : '0';
             document.getElementById('sum-inq').innerText = i > 0 ? `฿${(a/i).toFixed(0)}` : '0'; 
             document.getElementById('sum-roas').innerText = a > 0 ? (s/a).toFixed(2) : '0.0';
-
             const goal = config.monthlyGoal, remain = Math.max(0, goal - s), pct = (s/goal)*100;
             document.getElementById('ui-goal').innerText = `฿${goal.toLocaleString()}`;
             document.getElementById('ui-progress-bar').style.width = `${Math.min(100, pct)}%`;
             document.getElementById('ui-progress-text').innerText = `฿${s.toLocaleString()} / ขาดอีก ฿${remain.toLocaleString()}`;
             document.getElementById('ui-percent').innerText = `${pct.toFixed(1)}%`;
-            
             const days = new Set(filteredData.map(d=>d.date)).size || 1; document.getElementById('ui-avg-actual').innerText = `฿${(s/days).toLocaleString(undefined,{maximumFractionDigits:0})}`;
             const now = new Date(), daysInM = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate(), daysLeft = Math.max(1, daysInM - now.getDate());
             document.getElementById('ui-avg-required').innerText = `฿${(remain/daysLeft).toLocaleString(undefined,{maximumFractionDigits:0})}`;
@@ -297,13 +293,11 @@
                 const roas = a > 0 ? s/a : 0;
                 const cpa = o > 0 ? a/o : 0;
                 const closeRate = inq > 0 ? (o/inq)*100 : 0;
-
                 let adviceHTML = '', adviceClass = '';
                 if (s === 0 && a === 0) { adviceClass = 'text-slate-400 bg-slate-50'; adviceHTML = '<span>รอข้อมูล...</span>'; } 
                 else if (pct < 70) { adviceClass = 'bg-emerald-50 text-emerald-800 border-emerald-100'; adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="rocket" size="18" class="text-emerald-600"></i><span class="h-bold">กำไรดี (${pct.toFixed(1)}%)</span></div><p class="text-xs">แอดถูกกว่าเป้า 70%! เพิ่มงบยิงแอดได้เลย</p>`; } 
                 else if (pct >= 70 && pct <= 80) { adviceClass = 'bg-indigo-50 text-indigo-800 border-indigo-100'; adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="check-circle" size="18" class="text-indigo-600"></i><span class="h-bold">ตามเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs">อยู่ในเกณฑ์ 70-80% คุมงบและรักษาระดับไว้</p>`; } 
                 else { adviceClass = 'bg-rose-50 text-rose-800 border-rose-100'; if (closeRate < 15) { adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" size="18" class="text-rose-600"></i><span class="h-bold">เกินเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs"><strong>ปรับแอดมินด่วน:</strong> อัตราปิดการขายต่ำ (${closeRate.toFixed(1)}%) ลูกค้าทักเยอะแต่ไม่ซื้อ</p>`; } else { adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" size="18" class="text-rose-600"></i><span class="h-bold">เกินเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs"><strong>ปรับแอด:</strong> ต้นทุนแอดสูงเกินไป ปิดตัวกินเงินทิ้ง</p>`; } }
-
                 container.innerHTML += `<div class="card-stat ${p.css}"><div><div class="flex justify-between items-start mb-6"><h3 class="h-bold text-xl text-slate-800">${p.id}</h3><i data-lucide="bar-chart-2" class="text-slate-300"></i></div><div class="space-y-4 mb-6"><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ยอดขาย</span><span class="text-2xl h-bold text-emerald-500">฿${s.toLocaleString()}</span></div><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ค่าแอด</span><span class="text-xl h-bold text-rose-500">฿${a.toLocaleString()}</span></div><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">CPA</span><span class="text-lg h-medium text-slate-600">฿${cpa.toFixed(0)}</span></div></div><div class="grid grid-cols-2 gap-3"><div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">% ADS</p><p class="text-xl h-bold ${pct>80?'text-rose-500':'text-slate-800'}">${pct.toFixed(1)}%</p></div><div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">STAT</p><p class="text-xl h-bold text-amber-500">${roas.toFixed(1)}</p></div></div></div><div class="advice-box ${adviceClass} ${showAdvice ? '' : 'advice-hidden'}">${adviceHTML}</div></div>`;
             });
             lucide.createIcons();
@@ -321,75 +315,65 @@
         window.deleteEntry = async (id) => { if(!confirm("ยืนยันลบ?"))return; const k = localStorage.getItem('ads_admin_key'); try { await update(ref(db,`adsData/${id}`),{securityKey:k,sales:null}); await remove(ref(db,`adsData/${id}`)); } catch(e) { alert("❌ ลบไม่ได้: รหัส Admin ผิด!"); } };
         window.exportJSON = () => { const s = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData)); const n = document.createElement('a'); n.setAttribute("href", s); n.setAttribute("download", "backup_ads_data.json"); document.body.appendChild(n); n.click(); n.remove(); };
         
-        // --- UNIVERSAL IMPORT LOGIC (RECURSIVE SEARCH) ---
-        // ฟังก์ชันนี้จะ "ขุด" หา object ที่มีหน้าตาเหมือนข้อมูล (มี date, มี sales, มี adSpend) ไม่ว่าจะซ่อนอยู่ลึกแค่ไหน
-        function traverseAndFind(node, results = []) {
-            if (node && typeof node === 'object') {
-                // เช็คว่าเป็น Object ที่มีข้อมูลครบไหม? (เช็คแบบไม่สนตัวเล็กตัวใหญ่)
-                const keys = Object.keys(node).map(k => k.toLowerCase());
-                const hasDate = keys.some(k => k.includes('date'));
-                const hasSales = keys.some(k => k.includes('sale'));
-                const hasAds = keys.some(k => k.includes('spend') || k.includes('ads') || k.includes('cost'));
-
-                // ถ้าเจอว่าเป็นข้อมูลแน่ๆ ให้ดึงค่าออกมาเลย
-                if (hasDate && (hasSales || hasAds)) {
-                    // Normalize data (แปลงให้เป็น format มาตรฐานของเรา)
-                    const normalized = {
-                        pageId: node.pageId || node.PageId || node.product || 'General',
-                        date: node.date || node.Date || new Date().toISOString().split('T')[0],
-                        sales: parseFloat(node.sales || node.Sales || node.income || 0),
-                        adSpend: parseFloat(node.adSpend || node.adspend || node.AdSpend || node.cost || 0),
-                        orders: parseInt(node.orders || node.Orders || 0),
-                        inquiries: parseInt(node.inquiries || node.Inquiries || 0),
-                        note: node.note || node.Note || ''
-                    };
-                    results.push(normalized);
-                } else {
-                    // ถ้าไม่ใช่ข้อมูล ให้ขุดลึกลงไปอีก (Recursion)
-                    Object.values(node).forEach(child => traverseAndFind(child, results));
-                }
+        // --- UNIVERSAL IMPORT (Permission Fixed) ---
+        function findRecords(obj, results = []) {
+            if (!obj || typeof obj !== 'object') return results;
+            if (obj.pageId && obj.date && (obj.sales !== undefined || obj.adSpend !== undefined)) {
+                // Normalize data types
+                const clean = {
+                    pageId: obj.pageId,
+                    date: obj.date,
+                    sales: Number(obj.sales) || 0,
+                    adSpend: Number(obj.adSpend) || 0,
+                    orders: Number(obj.orders) || 0,
+                    inquiries: Number(obj.inquiries) || 0,
+                    note: obj.note || ''
+                };
+                results.push(clean);
+                return results;
             }
+            if (Array.isArray(obj)) { obj.forEach(item => findRecords(item, results)); } 
+            else { Object.values(obj).forEach(val => findRecords(val, results)); }
             return results;
         }
 
         window.importJSON = (e) => { 
-            const f = e.target.files[0]; 
-            if(!f) return; 
+            const f = e.target.files[0]; if(!f) return; 
             const r = new FileReader(); 
             r.onload = async (ev) => { 
                 try {
                     const raw = JSON.parse(ev.target.result);
+                    const data = findRecords(raw);
                     
-                    // ใช้ระบบ "จอมดูด" (Traverse) เพื่อหาข้อมูลทั้งหมด
-                    const data = traverseAndFind(raw);
-                    
-                    if(data.length === 0) { 
-                        alert("❌ ไม่พบข้อมูลในไฟล์ (หรือโครงสร้างไม่ถูกต้อง)\nกรุณาตรวจสอบว่าไฟล์มี field: date, sales, adSpend หรือไม่"); 
-                        return; 
-                    }
+                    if(data.length === 0) { alert("❌ ไม่พบข้อมูลในไฟล์ (หรือรูปแบบไม่ถูกต้อง)"); return; }
 
-                    if(confirm(`⚠️ ระบบจะลบข้อมูลเก่าทั้งหมดทิ้ง\nและแทนที่ด้วยข้อมูล ${data.length} รายการ\nยืนยันหรือไม่?`)) {
+                    if(confirm(`⚠️ คำเตือน: ข้อมูลเก่าจะถูกแทนที่\nพบข้อมูลในไฟล์: ${data.length} รายการ\n\nยืนยัน?`)) {
                         document.body.style.cursor = 'wait';
                         
-                        // 1. Wipe Old Data (ล้างบาง)
-                        await set(ref(db, 'adsData'), null);
+                        // 1. SOFT WIPE: ไล่ลบทีละตัว (เพื่อเลี่ยง Permission Denied)
+                        // (ถ้า Rules อนุญาต set null จะเร็วขึ้น แต่แบบนี้ชัวร์กว่า)
+                        if(allData.length > 0) {
+                            for(const item of allData) {
+                                if(item.id) await remove(ref(db, `adsData/${item.id}`));
+                            }
+                        }
 
                         let count = 0;
                         const k = "kjondabeat";
 
-                        // 2. Insert New Data (ใส่ใหม่)
+                        // 2. Insert New Data
                         for(const item of data) {
                             await push(ref(db,'adsData'), {...item, securityKey: k});
                             count++;
                         }
                         
                         document.body.style.cursor = 'default';
-                        alert(`✅ แทนที่ข้อมูลสำเร็จ ${count} รายการ!\n(กำลังรีโหลดหน้าจอ...)`);
+                        alert(`✅ แทนที่ข้อมูลสำเร็จ ${count} รายการ!\n(รีโหลดหน้าจอ...)`);
                         location.reload(); 
                     }
                 } catch(err) {
                     document.body.style.cursor = 'default';
-                    alert(`❌ อ่านไฟล์ไม่ได้: ${err.message}`);
+                    alert(`❌ เกิดข้อผิดพลาด: ${err.message}`);
                     console.error(err);
                 }
                 document.getElementById('fileInput').value = '';
