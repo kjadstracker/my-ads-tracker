@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Tracker V5.0 - Precision Logic Master</title>
+    <title>Ads Tracker V5.3 - Full Control</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -12,23 +12,13 @@
         :root { --base-fsize: 16px; --accent-color: #4f46e5; }
         body { font-family: 'Kanit', sans-serif; background-color: #f1f5f9; font-size: var(--base-fsize); color: #334155; }
         .h-bold { font-weight: 700; color: #0f172a; }
-        .h-medium { font-weight: 500; color: #475569; }
         .card-pro { background: #ffffff; border-radius: 1.5rem; border: 1px solid #e2e8f0; }
         input, select { border: 2.5px solid #cbd5e1 !important; border-radius: 1rem !important; padding: 0.8rem 1.2rem !important; font-weight: 600 !important; }
-        
-        /* Progression Bar Styling */
-        .progress-container { height: 52px; background: #e2e8f0; border-radius: 26px; overflow: hidden; position: relative; border: 4px solid #fff; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
-        .progress-fill { height: 100%; transition: width 1s ease-in-out, background-color 0.5s; }
+        .progress-container { height: 52px; background: #e2e8f0; border-radius: 26px; overflow: hidden; position: relative; border: 4px solid #fff; }
+        .progress-fill { height: 100%; transition: width 1s ease-in-out; }
         .progress-text-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-weight: 500; pointer-events: none; }
-        
-        /* New Scaling Logic Visuals */
-        .advice-box { border-radius: 1rem; border-left: 8px solid; padding: 1.25rem; transition: all 0.3s ease; }
-        .advice-hidden { display: none !important; }
-        
         .sidebar { transform: translateX(100%); transition: transform 0.3s ease; z-index: 1000; }
         .sidebar.open { transform: translateX(0); }
-        
-        /* History Visuals per Product */
         .row-เบต้าออยล์ { background-color: #fffbeb; }
         .row-เบต้าไลฟ์ { background-color: #fff9f2; }
         .row-แล็บฟาร์ม { background-color: #f0fdf4; }
@@ -37,126 +27,84 @@
 <body class="p-4 md:p-10">
 
     <div id="styleSidebar" class="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl border-l sidebar p-8 flex flex-col gap-8">
-        <h3 class="h-bold text-2xl border-b pb-4 text-black text-center">UI CUSTOMIZER</h3>
+        <h3 class="h-bold text-2xl border-b pb-4 text-black text-center">ADMIN SETTINGS</h3>
+        <div class="space-y-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+            <label class="text-xs h-bold uppercase text-indigo-600">Admin Security Key</label>
+            <input type="password" id="adminKeyInput" placeholder="กรอกรหัส kjondabeat" class="w-full text-sm!" onchange="saveAdminKey(this.value)">
+            <p class="text-[10px] text-slate-400 leading-tight">ใส่รหัสที่คุณตั้งใน Firebase เพื่อให้แก้ไข/ลบข้อมูลได้</p>
+        </div>
         <div class="space-y-4">
-            <label class="text-xs h-medium uppercase text-slate-400">ขนาดตัวอักษร</label>
+            <label class="text-xs h-bold text-slate-400 uppercase">ขนาดตัวอักษร</label>
             <input type="range" min="14" max="22" value="16" oninput="liveUpdateFontSize(this.value)" class="w-full accent-indigo-600">
-            <div class="flex justify-between text-[10px] h-bold text-slate-400"><span>14px</span><span id="fSizeLabel">16px</span><span>22px</span></div>
         </div>
-        <div class="space-y-4">
-            <label class="text-xs h-medium uppercase text-slate-400">สีธีมแอป</label>
-            <div class="grid grid-cols-4 gap-3">
-                <button onclick="liveUpdateTheme('#4f46e5')" class="w-10 h-10 rounded-full bg-[#4f46e5]"></button>
-                <button onclick="liveUpdateTheme('#0f172a')" class="w-10 h-10 rounded-full bg-[#0f172a]"></button>
-                <button onclick="liveUpdateTheme('#059669')" class="w-10 h-10 rounded-full bg-[#059669]"></button>
-                <button onclick="liveUpdateTheme('#e11d48')" class="w-10 h-10 rounded-full bg-[#e11d48]"></button>
-            </div>
-        </div>
-        <button onclick="saveStyleToCloud()" class="mt-auto w-full bg-slate-900 text-white py-4 rounded-2xl h-bold shadow-lg">เซฟสไตล์ลงคลาวด์</button>
+        <button onclick="saveStyleToCloud()" class="mt-auto w-full bg-slate-900 text-white py-4 rounded-2xl h-bold shadow-lg">Save Config</button>
     </div>
 
     <header class="max-w-[1600px] mx-auto mb-10 flex flex-col md:flex-row justify-between items-center gap-6">
         <div class="flex items-center gap-5">
-            <div class="p-3.5 rounded-2xl text-white shadow-xl shadow-indigo-100" id="ui-accent-box" style="background: #4f46e5;"><i data-lucide="zap" size="32"></i></div>
+            <div class="p-3.5 rounded-2xl text-white shadow-xl shadow-indigo-100" id="ui-accent-box" style="background: #4f46e5;"><i data-lucide="shield-check" size="32"></i></div>
             <div>
                 <h1 class="text-3xl h-bold uppercase tracking-tighter text-black">ADS CLOUD MASTER</h1>
-                <p class="text-[10px] h-medium uppercase tracking-[0.4em] text-slate-400">The Precision Analytics V5.0</p>
+                <p class="text-[10px] h-medium uppercase tracking-[0.4em] text-slate-400">Full Control V5.3</p>
             </div>
         </div>
         <div class="flex flex-wrap justify-center gap-3">
-            <button onclick="toggleSidebar()" class="p-3 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 transition shadow-sm"><i data-lucide="palette" size="20"></i></button>
-            <button onclick="exportProject()" class="px-6 py-3 rounded-xl bg-slate-800 text-white h-bold text-xs flex items-center gap-2 shadow-lg"><i data-lucide="save" size="18"></i> BACKUP JSON</button>
-            <label class="px-6 py-3 rounded-xl bg-amber-500 text-white h-bold text-xs flex items-center gap-2 cursor-pointer shadow-lg">
-                <i data-lucide="upload" size="18"></i> IMPORT <input type="file" id="importFile" class="hidden" onchange="window.importToCloud(event)">
-            </label>
+            <button onclick="toggleSidebar()" class="p-3 rounded-xl bg-white border border-slate-200 text-slate-500 shadow-sm"><i data-lucide="settings" size="20"></i></button>
+            <button onclick="exportProject()" class="px-6 py-3 rounded-xl bg-slate-800 text-white h-bold text-xs flex items-center gap-2 shadow-lg"><i data-lucide="save" size="18"></i> BACKUP</button>
         </div>
     </header>
 
     <main class="max-w-[1600px] mx-auto space-y-8">
-        
         <section class="card-pro p-8 md:p-10 shadow-sm border-2 border-white">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
-                <div><div class="flex items-center gap-2 mb-2"><p class="text-xs h-medium text-slate-400 uppercase tracking-widest">เป้าหมายเดือนนี้</p><button onclick="editGoalValue()" class="text-indigo-300"><i data-lucide="pencil" size="12"></i></button></div><span id="label-monthly-goal" class="text-5xl h-bold text-black">฿0</span></div>
-                <div><p class="text-xs h-medium text-slate-400 uppercase tracking-widest mb-2">เฉลี่ยต่อวันจริง</p><span id="stat-avg-sales" class="text-5xl h-bold text-emerald-600">฿0</span></div>
-                <div><p class="text-xs h-medium text-amber-600 uppercase tracking-widest mb-2 italic">ยอดต้องทำ/วัน เพื่อถึงเป้า</p><span id="stat-velocity" class="text-5xl h-bold text-amber-500">฿0</span></div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10 text-center md:text-left">
+                <div><p class="text-xs h-bold text-slate-400 uppercase tracking-widest">เป้าหมายเดือนนี้</p><span id="label-monthly-goal" class="text-5xl h-bold text-black">฿0</span></div>
+                <div><p class="text-xs h-bold text-slate-400 uppercase tracking-widest">ยอดปัจจุบัน</p><span id="stat-total-sales" class="text-5xl h-bold text-emerald-600">฿0</span></div>
+                <div><p class="text-xs h-bold text-amber-600 uppercase tracking-widest italic">ยอดที่ต้องทำเพิ่ม</p><span id="stat-remaining" class="text-5xl h-bold text-amber-500">฿0</span></div>
             </div>
-            <div class="space-y-4">
-                <div class="flex justify-between items-baseline"><span class="text-xs h-bold text-slate-400 uppercase tracking-widest">Progression Status</span><span id="progress-percent" class="text-4xl font-black text-black">0%</span></div>
-                <div class="progress-container shadow-inner">
-                    <div id="progress-bar" class="progress-fill" style="width: 0%"></div>
-                    <div class="progress-text-overlay text-lg md:text-xl" id="progress-value-text">฿0 / ขาดอีก ฿0</div>
-                </div>
+            <div class="progress-container shadow-inner">
+                <div id="progress-bar" class="progress-fill" style="width: 0%"></div>
+                <div class="progress-text-overlay text-lg md:text-xl" id="progress-percent-text">0%</div>
             </div>
         </section>
 
-        <section class="card-pro p-8 shadow-2xl border-t-[10px] border-t-indigo-600" id="ui-form-accent">
-            <h2 class="text-xl h-bold mb-8 flex items-center gap-3 uppercase text-black"><i data-lucide="plus-circle" class="text-indigo-600"></i> ลงข้อมูลรายวัน</h2>
+        <section class="card-pro p-8 shadow-2xl border-t-[10px] border-t-indigo-600">
+            <h2 id="form-title" class="text-xl h-bold mb-8 text-black uppercase">ลงข้อมูลรายวัน</h2>
             <form id="adsForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
                 <input type="hidden" id="editId">
                 <div class="flex flex-col gap-2"><label class="text-xs h-bold text-slate-500 uppercase">สินค้า</label><select id="pageId"></select></div>
                 <div class="flex flex-col gap-2"><label class="text-xs h-bold text-slate-500 uppercase">วันที่</label><input type="date" id="date" required></div>
-                <div class="flex flex-col gap-2"><label class="text-xs h-bold text-rose-500 uppercase">ค่าแอด (Ads)</label><input type="number" id="adSpend" placeholder="0.00" step="any"></div>
-                <div class="flex flex-col gap-2"><label class="text-xs h-bold text-emerald-600 uppercase">ยอดขาย (Sales)</label><input type="number" id="sales" placeholder="0.00" step="any"></div>
+                <div class="flex flex-col gap-2"><label class="text-xs h-bold text-rose-500 uppercase">ค่าแอด</label><input type="number" id="adSpend" placeholder="0.00" step="any"></div>
+                <div class="flex flex-col gap-2"><label class="text-xs h-bold text-emerald-600 uppercase">ยอดขาย</label><input type="number" id="sales" placeholder="0.00" step="any"></div>
                 <div class="flex flex-col gap-2"><label class="text-xs h-bold text-blue-500 uppercase">ออเดอร์</label><input type="number" id="orders" placeholder="0"></div>
                 <div class="flex flex-col gap-2"><label class="text-xs h-bold text-amber-500 uppercase">ยอดทัก</label><input type="number" id="inquiries" placeholder="0"></div>
-                <div class="lg:col-span-4 flex flex-col gap-2"><label class="text-xs h-bold text-slate-500 uppercase">หมายเหตุ</label><input type="text" id="note" placeholder="เทคนิคการยิงหรือปัญหาที่เจอ..." class="text-lg!"></div>
+                <div class="lg:col-span-4 flex flex-col gap-2"><input type="text" id="note" placeholder="บันทึกเทคนิคหรือประเด็นวันนี้..." class="text-lg!"></div>
                 <div class="lg:col-span-2 flex items-end gap-3">
-                    <button type="button" onclick="confirmSaveWithCheck()" class="flex-1 bg-indigo-600 text-white py-4 rounded-2xl h-bold text-lg shadow-lg">บันทึกข้อมูลคลาวด์</button>
+                    <button type="button" onclick="confirmSaveWithCheck()" class="flex-1 bg-indigo-600 text-white py-4 rounded-2xl h-bold text-lg shadow-lg">บันทึกข้อมูล</button>
                     <button type="button" id="cancelEditBtn" onclick="resetForm()" class="hidden bg-slate-200 text-slate-600 p-4 rounded-2xl hover:bg-slate-300 transition"><i data-lucide="x-circle" size="24"></i></button>
                 </div>
             </form>
         </section>
 
-        <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <div class="flex items-center gap-3 flex-wrap">
-                <i data-lucide="filter" size="18" class="text-indigo-600"></i>
-                <select id="filterType" onchange="toggleFilterInputs()" class="text-xs h-bold border-none! bg-slate-100 rounded-xl py-2 px-4 focus:ring-0! uppercase">
-                    <option value="monthly">รายเดือน</option><option value="daily">รายวัน</option><option value="range">ช่วงวัน</option><option value="yearly">รายปี</option>
-                </select>
-                <div id="filterInputs" class="flex gap-2 items-center"></div>
-                <select id="pageFilter" onchange="renderApp()" class="text-xs h-bold border-none! bg-slate-100 rounded-xl py-2 px-4 focus:ring-0! ml-2"><option value="all">ทุกเพจสินค้า</option></select>
-            </div>
-            <button onclick="toggleAdvice()" id="toggleAdviceBtn" class="px-5 py-2 text-xs h-bold text-slate-500 flex items-center gap-2 hover:text-indigo-600 transition">
-                <i data-lucide="eye" size="18" id="eyeIcon"></i> <span id="eyeText">ซ่อนคำแนะนำสเกล</span>
-            </button>
-        </div>
-
         <div id="product-cards" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
 
-        <section class="card-pro p-10 bg-slate-900 text-white shadow-2xl border border-slate-800">
-            <h2 class="text-xs h-bold uppercase tracking-[0.5em] text-indigo-400 mb-10 text-center">Portfolio Intelligence Summary</h2>
-            <div id="total-average-container" class="grid grid-cols-2 md:grid-cols-6 gap-8 text-center"></div>
-        </section>
-
         <section class="card-pro overflow-hidden shadow-xl border-2 border-white">
-            <div class="p-6 bg-white border-b border-slate-200 h-bold text-3xl text-black uppercase tracking-widest">
-                History Data Log
-            </div>
+            <div class="p-6 bg-white border-b border-slate-200 h-bold text-3xl text-black uppercase tracking-widest">History Data Log</div>
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-lg font-medium">
-                    <thead class="bg-slate-50 text-slate-600 uppercase h-bold border-b border-slate-200">
-                        <tr>
-                            <th class="p-6 text-base">วันที่</th>
-                            <th class="p-6 text-base">เพจ</th>
-                            <th class="p-6 text-base text-right">ยอดขาย</th>
-                            <th class="p-6 text-base text-right">ค่าแอด</th>
-                            <th class="p-6 text-base text-right text-indigo-600">CPA</th>
-                            <th class="p-6 text-base">หมายเหตุ</th>
-                            <th class="p-6 text-base text-center">จัดการ</th>
-                        </tr>
+                <table class="w-full text-left font-medium">
+                    <thead class="bg-slate-50 text-slate-600 uppercase h-bold border-b">
+                        <tr><th class="p-6 text-base">วันที่</th><th class="p-6 text-base">เพจ</th><th class="p-6 text-base text-right">ยอดขาย</th><th class="p-6 text-base text-right">ค่าแอด</th><th class="p-6 text-base text-right text-indigo-600">CPA</th><th class="p-6 text-base">หมายเหตุ</th><th class="p-6 text-base text-center">จัดการ</th></tr>
                     </thead>
                     <tbody id="dataTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
                 </table>
             </div>
-            <div class="p-6 bg-slate-50 flex justify-between items-center border-t"><p class="text-[11px] h-bold text-slate-400 uppercase tracking-widest" id="paginationInfo"></p><div class="flex gap-2" id="paginationControls"></div></div>
         </section>
     </main>
 
     <div id="confirmModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md hidden z-[1500] flex items-center justify-center p-4">
-        <div class="bg-white p-10 max-w-md w-full rounded-[3rem] border-4 border-slate-900 shadow-2xl text-center">
-            <h3 class="h-bold text-2xl mb-6 italic uppercase text-black" id="confirmTitle">Confirm?</h3>
-            <div id="confirmDetails" class="space-y-4 mb-8 p-6 bg-slate-50 rounded-[2rem] h-medium text-slate-700 text-xl border border-slate-200 text-left font-medium"></div>
-            <div class="flex gap-4"><button onclick="closeModal()" class="flex-1 py-4 rounded-2xl bg-slate-100 h-bold text-slate-400 text-lg">EDIT</button><button onclick="saveData()" class="flex-1 py-4 rounded-2xl bg-slate-900 text-white h-bold shadow-xl">CONFIRM</button></div>
+        <div class="bg-white p-10 max-w-md w-full rounded-[3rem] text-center border-4 border-slate-900 shadow-2xl">
+            <h3 class="h-bold text-2xl mb-6 text-black uppercase">ยืนยันบันทึก?</h3>
+            <div id="confirmDetails" class="mb-8 p-6 bg-slate-50 rounded-[2rem] text-left text-xl font-medium border border-slate-200"></div>
+            <div class="flex gap-4"><button onclick="closeModal()" class="flex-1 py-4 rounded-2xl bg-slate-100 h-bold text-slate-400">แก้ไข</button><button onclick="saveData()" class="flex-1 py-4 rounded-2xl bg-slate-900 text-white h-bold shadow-xl">ยืนยัน</button></div>
         </div>
     </div>
 
@@ -168,33 +116,25 @@
             apiKey: "AIzaSyBMHbzxijgu_fb5NzXb0QtySb6v7U9osu4",
             authDomain: "adstrackerkj.firebaseapp.com",
             databaseURL: "https://adstrackerkj-default-rtdb.asia-southeast1.firebasedatabase.app/",
-            projectId: "adstrackerkj",
-            storageBucket: "adstrackerkj.firebasestorage.app",
-            messagingSenderId: "791146621049",
-            appId: "1:791146621049:web:f2e0c0ec480d1951a24ca8",
-            measurementId: "G-ZBNTZWYCEY"
+            projectId: "adstrackerkj"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        
-        let adsData = [], uiConfig = { monthlyGoal: 1000000, style: { fontSize: '16px', color: '#4f46e5' } };
-        let isAdviceVisible = true; let currentPage = 1; const ITEMS_PER_PAGE = 10;
+        let adsData = [], uiConfig = { monthlyGoal: 1000000 };
         const PRODUCTS = [{ name: "เบต้าออยล์", color: "#f59e0b" },{ name: "เบต้าไลฟ์", color: "#78350f" },{ name: "แล็บฟาร์ม", color: "#10b981" }];
-        const thaiMonths = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
 
         window.onload = () => {
             lucide.createIcons(); document.getElementById('date').valueAsDate = new Date();
-            PRODUCTS.forEach(p => { 
-                document.getElementById('pageId').innerHTML += `<option value="${p.name}">${p.name}</option>`;
-                document.getElementById('pageFilter').innerHTML += `<option value="${p.name}">${p.name}</option>`;
-            });
-            toggleFilterInputs();
+            PRODUCTS.forEach(p => document.getElementById('pageId').innerHTML += `<option value="${p.name}">${p.name}</option>`);
+            document.getElementById('adminKeyInput').value = localStorage.getItem('ads_admin_key') || '';
+            
             onValue(ref(db, 'config'), (snap) => {
-                if(snap.exists()) { uiConfig = snap.val(); if(uiConfig.style) applyLoadedStyle(uiConfig.style); }
+                if(snap.exists()) uiConfig = snap.val();
                 document.getElementById('label-monthly-goal').innerText = `฿${(uiConfig.monthlyGoal || 0).toLocaleString()}`;
                 renderApp();
             });
+
             onValue(ref(db, 'adsData'), (snapshot) => {
                 const data = snapshot.val();
                 adsData = data ? Object.keys(data).map(key => ({...data[key], cloudId: key})) : [];
@@ -202,164 +142,105 @@
             });
         };
 
-        // --- Core Scaling Logic (Improved V5.0) ---
-        function getScalingAdvice(adP, stat, inqC, cpa) {
-            if (adP === 0 || isNaN(adP)) return { msg: "รอการลงข้อมูลเพื่อวิเคราะห์...", color: "text-slate-400", bg: "bg-slate-50", border: "border-slate-300" };
-            
-            // 1. DANGER ZONE (Loss/High Risk)
-            if (adP > 85) return { msg: "วิกฤต! %Ads ทะลุเพดาน หยุดแอดเช็คระบบด่วน", color: "text-rose-600", bg: "bg-rose-50", border: "border-rose-400" };
-            if (adP > 75) return { msg: "แจ้งเตือน: กำไรเริ่มหด %Ads สูงเกินมาตรฐาน", color: "text-rose-500", bg: "bg-rose-50", border: "border-rose-200" };
+        window.saveAdminKey = (val) => localStorage.setItem('ads_admin_key', val);
 
-            // 2. SCALE ZONE (High Profit)
-            if (adP < 45 && stat >= 2.5) return { msg: "โอกาสทอง! READY SCALE อัดงบเพิ่ม 20-30% ได้ทันที", color: "text-emerald-700", bg: "bg-emerald-50", border: "border-emerald-500" };
-            if (adP < 60 && stat >= 2.0) return { msg: "ประสิทธิภาพดี: ผลลัพธ์คุ้มค่า แนะนำให้ค่อยๆ สเกลงบ", color: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-300" };
+        window.saveData = async () => {
+            const key = localStorage.getItem('ads_admin_key');
+            const entry = { 
+                pageId: document.getElementById('pageId').value, 
+                date: document.getElementById('date').value, 
+                adSpend: parseFloat(document.getElementById('adSpend').value) || 0, 
+                sales: parseFloat(document.getElementById('sales').value) || 0, 
+                orders: parseInt(document.getElementById('orders').value) || 0, 
+                inquiries: parseInt(document.getElementById('inquiries').value) || 0, 
+                note: document.getElementById('note').value,
+                securityKey: key, 
+                timestamp: Date.now() 
+            };
+            const editId = document.getElementById('editId').value;
+            try {
+                if(editId) await update(ref(db, `adsData/${editId}`), entry); 
+                else await push(ref(db, 'adsData'), entry);
+                closeModal(); resetForm();
+            } catch (e) { alert("❌ ปฏิเสธการบันทึก: รหัส Admin ไม่ถูกต้อง!"); }
+        };
 
-            // 3. ADMIN / CONVERSION ISSUE
-            if (stat < 1.3 && adP > 65) return { msg: "ปัญหาแอดมิน: ยอดทักเยอะแต่ปิดไม่ได้ ปรับบทพูดด่วน", color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-400" };
+        window.editEntry = (id) => {
+            const e = adsData.find(d => d.cloudId === id);
+            if(!e) return;
+            document.getElementById('editId').value = id;
+            document.getElementById('pageId').value = e.pageId;
+            document.getElementById('date').value = e.date;
+            document.getElementById('adSpend').value = e.adSpend;
+            document.getElementById('sales').value = e.sales;
+            document.getElementById('orders').value = e.orders;
+            document.getElementById('inquiries').value = e.inquiries;
+            document.getElementById('note').value = e.note || '';
+            document.getElementById('form-title').innerText = "แก้ไขข้อมูลรายการ";
+            document.getElementById('cancelEditBtn').classList.remove('hidden');
+            window.scrollTo({ top: 300, behavior: 'smooth' });
+        };
 
-            // 4. CONTENT / LEAD COST ISSUE
-            if (adP > 70 && stat >= 2.0) return { msg: "ปัญหาคอนเทนต์: ทุนทักแพงเกินไป เร่งทำสื่อชุดใหม่", color: "text-amber-600", bg: "bg-amber-50", border: "border-amber-400" };
-
-            // 5. STABLE
-            return { msg: "สถานะทรงตัว: ผลลัพธ์อยู่ในเกณฑ์มาตรฐาน รอดูสถานการณ์", color: "text-slate-500", bg: "bg-slate-50", border: "border-slate-200" };
-        }
+        window.deleteEntry = async (id) => {
+            if(!confirm("ต้องการลบประวัตินี้ออกจากคลาวด์ถาวร?")) return;
+            const key = localStorage.getItem('ads_admin_key');
+            try {
+                await update(ref(db, `adsData/${id}`), { securityKey: key, sales: null, adSpend: null, timestamp: null });
+                await remove(ref(db, `adsData/${id}`));
+            } catch (e) { alert("❌ ลบไม่สำเร็จ: รหัส Admin ไม่ถูกต้อง!"); }
+        };
 
         function renderApp() {
-            const filtered = getFilteredData(); const now = new Date();
-            const currentMonthEntries = adsData.filter(d => new Date(d.date).getMonth() === now.getMonth() && new Date(d.date).getFullYear() === now.getFullYear());
-            const totalMonthSales = currentMonthEntries.reduce((s, i) => s + i.sales, 0);
+            const sorted = adsData.sort((a,b) => new Date(b.date) - new Date(a.date));
+            const totalS = sorted.reduce((s, i) => s + i.sales, 0);
+            const remain = Math.max(0, uiConfig.monthlyGoal - totalS);
+            const pct = Math.min(100, (totalS / uiConfig.monthlyGoal) * 100);
             
-            const totalSalesOnScreen = filtered.reduce((s, i) => s + i.sales, 0);
-            const remainingAmt = Math.max(0, uiConfig.monthlyGoal - totalSalesOnScreen);
-            const progressPct = Math.min(200, (totalSalesOnScreen / uiConfig.monthlyGoal) * 100);
+            document.getElementById('stat-total-sales').innerText = `฿${totalS.toLocaleString()}`;
+            document.getElementById('stat-remaining').innerText = `฿${remain.toLocaleString()}`;
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+            document.getElementById('progress-percent-text').innerText = `${pct.toFixed(1)}%`;
             
-            const pBar = document.getElementById('progress-bar');
-            const pText = document.getElementById('progress-value-text');
-            pBar.style.width = `${Math.min(100, progressPct)}%`;
-            document.getElementById('progress-percent').innerText = `${progressPct.toFixed(1)}%`;
-            pText.innerText = `฿${totalSalesOnScreen.toLocaleString()} / ขาดอีก ฿${remainingAmt.toLocaleString()}`;
-            
-            pBar.className = progressPct < 30 ? "progress-fill bg-rose-500" : progressPct < 75 ? "progress-fill bg-amber-500" : progressPct <= 100 ? "progress-fill bg-emerald-500 shadow-lg" : "progress-fill bg-indigo-600 animate-pulse shadow-xl";
-
-            const daysPassed = [...new Set(currentMonthEntries.map(d => d.date))].length || 1;
-            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-            const remainDays = Math.max(1, lastDay - now.getDate());
-            document.getElementById('stat-avg-sales').innerText = `฿${(totalMonthSales / daysPassed).toLocaleString(undefined, {maximumFractionDigits:0})}`;
-            document.getElementById('stat-velocity').innerText = `฿${Math.max(0, (uiConfig.monthlyGoal - totalMonthSales) / remainDays).toLocaleString(undefined, {maximumFractionDigits:0})}`;
-
-            const cardContainer = document.getElementById('product-cards'); cardContainer.innerHTML = '';
-            let tS=0, tA=0, tO=0, tInq=0;
-
-            PRODUCTS.forEach(p => {
-                const pData = filtered.filter(d => d.pageId === p.name);
-                const s = pData.reduce((sum, i) => sum + i.sales, 0), a = pData.reduce((sum, i) => sum + i.adSpend, 0), o = pData.reduce((sum, i) => sum + i.orders, 0), inq = pData.reduce((sum, i) => sum + i.inquiries, 0);
-                tS += s; tA += a; tO += o; tInq += inq;
-                const adP = s > 0 ? (a/s)*100 : 0, stat = inq > 0 ? (o/inq)*10 : 0, cpa = o > 0 ? (a/o) : 0, cpi = inq > 0 ? (a/inq) : 0;
-                const advice = getScalingAdvice(adP, stat, cpi, cpa);
-
-                cardContainer.innerHTML += `
-                    <div class="card-pro p-6 border-l-[12px] shadow-lg" style="border-left-color: ${p.color}">
-                        <div class="flex justify-between items-center mb-5"><h4 class="text-2xl h-bold uppercase text-slate-800">${p.name}</h4><i data-lucide="line-chart" class="text-slate-200"></i></div>
-                        <div class="space-y-4 mb-6">
-                            <div class="flex justify-between items-end border-b border-slate-50 pb-2"><span class="text-xs h-medium text-slate-400 uppercase">ยอดขาย</span><span class="text-3xl h-bold text-emerald-600">฿${s.toLocaleString()}</span></div>
-                            <div class="flex justify-between items-end border-b border-slate-50 pb-2"><span class="text-xs h-medium text-slate-400 uppercase">ค่าแอด</span><span class="text-3xl h-bold text-rose-500">฿${a.toLocaleString()}</span></div>
-                            <div class="flex justify-between"><span class="text-sm h-medium text-slate-500 uppercase">CPA (ซื้อ)</span><span class="text-lg h-bold text-slate-800">฿${cpa.toFixed(0)}</span></div>
-                            <div class="grid grid-cols-2 gap-2 pt-2"><div class="bg-slate-50 p-4 rounded-2xl text-center"><p class="text-[9px] h-bold text-slate-400 uppercase">% ADS</p><p class="text-2xl h-bold ${adP > 75 ? 'text-rose-600' : 'text-slate-800'}">${adP.toFixed(1)}%</p></div><div class="bg-slate-50 p-4 rounded-2xl text-center"><p class="text-[9px] h-bold text-slate-400 uppercase">STAT</p><p class="text-2xl h-bold text-amber-600">${stat.toFixed(1)}</p></div></div>
-                        </div>
-                        <div class="advice-box ${advice.bg} ${isAdviceVisible ? '' : 'advice-hidden'}" style="border-left-color: ${p.color}">
-                            <p class="text-[10px] h-bold text-slate-400 uppercase mb-1 tracking-widest">Scaling Advice</p>
-                            <p class="h-medium leading-tight ${advice.color}">${advice.msg}</p>
-                        </div>
-                    </div>`;
-            });
-
-            const avgAdP = tS > 0 ? ((tA/tS)*100).toFixed(1) : 0, avgCPA = tO > 0 ? (tA/tO).toFixed(0) : 0, avgCPI = tInq > 0 ? (tA/tInq).toFixed(0) : 0, avgSTAT = tInq > 0 ? ((tO/tInq)*10).toFixed(1) : 0;
-            document.getElementById('total-average-container').innerHTML = `
-                <div><p class="text-[10px] h-medium uppercase text-indigo-300 tracking-widest">Total Sales</p><p class="text-2xl h-bold text-emerald-400">฿${tS.toLocaleString()}</p></div>
-                <div><p class="text-[10px] h-medium uppercase text-indigo-300 tracking-widest">Total Ads</p><p class="text-2xl h-bold text-rose-400">฿${tA.toLocaleString()}</p></div>
-                <div><p class="text-[10px] h-medium uppercase text-indigo-300 tracking-widest">% Ads</p><p class="text-2xl h-bold text-white">${avgAdP}%</p></div>
-                <div><p class="text-[10px] h-medium uppercase text-indigo-300 tracking-widest">Avg CPA</p><p class="text-2xl h-bold text-indigo-300">฿${avgCPA}</p></div>
-                <div><p class="text-[10px] h-medium uppercase text-indigo-300 tracking-widest">Avg Inq</p><p class="text-2xl h-bold text-blue-300">฿${avgCPI}</p></div>
-                <div><p class="text-[10px] h-medium uppercase text-indigo-300 tracking-widest">Avg STAT</p><p class="text-2xl h-bold text-amber-400">${avgSTAT}</p></div>`;
-            
-            renderTable(filtered); lucide.createIcons();
-        }
-
-        window.renderTable = (data) => {
-            const tbody = document.getElementById('dataTableBody'); const total = data.length, totalPages = Math.ceil(total / ITEMS_PER_PAGE) || 1;
-            const start = (currentPage - 1) * ITEMS_PER_PAGE, pageData = data.slice(start, start + ITEMS_PER_PAGE);
-            tbody.innerHTML = '';
-            pageData.forEach(i => {
-                const color = PRODUCTS.find(p=>p.name===i.pageId).color;
+            const tbody = document.getElementById('dataTableBody'); tbody.innerHTML = '';
+            sorted.forEach(i => {
+                const color = PRODUCTS.find(p=>p.name===i.pageId)?.color || '#ccc';
                 tbody.innerHTML += `<tr class="hover:bg-slate-50 transition border-l-[12px] row-${i.pageId}" style="border-left-color: ${color}">
                     <td class="p-6 h-bold text-2xl text-black">${new Date(i.date).toLocaleDateString('th-TH')}</td>
-                    <td class="p-6 text-center"><span class="text-sm h-bold px-3 py-1.5 bg-white border rounded-xl shadow-sm uppercase text-black font-black">${i.pageId}</span></td>
-                    <td class="p-6 h-bold text-emerald-600 text-3xl text-right">฿${i.sales.toLocaleString()}</td>
-                    <td class="p-6 h-bold text-rose-500 font-bold text-right text-2xl">฿${i.adSpend.toLocaleString()}</td>
-                    <td class="p-6 h-bold text-indigo-600 text-4xl text-right font-black">฿${i.orders > 0 ? (i.adSpend/i.orders).toFixed(0) : 0}</td>
-                    <td class="p-6 text-lg h-medium text-black break-words max-w-[350px] font-normal italic leading-tight">${i.note || '-'}</td>
-                    <td class="p-6 text-center"><div class="flex justify-center gap-2">
-                        <button onclick="window.editEntry('${i.cloudId}')" class="p-3 bg-white text-slate-300 hover:text-indigo-600 border rounded-xl shadow-sm transition"><i data-lucide="edit-3" size="28"></i></button>
-                        <button onclick="window.deleteEntry('${i.cloudId}')" class="p-3 bg-white text-slate-300 hover:text-rose-600 border rounded-xl shadow-sm transition"><i data-lucide="trash-2" size="28"></i></button>
-                    </div></td>
+                    <td class="p-6"><span class="text-sm h-bold px-3 py-1 bg-white border rounded-lg shadow-sm text-black font-black">${i.pageId}</span></td>
+                    <td class="p-6 text-right text-3xl h-bold text-emerald-600">฿${i.sales.toLocaleString()}</td>
+                    <td class="p-6 text-right text-2xl h-bold text-rose-500">฿${i.adSpend.toLocaleString()}</td>
+                    <td class="p-6 text-right text-4xl h-bold text-indigo-600">฿${i.orders > 0 ? (i.adSpend/i.orders).toFixed(0) : 0}</td>
+                    <td class="p-6 text-lg h-medium text-black break-words max-w-[300px] italic leading-tight">${i.note || '-'}</td>
+                    <td class="p-6 text-center">
+                        <div class="flex gap-2 justify-center">
+                            <button onclick="window.editEntry('${i.cloudId}')" class="text-indigo-300 hover:text-indigo-600 p-2 transition"><i data-lucide="edit-3" size="28"></i></button>
+                            <button onclick="window.deleteEntry('${i.cloudId}')" class="text-rose-300 hover:text-rose-600 p-2 transition"><i data-lucide="trash-2" size="28"></i></button>
+                        </div>
+                    </td>
                 </tr>`;
             });
-            document.getElementById('paginationInfo').innerText = `PAGE ${currentPage} / ${totalPages} (รวม ${total} รายการ)`;
-            document.getElementById('paginationControls').innerHTML = `<button onclick="window.changePage(-1)" ${currentPage === 1 ? 'disabled' : ''} class="px-5 py-2 bg-white border-2 rounded-xl text-xs h-bold uppercase">Prev</button><button onclick="window.changePage(1)" ${currentPage === totalPages ? 'disabled' : ''} class="px-5 py-2 bg-indigo-600 text-white rounded-xl text-xs h-bold shadow-lg">Next</button>`;
-        };
-
-        // Standard helpers (Keep untouched)
-        window.confirmSaveWithCheck = () => {
-            const page = document.getElementById('pageId').value; const date = document.getElementById('date').value; const editId = document.getElementById('editId').value;
-            const exists = adsData.find(d => d.pageId === page && d.date === date);
-            if(exists && !editId) { document.getElementById('confirmTitle').innerText = "ข้อมูลซ้ำ!"; document.getElementById('confirmDetails').innerHTML = `<p class="text-rose-600 font-bold">เพจ ${page} วันที่ ${date} มีข้อมูลอยู่แล้ว</p><p class="mt-2 text-sm text-slate-400 font-black text-black">บันทึกทับข้อมูลเดิมบน Cloud หรือไม่?</p>`; window.duplicateEntryId = exists.cloudId; }
-            else { document.getElementById('confirmTitle').innerText = "ยืนยันการบันทึกยอด?"; document.getElementById('confirmDetails').innerHTML = `<p>สินค้า: ${page}</p><p>ยอดขาย: ฿${parseFloat(document.getElementById('sales').value || 0).toLocaleString()}</p>`; window.duplicateEntryId = null; }
-            document.getElementById('confirmModal').classList.remove('hidden');
-        };
-        window.saveData = async () => {
-            const entry = { pageId: document.getElementById('pageId').value, date: document.getElementById('date').value, adSpend: parseFloat(document.getElementById('adSpend').value) || 0, sales: parseFloat(document.getElementById('sales').value) || 0, orders: parseInt(document.getElementById('orders').value) || 0, inquiries: parseInt(document.getElementById('inquiries').value) || 0, note: document.getElementById('note').value, timestamp: Date.now() };
-            const editId = document.getElementById('editId').value || window.duplicateEntryId;
-            if(editId) await update(ref(db, `adsData/${editId}`), entry); else await push(ref(db, 'adsData'), entry);
-            closeModal(); resetForm();
-        };
-        window.editEntry = (id) => {
-            const e = adsData.find(d => d.cloudId === id); if (!e) return;
-            document.getElementById('editId').value = id; document.getElementById('pageId').value = e.pageId; document.getElementById('date').value = e.date;
-            document.getElementById('adSpend').value = e.adSpend; document.getElementById('sales').value = e.sales;
-            document.getElementById('orders').value = e.orders; document.getElementById('inquiries').value = e.inquiries; document.getElementById('note').value = e.note || '';
-            document.getElementById('cancelEditBtn').classList.remove('hidden'); window.scrollTo({ top: 300, behavior: 'smooth' });
-        };
-        window.resetForm = () => { document.getElementById('adsForm').reset(); document.getElementById('editId').value = ''; document.getElementById('cancelEditBtn').classList.add('hidden'); document.getElementById('date').valueAsDate = new Date(); };
-        window.deleteEntry = async (id) => { if(confirm("ลบออกจาก Cloud ถาวร?")) await remove(ref(db, `adsData/${id}`)); };
-        function getFilteredData() {
-            const type = document.getElementById('filterType').value, pF = document.getElementById('pageFilter').value; let f = adsData;
-            if (pF !== 'all') f = f.filter(d => d.pageId === pF);
-            if (type === 'daily') { const v = document.getElementById('fDate').value; if (v) f = f.filter(d => d.date === v); }
-            else if (type === 'range') { const s = document.getElementById('fStart').value, e = document.getElementById('fEnd').value; if (s && e) f = f.filter(d => d.date >= s && d.date <= e); }
-            else if (type === 'monthly') { const m = parseInt(document.getElementById('fMonth').value); f = f.filter(d => new Date(d.date).getMonth() === m); }
-            else if (type === 'yearly') { const y = parseInt(document.getElementById('fYear').value); f = f.filter(d => new Date(d.date).getFullYear() === y); }
-            return f.sort((a,b) => new Date(b.date) - new Date(a.date));
+            lucide.createIcons();
         }
-        window.toggleFilterInputs = () => {
-            const type = document.getElementById('filterType').value, container = document.getElementById('filterInputs'), now = new Date(); let html = '';
-            if (type === 'daily') html = `<input type="date" id="fDate" onchange="window.resetPagination()" class="text-xs h-bold py-2 px-3 border border-slate-200 rounded-xl" value="${now.toISOString().split('T')[0]}">`;
-            else if (type === 'range') html = `<input type="date" id="fStart" onchange="window.resetPagination()" class="text-xs h-bold py-2 px-3 border border-slate-200 rounded-xl"><input type="date" id="fEnd" onchange="window.resetPagination()" class="text-xs h-bold py-2 px-3 border border-slate-200 rounded-xl">`;
-            else if (type === 'monthly') { html = `<select id="fMonth" onchange="window.resetPagination()" class="text-xs h-bold py-2 px-3 border border-slate-200 rounded-xl">`; thaiMonths.forEach((m, idx) => html += `<option value="${idx}" ${idx === now.getMonth() ? 'selected' : ''}>${m}</option>`); html += `</select>`; }
-            else if (type === 'yearly') html = `<input type="number" id="fYear" onchange="window.resetPagination()" class="text-xs h-bold py-2 px-3 border border-slate-200 rounded-xl w-24" value="${now.getFullYear()}">`;
-            container.innerHTML = html; window.resetPagination();
-        };
+
         window.toggleSidebar = () => document.getElementById('styleSidebar').classList.toggle('open');
-        window.liveUpdateFontSize = (v) => { document.documentElement.style.setProperty('--base-fsize', `${v}px`); document.getElementById('fSizeLabel').innerText = `${v}px`; };
-        window.liveUpdateTheme = (c) => { document.documentElement.style.setProperty('--accent-color', c); document.getElementById('ui-accent-box').style.background = c; };
-        window.saveStyleToCloud = () => set(ref(db, 'config/style'), { fontSize: getComputedStyle(document.documentElement).getPropertyValue('--base-fsize'), color: getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() });
-        function applyLoadedStyle(s) { liveUpdateFontSize(s.fontSize.replace('px','')); liveUpdateTheme(s.color); }
-        window.editGoalValue = () => { const g = prompt("เป้าหมายใหม่ (บาท):", uiConfig.monthlyGoal); if(g) set(ref(db, 'config/monthlyGoal'), parseFloat(g)); };
-        window.toggleAdvice = () => { isAdviceVisible = !isAdviceVisible; document.getElementById('eyeIcon').setAttribute('data-lucide', isAdviceVisible ? 'eye' : 'eye-off'); document.getElementById('eyeText').innerText = isAdviceVisible ? "ซ่อนคำแนะนำสเกล" : "แสดงคำแนะนำสเกล"; renderApp(); };
+        window.liveUpdateFontSize = (v) => document.documentElement.style.setProperty('--base-fsize', `${v}px`);
+        window.saveStyleToCloud = () => {
+            const key = localStorage.getItem('ads_admin_key');
+            set(ref(db, 'config/style'), { 
+                fontSize: getComputedStyle(document.documentElement).getPropertyValue('--base-fsize'),
+                securityKey: key 
+            }).catch(() => alert("❌ เซฟไม่สำเร็จ: รหัส Admin ผิด!"));
+        };
+        window.confirmSaveWithCheck = () => { document.getElementById('confirmModal').classList.remove('hidden'); };
         window.closeModal = () => document.getElementById('confirmModal').classList.add('hidden');
-        window.changePage = (dir) => { currentPage += dir; renderApp(); };
-        window.resetPagination = () => { currentPage = 1; renderApp(); };
-        window.exportProject = () => { const b = new Blob([JSON.stringify({data: adsData})], {type: 'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `Backup_KJ_V5.json`; a.click(); };
-        window.importToCloud = (e) => { const f = e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = async (ev) => { const l = JSON.parse(ev.target.result).data || []; if(confirm(`อัปโหลด ${l.length} รายการ?`)) { for(let i of l) await push(ref(db, 'adsData'), {...i, timestamp: Date.now()}); alert("Import Done!"); } }; r.readAsText(f); };
+        window.resetForm = () => { 
+            document.getElementById('adsForm').reset(); 
+            document.getElementById('editId').value = ''; 
+            document.getElementById('form-title').innerText = "ลงข้อมูลรายวัน";
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+            document.getElementById('date').valueAsDate = new Date(); 
+        };
+        window.exportProject = () => { const b = new Blob([JSON.stringify({data: adsData})], {type: 'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `Backup_KJ.json`; a.click(); };
     </script>
 </body>
 </html>
