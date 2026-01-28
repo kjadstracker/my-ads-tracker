@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V7.1.1 - Soft Wipe</title>
+    <title>Ads Cloud Master V6.8 - Ultimate</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -14,10 +14,10 @@
         .h-bold { font-weight: 700; } 
         .h-medium { font-weight: 500; } 
         
-        /* LOCK SCREEN */
+        /* --- LOCK SCREEN --- */
         #lockOverlay { position: fixed; inset: 0; background-color: #0f172a; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.5s ease; }
         
-        /* CARD STYLES */
+        /* --- ORIGINAL V6.8 CARD STYLES --- */
         .card-stat { 
             display: flex; flex-direction: column; justify-content: space-between;
             width: 100%; max-width: 280px; min-height: 500px; 
@@ -30,10 +30,8 @@
         .card-betalife { border-top: 8px solid #78350f; background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%); }
         .card-labfarm { border-top: 8px solid #10b981; background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%); }
 
-        /* PORTFOLIO BOX */
         .portfolio-box { background: #0f172a; color: white; border-radius: 1.5rem; position: relative; overflow: hidden; }
-
-        /* PROGRESS BAR */
+        
         .progress-bar-bg { background: #e2e8f0; height: 48px; border-radius: 24px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
         .progress-bar-fill { height: 100%; background-color: #10b981; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
         .progress-text-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.4); z-index: 10; pointer-events: none; }
@@ -44,7 +42,8 @@
         .hidden { display: none; }
         .flex { display: flex; }
         
-        input, select { outline: none; transition: all 0.2s; }
+        input, select { border: 2px solid #e2e8f0 !important; border-radius: 0.8rem !important; padding: 0.6rem 1rem !important; font-weight: 500 !important; outline: none; transition: all 0.2s; font-size: 0.95rem; }
+        input:focus, select:focus { border-color: #4f46e5 !important; ring: 2px solid #e0e7ff; }
         .sidebar { position: fixed; top: 0; right: 0; height: 100%; width: 320px; background: white; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transform: translateX(100%); transition: transform 0.3s ease; z-index: 2000; padding: 2rem; }
         .sidebar.open { transform: translateX(0); }
     </style>
@@ -54,9 +53,9 @@
     <div id="lockOverlay">
         <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-sm text-center space-y-6">
             <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto text-white shadow-lg"><i data-lucide="lock" size="32"></i></div>
-            <div><h2 class="text-2xl h-bold text-slate-800">SYSTEM LOCKED</h2><p class="text-slate-400 text-sm mt-1">Access Restricted</p></div>
+            <div><h2 class="text-2xl h-bold text-slate-800">SYSTEM LOCKED</h2><p class="text-slate-400 text-sm mt-1">กรุณาใส่รหัสเพื่อเข้าใช้งาน</p></div>
             <div class="space-y-4">
-                <input type="password" id="unlockPass" placeholder="ใบ้: kj" class="w-full text-center text-lg py-3 bg-slate-50 border-2 border-slate-100 focus:border-indigo-500 rounded-xl" onkeyup="if(event.key==='Enter') checkUnlock()">
+                <input type="password" id="unlockPass" placeholder="ใบ้: kj" class="w-full text-center text-lg py-3 bg-slate-50 border-none focus:ring-2 focus:ring-indigo-500 rounded-xl" onkeyup="if(event.key==='Enter') checkUnlock()">
                 <button onclick="checkUnlock()" class="w-full py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg hover:bg-indigo-700 transition transform active:scale-95">UNLOCK</button>
                 <p id="unlockMsg" class="text-rose-500 text-sm font-bold hidden">รหัสผ่านผิด!</p>
             </div>
@@ -66,7 +65,7 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V7.1.1 Permission Fix</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V6.8 Ultimate</p></div></div>
             <div class="flex gap-2">
                 <button onclick="exportJSON()" class="px-4 py-2 bg-slate-800 text-white rounded-lg h-bold text-xs flex items-center gap-2 hover:bg-slate-900 transition"><i data-lucide="download" size="16"></i> Backup</button>
                 <label class="px-4 py-2 bg-amber-500 text-white rounded-lg h-bold text-xs flex items-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload" size="16"></i> Import (Replace) <input type="file" id="fileInput" hidden onchange="importJSON(event)"></label>
@@ -88,6 +87,7 @@
                             <button onclick="toggleGoalEdit(false)" class="p-2 bg-slate-200 text-slate-500 rounded-lg hover:bg-slate-300 transition"><i data-lucide="x" size="20"></i></button>
                         </div>
                     </div>
+
                     <div><div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="trending-up" size="14"></i><span class="text-xs h-bold uppercase">เฉลี่ยต่อวันจริง</span></div><div class="text-4xl h-bold text-emerald-500" id="ui-avg-actual">฿0</div></div>
                     <div><div class="flex items-center gap-2 text-amber-500 mb-1"><i data-lucide="zap" size="14"></i><span class="text-xs h-bold uppercase">ยอดต้องทำ/วัน</span></div><div class="text-4xl h-bold text-amber-500" id="ui-avg-required">฿0</div></div>
                 </div>
@@ -103,13 +103,13 @@
                 <h3 class="h-bold text-lg mb-6 flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center"><i data-lucide="plus" size="16"></i></div> ลงข้อมูลรายวัน</h3>
                 <form id="adsForm" class="grid grid-cols-2 md:grid-cols-6 gap-4">
                     <input type="hidden" id="editId">
-                    <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="formPageId" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-slate-50"></select></div>
-                    <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">วันที่</label><input type="date" id="formDate" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-slate-50" required></div>
-                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-rose-400 uppercase">ค่าแอด</label><input type="number" id="adSpend" placeholder="0" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-rose-50 text-rose-600 font-bold" step="any"></div>
-                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-emerald-500 uppercase">ยอดขาย</label><input type="number" id="sales" placeholder="0" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-emerald-50 text-emerald-600 font-bold" step="any"></div>
-                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-blue-400 uppercase">ออเดอร์</label><input type="number" id="orders" placeholder="0" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-blue-50 text-blue-600 font-bold"></div>
-                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-amber-400 uppercase">ทัก</label><input type="number" id="inquiries" placeholder="0" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-amber-50 text-amber-600 font-bold"></div>
-                    <div class="col-span-2 md:col-span-4 space-y-1"><input type="text" id="note" placeholder="บันทึกหมายเหตุ..." class="w-full border-2 border-slate-200 rounded-xl p-2 bg-slate-50"></div>
+                    <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="formPageId" class="w-full bg-slate-50"></select></div>
+                    <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">วันที่</label><input type="date" id="formDate" class="w-full bg-slate-50" required></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-rose-400 uppercase">ค่าแอด</label><input type="number" id="adSpend" placeholder="0" class="w-full bg-rose-50 text-rose-600 font-bold" step="any"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-emerald-500 uppercase">ยอดขาย</label><input type="number" id="sales" placeholder="0" class="w-full bg-emerald-50 text-emerald-600 font-bold" step="any"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-blue-400 uppercase">ออเดอร์</label><input type="number" id="orders" placeholder="0" class="w-full bg-blue-50 text-blue-600 font-bold"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-amber-400 uppercase">ทัก</label><input type="number" id="inquiries" placeholder="0" class="w-full bg-amber-50 text-amber-600 font-bold"></div>
+                    <div class="col-span-2 md:col-span-4 space-y-1"><input type="text" id="note" placeholder="บันทึกหมายเหตุ..." class="w-full bg-slate-50"></div>
                     <div class="col-span-2 md:col-span-2 flex items-end gap-2"><button type="button" onclick="resetForm()" id="cancelBtn" class="hidden-force px-4 py-3 bg-slate-100 text-slate-500 rounded-xl"><i data-lucide="x"></i></button><button type="button" onclick="saveData()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">บันทึกข้อมูล</button></div>
                 </form>
             </div>
@@ -140,11 +140,11 @@
             <div class="w-full bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                 <div class="flex items-center gap-2 mb-4"><div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600"><i data-lucide="filter" size="16"></i></div><span class="text-sm h-bold uppercase text-slate-700">Filter Data System</span></div>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">โหมดกรอง</label><select id="filterMode" onchange="toggleFilterInputs()" class="w-full border-2 border-slate-200 rounded-xl p-2"><option value="month">รายเดือน (Monthly)</option><option value="year">รายปี (Yearly)</option><option value="range">ช่วงเวลา (Date Range)</option><option value="day">วันที่เดียว (Specific Date)</option></select></div>
-                    <div id="filter-month-group" class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full border-2 border-slate-200 rounded-xl p-2"></select><select id="filterYear" class="w-full border-2 border-slate-200 rounded-xl p-2"></select></div></div>
-                    <div id="filter-range-group" class="space-y-1 hidden-force col-span-2"><label class="text-[10px] h-bold text-slate-400 uppercase">จากวันที่ - ถึงวันที่</label><div class="flex gap-2"><input type="date" id="filterStart" class="w-full border-2 border-slate-200 rounded-xl p-2"><input type="date" id="filterEnd" class="w-full border-2 border-slate-200 rounded-xl p-2"></div></div>
-                    <div id="filter-day-group" class="space-y-1 hidden-force"><label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full border-2 border-slate-200 rounded-xl p-2"></div>
-                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="filterProduct" class="w-full border-2 border-slate-200 rounded-xl p-2"><option value="all">ทุกสินค้า</option></select></div>
+                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">โหมดกรอง</label><select id="filterMode" onchange="toggleFilterInputs()" class="w-full bg-slate-50"><option value="month">รายเดือน (Monthly)</option><option value="year">รายปี (Yearly)</option><option value="range">ช่วงเวลา (Date Range)</option><option value="day">วันที่เดียว (Specific Date)</option></select></div>
+                    <div id="filter-month-group" class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full bg-slate-50"></select><select id="filterYear" class="w-full bg-slate-50"></select></div></div>
+                    <div id="filter-range-group" class="space-y-1 hidden-force col-span-2"><label class="text-[10px] h-bold text-slate-400 uppercase">จากวันที่ - ถึงวันที่</label><div class="flex gap-2"><input type="date" id="filterStart" class="w-full bg-slate-50"><input type="date" id="filterEnd" class="w-full bg-slate-50"></div></div>
+                    <div id="filter-day-group" class="space-y-1 hidden-force"><label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full bg-slate-50"></div>
+                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="filterProduct" class="w-full bg-slate-50"><option value="all">ทุกสินค้า</option></select></div>
                 </div>
             </div>
         </section>
@@ -170,6 +170,7 @@
         
         let ignoreRemoteGoal = false;
 
+        // --- GOAL EDITOR (Anti-Bounce) ---
         window.toggleGoalEdit = (show) => {
             const display = document.getElementById('goalDisplay');
             const edit = document.getElementById('goalEdit');
@@ -191,7 +192,7 @@
             }
         }
 
-        // --- SESSION LOGIC (24H) ---
+        // --- LOCK SCREEN (1-Day Session) ---
         window.checkUnlock = () => {
             const pass = document.getElementById('unlockPass').value;
             if(pass === 'kjondabeat') {
@@ -212,11 +213,12 @@
 
         window.onload = () => {
             lucide.createIcons(); document.getElementById('formDate').valueAsDate = new Date();
-            const today = new Date(); const mSelect = document.getElementById('filterMonth'); ["January","February","March","April","May","June","July","August","September","October","November","December"].forEach((m,i) => mSelect.innerHTML += `<option value="${i+1}" ${i === today.getMonth() ? 'selected' : ''}>${m}</option>`);
+            const today = new Date(); const mSelect = document.getElementById('filterMonth'); ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].forEach((m,i) => mSelect.innerHTML += `<option value="${i+1}" ${i === today.getMonth() ? 'selected' : ''}>${m}</option>`);
             const ySelect = document.getElementById('filterYear'); const currentYear = today.getFullYear(); for(let y=currentYear; y>=2024; y--) ySelect.innerHTML += `<option value="${y}">${y}</option>`;
             document.getElementById('filterDate').valueAsDate = today;
             const pSelect = document.getElementById('formPageId'); const fSelect = document.getElementById('filterProduct'); PRODUCTS.forEach(p => { pSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`; fSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`; });
             
+            // Auto Login Check
             const expiry = localStorage.getItem('ads_session_expiry');
             if(expiry && new Date().getTime() < parseInt(expiry)) unlockApp();
 
@@ -295,9 +297,9 @@
                 const closeRate = inq > 0 ? (o/inq)*100 : 0;
                 let adviceHTML = '', adviceClass = '';
                 if (s === 0 && a === 0) { adviceClass = 'text-slate-400 bg-slate-50'; adviceHTML = '<span>รอข้อมูล...</span>'; } 
-                else if (pct < 70) { adviceClass = 'bg-emerald-50 text-emerald-800 border-emerald-100'; adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="rocket" size="18" class="text-emerald-600"></i><span class="h-bold">กำไรดี (${pct.toFixed(1)}%)</span></div><p class="text-xs">แอดถูกกว่าเป้า 70%! เพิ่มงบยิงแอดได้เลย</p>`; } 
-                else if (pct >= 70 && pct <= 80) { adviceClass = 'bg-indigo-50 text-indigo-800 border-indigo-100'; adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="check-circle" size="18" class="text-indigo-600"></i><span class="h-bold">ตามเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs">อยู่ในเกณฑ์ 70-80% คุมงบและรักษาระดับไว้</p>`; } 
-                else { adviceClass = 'bg-rose-50 text-rose-800 border-rose-100'; if (closeRate < 15) { adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" size="18" class="text-rose-600"></i><span class="h-bold">เกินเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs"><strong>ปรับแอดมินด่วน:</strong> อัตราปิดการขายต่ำ (${closeRate.toFixed(1)}%) ลูกค้าทักเยอะแต่ไม่ซื้อ</p>`; } else { adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" size="18" class="text-rose-600"></i><span class="h-bold">เกินเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs"><strong>ปรับแอด:</strong> ต้นทุนแอดสูงเกินไป ปิดตัวกินเงินทิ้ง</p>`; } }
+                else if (pct < 70) { adviceClass = 'bg-emerald-50 text-emerald-800 border-emerald-100'; adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="rocket" size="18" class="text-emerald-600"></i><span class="h-bold">กำไรดี (${pct.toFixed(1)}%)</span></div><p class="text-xs">แอดถูกกว่าเป้าเยอะ! เพิ่มงบยิงแอดได้เลย</p>`; } 
+                else if (pct >= 70 && pct <= 80) { adviceClass = 'bg-indigo-50 text-indigo-800 border-indigo-100'; adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="check-circle" size="18" class="text-indigo-600"></i><span class="h-bold">ตามเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs">อยู่ในเกณฑ์ดี คุมงบและรักษาระดับไว้</p>`; } 
+                else { adviceClass = 'bg-rose-50 text-rose-800 border-rose-100'; if (closeRate < 15) { adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" size="18" class="text-rose-600"></i><span class="h-bold">เกินเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs"><strong>ปรับแอดมินด่วน:</strong> อัตราปิดการขายต่ำ (${closeRate.toFixed(1)}%)</p>`; } else { adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" size="18" class="text-rose-600"></i><span class="h-bold">เกินเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs"><strong>ปรับแอด:</strong> ต้นทุนแอดสูงเกินไป</p>`; } }
                 container.innerHTML += `<div class="card-stat ${p.css}"><div><div class="flex justify-between items-start mb-6"><h3 class="h-bold text-xl text-slate-800">${p.id}</h3><i data-lucide="bar-chart-2" class="text-slate-300"></i></div><div class="space-y-4 mb-6"><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ยอดขาย</span><span class="text-2xl h-bold text-emerald-500">฿${s.toLocaleString()}</span></div><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ค่าแอด</span><span class="text-xl h-bold text-rose-500">฿${a.toLocaleString()}</span></div><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">CPA</span><span class="text-lg h-medium text-slate-600">฿${cpa.toFixed(0)}</span></div></div><div class="grid grid-cols-2 gap-3"><div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">% ADS</p><p class="text-xl h-bold ${pct>80?'text-rose-500':'text-slate-800'}">${pct.toFixed(1)}%</p></div><div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">STAT</p><p class="text-xl h-bold text-amber-500">${roas.toFixed(1)}</p></div></div></div><div class="advice-box ${adviceClass} ${showAdvice ? '' : 'advice-hidden'}">${adviceHTML}</div></div>`;
             });
             lucide.createIcons();
@@ -315,7 +317,7 @@
         window.deleteEntry = async (id) => { if(!confirm("ยืนยันลบ?"))return; const k = localStorage.getItem('ads_admin_key'); try { await update(ref(db,`adsData/${id}`),{securityKey:k,sales:null}); await remove(ref(db,`adsData/${id}`)); } catch(e) { alert("❌ ลบไม่ได้: รหัส Admin ผิด!"); } };
         window.exportJSON = () => { const s = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData)); const n = document.createElement('a'); n.setAttribute("href", s); n.setAttribute("download", "backup_ads_data.json"); document.body.appendChild(n); n.click(); n.remove(); };
         
-        // --- UNIVERSAL IMPORT (Permission Fixed) ---
+        // --- 3. UNIVERSAL IMPORT (AI Deep Search + Soft Wipe) ---
         function findRecords(obj, results = []) {
             if (!obj || typeof obj !== 'object') return results;
             if (obj.pageId && obj.date && (obj.sales !== undefined || obj.adSpend !== undefined)) {
@@ -350,8 +352,7 @@
                     if(confirm(`⚠️ คำเตือน: ข้อมูลเก่าจะถูกแทนที่\nพบข้อมูลในไฟล์: ${data.length} รายการ\n\nยืนยัน?`)) {
                         document.body.style.cursor = 'wait';
                         
-                        // 1. SOFT WIPE: ไล่ลบทีละตัว (เพื่อเลี่ยง Permission Denied)
-                        // (ถ้า Rules อนุญาต set null จะเร็วขึ้น แต่แบบนี้ชัวร์กว่า)
+                        // 1. SOFT WIPE: ไล่ลบทีละตัว (เลี่ยง Permission Denied)
                         if(allData.length > 0) {
                             for(const item of allData) {
                                 if(item.id) await remove(ref(db, `adsData/${item.id}`));
