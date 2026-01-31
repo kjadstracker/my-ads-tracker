@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V8.0 - Report Edition</title>
+    <title>Ads Cloud Master V8.1 - Final Standard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -30,7 +30,7 @@
         .card-betalife { border-top: 6px solid #78350f; background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%); }
         .card-labfarm { border-top: 6px solid #10b981; background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%); }
 
-        /* PORTFOLIO BOX (REPORT STYLE) */
+        /* PORTFOLIO BOX (BIG & THAI) */
         .portfolio-box { 
             background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); 
             color: white; border-radius: 1.5rem; position: relative; overflow: hidden; 
@@ -72,32 +72,14 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V8.0 Report Edition</p></div></div>
-            <button onclick="toggleSidebar()" class="w-10 h-10 bg-white border rounded-xl flex items-center justify-center text-slate-500 hover:text-indigo-600 transition shadow-sm"><i data-lucide="settings" size="20"></i></button>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V8.1 Final Standard</p></div></div>
+            <div class="flex gap-2">
+                <button onclick="exportJSON()" class="px-4 py-2 bg-slate-800 text-white rounded-lg h-bold text-xs flex items-center gap-2 hover:bg-slate-900 transition"><i data-lucide="download" size="16"></i> Backup</button>
+                <label class="px-4 py-2 bg-amber-500 text-white rounded-lg h-bold text-xs flex items-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload" size="16"></i> Import (Replace) <input type="file" id="fileInput" hidden onchange="importJSON(event)"></label>
+            </div>
         </header>
 
-        <div class="max-w-7xl mx-auto mb-6 flex justify-between items-end">
-            <h3 class="h-bold text-xl text-slate-800">Performance Cards</h3>
-            <div class="flex items-center gap-3"><span class="text-xs h-bold text-slate-400 uppercase">Show Advice:</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="adviceToggle" class="sr-only peer" onchange="toggleAdviceGlobal()"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div></label></div>
-        </div>
-        <div id="product-cards" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 items-start justify-center"></div>
-
-        <section class="max-w-7xl mx-auto mb-8">
-            <div class="portfolio-box p-10 md:p-12 shadow-2xl relative overflow-hidden">
-                <div class="portfolio-glow"></div>
-                <h3 class="text-center text-sm h-bold text-indigo-300 uppercase tracking-[0.3em] mb-12 relative z-10">ภาพรวมธุรกิจ (PORTFOLIO SUMMARY)</h3>
-                <div class="grid grid-cols-2 md:grid-cols-6 gap-y-10 gap-x-4 text-center relative z-10">
-                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ยอดขายรวม</p><div class="text-3xl md:text-4xl h-bold text-emerald-400 drop-shadow-lg" id="sum-sales">฿0</div></div>
-                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ค่าแอดรวม</p><div class="text-3xl md:text-4xl h-bold text-rose-400 drop-shadow-lg" id="sum-ads">฿0</div></div>
-                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">% ค่าแอด</p><div class="text-3xl md:text-4xl h-bold text-white drop-shadow-lg" id="sum-pct">0%</div></div>
-                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">CPA เฉลี่ย</p><div class="text-2xl md:text-3xl h-bold text-indigo-400" id="sum-cpa">฿0</div></div>
-                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ทักเฉลี่ย</p><div class="text-2xl md:text-3xl h-bold text-blue-400" id="sum-inq">฿0</div></div>
-                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ROAS เฉลี่ย</p><div class="text-3xl md:text-4xl h-bold text-amber-400 drop-shadow-lg" id="sum-roas">0.0</div></div>
-                </div>
-            </div>
-        </section>
-
-        <section class="max-w-7xl mx-auto mb-12">
+        <section class="max-w-7xl mx-auto mb-10">
             <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 relative overflow-hidden">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
                     <div>
@@ -136,6 +118,27 @@
                     <div class="col-span-2 md:col-span-4 space-y-1"><input type="text" id="note" placeholder="บันทึกหมายเหตุ..." class="w-full bg-slate-50"></div>
                     <div class="col-span-2 md:col-span-2 flex items-end gap-2"><button type="button" onclick="resetForm(true)" id="cancelBtn" class="hidden-force px-4 py-3 bg-slate-100 text-slate-500 rounded-xl"><i data-lucide="x"></i></button><button type="button" onclick="saveData()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">บันทึกข้อมูล</button></div>
                 </form>
+            </div>
+        </section>
+
+        <div class="max-w-7xl mx-auto mb-6 flex justify-between items-end">
+            <h3 class="h-bold text-xl text-slate-800">Performance Cards</h3>
+            <div class="flex items-center gap-3"><span class="text-xs h-bold text-slate-400 uppercase">Show Advice:</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="adviceToggle" class="sr-only peer" onchange="toggleAdviceGlobal()"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div></label></div>
+        </div>
+        <div id="product-cards" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 items-start justify-center"></div>
+
+        <section class="max-w-7xl mx-auto mb-12">
+            <div class="portfolio-box p-10 md:p-12 shadow-2xl relative overflow-hidden">
+                <div class="portfolio-glow"></div>
+                <h3 class="text-center text-sm h-bold text-indigo-300 uppercase tracking-[0.3em] mb-12 relative z-10">ภาพรวมธุรกิจ (PORTFOLIO SUMMARY)</h3>
+                <div class="grid grid-cols-2 md:grid-cols-6 gap-y-10 gap-x-4 text-center relative z-10">
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ยอดขายรวม</p><div class="text-3xl md:text-4xl h-bold text-emerald-400 drop-shadow-lg" id="sum-sales">฿0</div></div>
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ค่าแอดรวม</p><div class="text-3xl md:text-4xl h-bold text-rose-400 drop-shadow-lg" id="sum-ads">฿0</div></div>
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">% ค่าแอด</p><div class="text-3xl md:text-4xl h-bold text-white drop-shadow-lg" id="sum-pct">0%</div></div>
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">CPA เฉลี่ย</p><div class="text-2xl md:text-3xl h-bold text-indigo-400" id="sum-cpa">฿0</div></div>
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ทักเฉลี่ย</p><div class="text-2xl md:text-3xl h-bold text-blue-400" id="sum-inq">฿0</div></div>
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ROAS เฉลี่ย</p><div class="text-3xl md:text-4xl h-bold text-amber-400 drop-shadow-lg" id="sum-roas">0.0</div></div>
+                </div>
             </div>
         </section>
 
