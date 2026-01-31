@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V8.1 - Final Standard</title>
+    <title>Ads Cloud Master V8.2 - Instant Show</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -30,7 +30,7 @@
         .card-betalife { border-top: 6px solid #78350f; background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%); }
         .card-labfarm { border-top: 6px solid #10b981; background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%); }
 
-        /* PORTFOLIO BOX (BIG & THAI) */
+        /* PORTFOLIO BOX */
         .portfolio-box { 
             background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); 
             color: white; border-radius: 1.5rem; position: relative; overflow: hidden; 
@@ -72,11 +72,8 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V8.1 Final Standard</p></div></div>
-            <div class="flex gap-2">
-                <button onclick="exportJSON()" class="px-4 py-2 bg-slate-800 text-white rounded-lg h-bold text-xs flex items-center gap-2 hover:bg-slate-900 transition"><i data-lucide="download" size="16"></i> Backup</button>
-                <label class="px-4 py-2 bg-amber-500 text-white rounded-lg h-bold text-xs flex items-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload" size="16"></i> Import (Replace) <input type="file" id="fileInput" hidden onchange="importJSON(event)"></label>
-            </div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V8.2 Instant Show</p></div></div>
+            <button onclick="toggleSidebar()" class="w-10 h-10 bg-white border rounded-xl flex items-center justify-center text-slate-500 hover:text-indigo-600 transition shadow-sm"><i data-lucide="settings" size="20"></i></button>
         </header>
 
         <section class="max-w-7xl mx-auto mb-10">
@@ -285,7 +282,7 @@
             PRODUCTS.forEach(p=>{
                 const d=filteredData.filter(x=>x.pageId===p.id), s=d.reduce((a,b)=>a+(parseFloat(b.sales)||0),0), a=d.reduce((a,b)=>a+(parseFloat(b.adSpend)||0),0), o=d.reduce((a,b)=>a+(parseInt(b.orders)||0),0), inq=d.reduce((a,b)=>a+(parseInt(b.inquiries)||0),0);
                 const pct=s>0?(a/s)*100:0, roas=a>0?s/a:0, cpa=o>0?a/o:0, cr=inq>0?(o/inq)*100:0;
-                let adv='', cls=''; if(s===0){ cls='bg-slate-50 text-slate-400'; adv='<span>รอข้อมูล...</span>'; } else if(pct<70){ cls='bg-emerald-50 text-emerald-800 border-emerald-100'; adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="rocket" size="18" class="text-emerald-600"></i><span class="h-bold">กำไรดี (${pct.toFixed(1)}%)</span></div><p class="text-xs">แอดถูกกว่าเป้า 70%! เพิ่มงบยิงแอดได้เลย</p>`; } else if(pct>=70 && pct<=80){ cls='bg-indigo-50 text-indigo-800 border-indigo-100'; adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="check-circle" size="18" class="text-indigo-600"></i><span class="h-bold">ตามเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs">อยู่ในเกณฑ์ 70-80% คุมงบและรักษาระดับไว้</p>`; } else { cls='bg-rose-50 text-rose-800 border-rose-100'; adv=cr<15?`<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" size="18" class="text-rose-600"></i><span class="h-bold">เกินเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs"><strong>ปรับแอดมินด่วน:</strong> ปิดการขายต่ำ (${cr.toFixed(1)}%)</p>`:`<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" size="18" class="text-rose-600"></i><span class="h-bold">เกินเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs"><strong>ปรับแอด:</strong> ต้นทุนแอดสูงเกินไป</p>`; }
+                let adv='', cls=''; if(s===0){ cls='bg-slate-50 text-slate-400'; adv='<span>รอข้อมูล...</span>'; } else if(pct<70){ cls='bg-emerald-50 text-emerald-800 border-emerald-100'; adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="rocket" size="18" class="text-emerald-600"></i><span class="h-bold">กำไรดี (${pct.toFixed(1)}%)</span></div><p class="text-xs">แอดถูกกว่าเป้า 70%!</p>`; } else if(pct>=70 && pct<=80){ cls='bg-indigo-50 text-indigo-800 border-indigo-100'; adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="check-circle" size="18" class="text-indigo-600"></i><span class="h-bold">ตามเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs">อยู่ในเกณฑ์ดี</p>`; } else { cls='bg-rose-50 text-rose-800 border-rose-100'; adv=cr<15?`<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" size="18" class="text-rose-600"></i><span class="h-bold">เกินเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs">ปิดการขายต่ำ (${cr.toFixed(1)}%)</p>`:`<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" size="18" class="text-rose-600"></i><span class="h-bold">เกินเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs">ลดต้นทุนแอดด่วน</p>`; }
                 container.innerHTML+=`<div class="card-stat ${p.css}"><div><div class="flex justify-between items-start mb-6"><h3 class="h-bold text-xl text-slate-800">${p.id}</h3><i data-lucide="bar-chart-2" class="text-slate-300"></i></div><div class="space-y-4 mb-6"><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ยอดขาย</span><span class="text-2xl h-bold text-emerald-500">฿${s.toLocaleString()}</span></div><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ค่าแอด</span><span class="text-xl h-bold text-rose-500">฿${a.toLocaleString()}</span></div><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">CPA</span><span class="text-lg h-medium text-slate-600">฿${cpa.toFixed(0)}</span></div></div><div class="grid grid-cols-2 gap-3"><div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">% ADS</p><p class="text-xl h-bold ${pct>80?'text-rose-500':'text-slate-800'}">${pct.toFixed(1)}%</p></div><div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">STAT</p><p class="text-xl h-bold text-amber-500">${roas.toFixed(1)}</p></div></div></div><div class="advice-box ${cls} ${showAdvice?'':'advice-hidden'}">${adv}</div></div>`;
             });
             lucide.createIcons();
@@ -297,7 +294,32 @@
         window.editEntry=(id)=>{const d=allData.find(x=>x.id===id);if(!d)return;document.getElementById('editId').value=id;document.getElementById('formPageId').value=d.pageId;document.getElementById('formDate').value=d.date;document.getElementById('adSpend').value=d.adSpend;document.getElementById('sales').value=d.sales;document.getElementById('orders').value=d.orders;document.getElementById('inquiries').value=d.inquiries;document.getElementById('note').value=d.note||'';document.getElementById('cancelBtn').classList.remove('hidden-force');window.scrollTo({top:0,behavior:'smooth'});};
         window.deleteEntry=async(id)=>{if(!confirm("ยืนยันลบ?"))return;const k=localStorage.getItem('ads_admin_key');try{await update(ref(db,`adsData/${id}`),{securityKey:k,sales:null});await remove(ref(db,`adsData/${id}`));}catch(e){alert("❌ Error: "+e.message);}};
         window.exportJSON=()=>{const s="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(allData));const n=document.createElement('a');n.href=s;n.download="backup_ads_data.json";n.click();};
-        window.importJSON=(e)=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=async(ev)=>{try{const j=JSON.parse(ev.target.result);let dt=[];if(j.data && Array.isArray(j.data))dt=j.data;else if(Array.isArray(j))dt=j;else if(typeof j==='object')dt=Object.values(j);if(dt.length===0){alert("❌ ไม่พบข้อมูล");return;}if(confirm(`นำเข้า ${dt.length} รายการ (ล้างของเก่า)?`)){document.body.style.cursor='wait';if(allData.length>0)for(const i of allData)if(i.id)await remove(ref(db,`adsData/${i.id}`));const k="kjondabeat";for(const i of dt)await push(ref(db,'adsData'),{...i,securityKey:k});document.body.style.cursor='default';alert("✅ Import สำเร็จ");location.reload();}}catch(e){document.body.style.cursor='default';alert("Error: "+e.message);}document.getElementById('fileInput').value='';};r.readAsText(f);};
+        
+        // --- IMPORT (Fixed No-Reload) ---
+        window.importJSON=(e)=>{
+            const f=e.target.files[0]; if(!f)return;
+            const r=new FileReader();
+            r.onload=async(ev)=>{
+                try{
+                    const j=JSON.parse(ev.target.result);
+                    let dt=[]; if(j.data && Array.isArray(j.data))dt=j.data; else if(Array.isArray(j))dt=j; else if(typeof j==='object')dt=Object.values(j);
+                    if(dt.length===0){alert("❌ ไม่พบข้อมูล");return;}
+                    if(confirm(`นำเข้า ${dt.length} รายการ (ล้างของเก่า)?`)){
+                        document.body.style.cursor='wait';
+                        if(allData.length>0)for(const i of allData)if(i.id)await remove(ref(db,`adsData/${i.id}`));
+                        const k="kjondabeat";
+                        for(const i of dt) await push(ref(db,'adsData'),{...i,securityKey:k});
+                        document.body.style.cursor='default'; alert("✅ Import สำเร็จ! (กำลังอัปเดตหน้าจอ...)");
+                        
+                        // AUTO-ADJUST VIEW TO SEE DATA
+                        document.getElementById('filterMode').value='year'; // Show Year to ensure data is visible
+                        const t=new Date(); document.getElementById('filterYearOnly').value=t.getFullYear();
+                        window.toggleFilterInputs(); // Refresh
+                    }
+                }catch(e){ document.body.style.cursor='default'; alert("Error: "+e.message); }
+                document.getElementById('fileInput').value='';
+            }; r.readAsText(f);
+        };
     </script>
 </body>
 </html>
