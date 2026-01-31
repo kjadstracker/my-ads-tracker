@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V7.2 - File Unlock</title>
+    <title>Ads Cloud Master V7.4 - Direct Import</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -30,20 +30,16 @@
         .card-betalife { border-top: 8px solid #78350f; background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%); }
         .card-labfarm { border-top: 8px solid #10b981; background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%); }
 
-        /* PORTFOLIO BOX */
+        /* PORTFOLIO & UI */
         .portfolio-box { background: #0f172a; color: white; border-radius: 1.5rem; position: relative; overflow: hidden; }
-
-        /* PROGRESS BAR */
         .progress-bar-bg { background: #e2e8f0; height: 48px; border-radius: 24px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
         .progress-bar-fill { height: 100%; background-color: #10b981; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
         .progress-text-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.4); z-index: 10; pointer-events: none; }
-
         .advice-box { margin-top: 1rem; padding: 1rem; border-radius: 1rem; font-size: 0.85rem; line-height: 1.4; background: rgba(255,255,255,0.9); border: 1px solid rgba(0,0,0,0.05); }
         .advice-hidden { display: none !important; }
         .hidden { display: none; }
         .flex { display: flex; }
-        
-        input, select { outline: none; transition: all 0.2s; }
+        input, select { border: 2px solid #e2e8f0 !important; border-radius: 0.8rem !important; padding: 0.6rem 1rem !important; outline: none; transition: all 0.2s; font-size: 0.95rem; }
         .sidebar { position: fixed; top: 0; right: 0; height: 100%; width: 320px; background: white; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transform: translateX(100%); transition: transform 0.3s ease; z-index: 2000; padding: 2rem; }
         .sidebar.open { transform: translateX(0); }
     </style>
@@ -63,9 +59,8 @@
     </div>
 
     <div id="mainContent" style="display: none;">
-        
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V7.2 File Unlock</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V7.4 Direct Import</p></div></div>
             <div class="flex gap-2">
                 <button onclick="exportJSON()" class="px-4 py-2 bg-slate-800 text-white rounded-lg h-bold text-xs flex items-center gap-2 hover:bg-slate-900 transition"><i data-lucide="download" size="16"></i> Backup</button>
                 <label class="px-4 py-2 bg-amber-500 text-white rounded-lg h-bold text-xs flex items-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload" size="16"></i> Import (Replace) <input type="file" id="fileInput" hidden onchange="importJSON(event)"></label>
@@ -82,7 +77,7 @@
                             <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-indigo-50 group-hover:text-indigo-500 transition"><i data-lucide="edit-2" size="16"></i></div>
                         </div>
                         <div id="goalEdit" class="hidden flex items-center gap-2">
-                            <input type="number" id="goalInput" class="w-full text-xl h-bold text-slate-800 bg-slate-50 border-2 border-indigo-100 rounded-lg px-3 py-1 focus:border-indigo-500" placeholder="ตั้งเป้าหมาย...">
+                            <input type="number" id="goalInput" class="w-full text-xl h-bold text-slate-800 bg-slate-50 border-2 border-indigo-100 rounded-lg px-3 py-1 focus:border-indigo-500">
                             <button onclick="saveGoal()" class="p-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 shadow-sm transition"><i data-lucide="check" size="20"></i></button>
                             <button onclick="toggleGoalEdit(false)" class="p-2 bg-slate-200 text-slate-500 rounded-lg hover:bg-slate-300 transition"><i data-lucide="x" size="20"></i></button>
                         </div>
@@ -102,13 +97,13 @@
                 <h3 class="h-bold text-lg mb-6 flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center"><i data-lucide="plus" size="16"></i></div> ลงข้อมูลรายวัน</h3>
                 <form id="adsForm" class="grid grid-cols-2 md:grid-cols-6 gap-4">
                     <input type="hidden" id="editId">
-                    <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="formPageId" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-slate-50"></select></div>
-                    <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">วันที่</label><input type="date" id="formDate" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-slate-50" required></div>
-                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-rose-400 uppercase">ค่าแอด</label><input type="number" id="adSpend" placeholder="0" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-rose-50 text-rose-600 font-bold" step="any"></div>
-                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-emerald-500 uppercase">ยอดขาย</label><input type="number" id="sales" placeholder="0" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-emerald-50 text-emerald-600 font-bold" step="any"></div>
-                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-blue-400 uppercase">ออเดอร์</label><input type="number" id="orders" placeholder="0" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-blue-50 text-blue-600 font-bold"></div>
-                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-amber-400 uppercase">ทัก</label><input type="number" id="inquiries" placeholder="0" class="w-full border-2 border-slate-200 rounded-xl p-2 bg-amber-50 text-amber-600 font-bold"></div>
-                    <div class="col-span-2 md:col-span-4 space-y-1"><input type="text" id="note" placeholder="บันทึกหมายเหตุ..." class="w-full border-2 border-slate-200 rounded-xl p-2 bg-slate-50"></div>
+                    <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="formPageId" class="w-full bg-slate-50"></select></div>
+                    <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">วันที่</label><input type="date" id="formDate" class="w-full bg-slate-50" required></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-rose-400 uppercase">ค่าแอด</label><input type="number" id="adSpend" placeholder="0" class="w-full bg-rose-50 text-rose-600 font-bold" step="any"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-emerald-500 uppercase">ยอดขาย</label><input type="number" id="sales" placeholder="0" class="w-full bg-emerald-50 text-emerald-600 font-bold" step="any"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-blue-400 uppercase">ออเดอร์</label><input type="number" id="orders" placeholder="0" class="w-full bg-blue-50 text-blue-600 font-bold"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-amber-400 uppercase">ทัก</label><input type="number" id="inquiries" placeholder="0" class="w-full bg-amber-50 text-amber-600 font-bold"></div>
+                    <div class="col-span-2 md:col-span-4 space-y-1"><input type="text" id="note" placeholder="บันทึกหมายเหตุ..." class="w-full bg-slate-50"></div>
                     <div class="col-span-2 md:col-span-2 flex items-end gap-2"><button type="button" onclick="resetForm()" id="cancelBtn" class="hidden px-4 py-3 bg-slate-100 text-slate-500 rounded-xl"><i data-lucide="x"></i></button><button type="button" onclick="saveData()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">บันทึกข้อมูล</button></div>
                 </form>
             </div>
@@ -139,11 +134,11 @@
             <div class="w-full bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                 <div class="flex items-center gap-2 mb-4"><div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600"><i data-lucide="filter" size="16"></i></div><span class="text-sm h-bold uppercase text-slate-700">Filter Data System</span></div>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">โหมดกรอง</label><select id="filterMode" onchange="toggleFilterInputs()" class="w-full border-2 border-slate-200 rounded-xl p-2"><option value="month">รายเดือน (Monthly)</option><option value="year">รายปี (Yearly)</option><option value="range">ช่วงเวลา (Date Range)</option><option value="day">วันที่เดียว (Specific Date)</option></select></div>
-                    <div id="filter-month-group" class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full border-2 border-slate-200 rounded-xl p-2"></select><select id="filterYear" class="w-full border-2 border-slate-200 rounded-xl p-2"></select></div></div>
-                    <div id="filter-range-group" class="space-y-1 hidden-force col-span-2"><label class="text-[10px] h-bold text-slate-400 uppercase">จากวันที่ - ถึงวันที่</label><div class="flex gap-2"><input type="date" id="filterStart" class="w-full border-2 border-slate-200 rounded-xl p-2"><input type="date" id="filterEnd" class="w-full border-2 border-slate-200 rounded-xl p-2"></div></div>
-                    <div id="filter-day-group" class="space-y-1 hidden-force"><label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full border-2 border-slate-200 rounded-xl p-2"></div>
-                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="filterProduct" class="w-full border-2 border-slate-200 rounded-xl p-2"><option value="all">ทุกสินค้า</option></select></div>
+                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">โหมดกรอง</label><select id="filterMode" onchange="toggleFilterInputs()" class="w-full bg-slate-50"><option value="month">รายเดือน (Monthly)</option><option value="year">รายปี (Yearly)</option><option value="range">ช่วงเวลา (Date Range)</option><option value="day">วันที่เดียว (Specific Date)</option></select></div>
+                    <div id="filter-month-group" class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full bg-slate-50"></select><select id="filterYear" class="w-full bg-slate-50"></select></div></div>
+                    <div id="filter-range-group" class="space-y-1 hidden-force col-span-2"><label class="text-[10px] h-bold text-slate-400 uppercase">จากวันที่ - ถึงวันที่</label><div class="flex gap-2"><input type="date" id="filterStart" class="w-full bg-slate-50"><input type="date" id="filterEnd" class="w-full bg-slate-50"></div></div>
+                    <div id="filter-day-group" class="space-y-1 hidden-force"><label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full bg-slate-50"></div>
+                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="filterProduct" class="w-full bg-slate-50"><option value="all">ทุกสินค้า</option></select></div>
                 </div>
             </div>
         </section>
@@ -164,226 +159,160 @@
         import { getDatabase, ref, push, onValue, remove, update, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
         const firebaseConfig = { apiKey: "AIzaSyBMHbzxijgu_fb5NzXb0QtySb6v7U9osu4", authDomain: "adstrackerkj.firebaseapp.com", databaseURL: "https://adstrackerkj-default-rtdb.asia-southeast1.firebasedatabase.app/", projectId: "adstrackerkj" };
         const app = initializeApp(firebaseConfig); const db = getDatabase(app);
-        let allData = [], filteredData = [], config = { monthlyGoal: 1000000 }, currentPage = 1; const ITEMS_PER_PAGE = 10;
-        const PRODUCTS = [ { id: "เบต้าออยล์", css: "card-betaoil" }, { id: "เบต้าไลฟ์", css: "card-betalife" }, { id: "แล็บฟาร์ม", css: "card-labfarm" } ];
         
+        let allData=[], filteredData=[], config={monthlyGoal:1000000}, currentPage=1; const ITEMS_PER_PAGE=10;
+        const PRODUCTS=[{id:"เบต้าออยล์",css:"card-betaoil"},{id:"เบต้าไลฟ์",css:"card-betalife"},{id:"แล็บฟาร์ม",css:"card-labfarm"}];
         let ignoreRemoteGoal = false;
 
-        window.toggleGoalEdit = (show) => {
-            const display = document.getElementById('goalDisplay');
-            const edit = document.getElementById('goalEdit');
-            const input = document.getElementById('goalInput');
-            if(show) { display.classList.add('hidden'); edit.classList.remove('hidden'); edit.classList.add('flex'); input.value = config.monthlyGoal; input.focus(); } 
-            else { display.classList.remove('hidden'); edit.classList.add('hidden'); edit.classList.remove('flex'); }
-        }
-
-        window.saveGoal = () => {
-            const val = parseFloat(document.getElementById('goalInput').value);
-            if(val > 0) {
-                ignoreRemoteGoal = true;
-                config.monthlyGoal = val; 
-                document.getElementById('ui-goal').innerText = `฿${val.toLocaleString()}`; 
-                renderStats(); 
-                set(ref(db, 'config/monthlyGoal'), val); 
-                toggleGoalEdit(false);
-                setTimeout(() => { ignoreRemoteGoal = false; }, 3000);
+        window.toggleGoalEdit=(s)=>{
+            document.getElementById('goalDisplay').classList.toggle('hidden',s);
+            document.getElementById('goalEdit').classList.toggle('hidden',!s);
+            document.getElementById('goalEdit').classList.toggle('flex',s);
+            if(s){ document.getElementById('goalInput').value=config.monthlyGoal; document.getElementById('goalInput').focus(); }
+        };
+        window.saveGoal=()=>{
+            const v=parseFloat(document.getElementById('goalInput').value);
+            if(v>0){
+                ignoreRemoteGoal=true; config.monthlyGoal=v; 
+                document.getElementById('ui-goal').innerText=`฿${v.toLocaleString()}`; renderStats();
+                set(ref(db,'config/monthlyGoal'),v); toggleGoalEdit(false);
+                setTimeout(()=>ignoreRemoteGoal=false,3000);
             }
-        }
+        };
 
-        // --- SESSION LOGIC (24H) ---
-        window.checkUnlock = () => {
-            const pass = document.getElementById('unlockPass').value;
-            if(pass === 'kjondabeat') {
-                unlockApp();
-                const expiry = new Date().getTime() + (24 * 60 * 60 * 1000);
-                localStorage.setItem('ads_session_expiry', expiry);
-                localStorage.setItem('ads_admin_key', pass);
-            } else { document.getElementById('unlockMsg').classList.remove('hidden'); }
-        }
+        // --- LOCK SCREEN ---
+        window.checkUnlock=()=>{
+            const p=document.getElementById('unlockPass').value;
+            if(p==='kjondabeat'){ 
+                unlockApp(); 
+                const e=new Date().getTime()+(24*3600000); 
+                localStorage.setItem('ads_session_expiry',e); 
+                localStorage.setItem('ads_admin_key',p); 
+            } else document.getElementById('unlockMsg').classList.remove('hidden');
+        };
+        function unlockApp(){ document.getElementById('lockOverlay').style.opacity='0'; setTimeout(()=>{document.getElementById('lockOverlay').style.display='none'; document.getElementById('mainContent').style.display='block';},500); }
 
-        function unlockApp() {
-            document.getElementById('lockOverlay').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('lockOverlay').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-            }, 500);
-        }
-
-        window.onload = () => {
-            lucide.createIcons(); document.getElementById('formDate').valueAsDate = new Date();
-            const today = new Date(); const mSelect = document.getElementById('filterMonth'); ["January","February","March","April","May","June","July","August","September","October","November","December"].forEach((m,i) => mSelect.innerHTML += `<option value="${i+1}" ${i === today.getMonth() ? 'selected' : ''}>${m}</option>`);
-            const ySelect = document.getElementById('filterYear'); const currentYear = today.getFullYear(); for(let y=currentYear; y>=2024; y--) ySelect.innerHTML += `<option value="${y}">${y}</option>`;
-            document.getElementById('filterDate').valueAsDate = today;
-            const pSelect = document.getElementById('formPageId'); const fSelect = document.getElementById('filterProduct'); PRODUCTS.forEach(p => { pSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`; fSelect.innerHTML += `<option value="${p.id}">${p.id}</option>`; });
+        window.onload=()=>{
+            lucide.createIcons(); document.getElementById('formDate').valueAsDate=new Date();
+            const today=new Date(); const mSelect=document.getElementById('filterMonth'); ["January","February","March","April","May","June","July","August","September","October","November","December"].forEach((m,i)=>mSelect.innerHTML+=`<option value="${i+1}" ${i===today.getMonth()?'selected':''}>${m}</option>`);
+            const ySelect=document.getElementById('filterYear'); const cy=today.getFullYear(); for(let y=cy; y>=2024; y--) ySelect.innerHTML+=`<option value="${y}">${y}</option>`;
+            document.getElementById('filterDate').valueAsDate=today;
+            const pSelect=document.getElementById('formPageId'); const fSelect=document.getElementById('filterProduct'); PRODUCTS.forEach(p=>{ pSelect.innerHTML+=`<option value="${p.id}">${p.id}</option>`; fSelect.innerHTML+=`<option value="${p.id}">${p.id}</option>`; });
             
-            // Check Session
-            const expiry = localStorage.getItem('ads_session_expiry');
-            if(expiry && new Date().getTime() < parseInt(expiry)) unlockApp();
-
-            ['filterMode','filterMonth','filterYear','filterStart','filterEnd','filterDate','filterProduct'].forEach(id => document.getElementById(id).addEventListener('change', () => { currentPage = 1; renderApp(); }));
+            const exp=localStorage.getItem('ads_session_expiry'); if(exp && new Date().getTime()<parseInt(exp)) unlockApp();
+            ['filterMode','filterMonth','filterYear','filterStart','filterEnd','filterDate','filterProduct'].forEach(id=>document.getElementById(id).addEventListener('change',()=>{currentPage=1;renderApp()}));
             
-            onValue(ref(db, 'config'), snap => { 
-                if(snap.exists()) { 
-                    const data = snap.val(); 
-                    if(!ignoreRemoteGoal) {
-                        if(typeof data === 'number') config.monthlyGoal = data; 
-                        else config = { ...config, ...data }; 
-                        renderApp(); 
+            onValue(ref(db,'config'),snap=>{ if(snap.exists()){ const d=snap.val(); if(!ignoreRemoteGoal){ if(typeof d==='number')config.monthlyGoal=d; else config={...config,...d}; renderApp(); } } });
+            onValue(ref(db,'adsData'),snap=>{ const r=snap.val(); allData=r?Object.keys(r).map(k=>({...r[k],id:k})):[]; renderApp(); });
+        };
+
+        // --- IMPORT LOGIC (Direct & Clean) ---
+        window.importJSON=(e)=>{
+            const f=e.target.files[0]; if(!f)return;
+            const r=new FileReader();
+            r.onload=async(ev)=>{
+                try{
+                    const j=JSON.parse(ev.target.result);
+                    
+                    // 1. ตรวจสอบโครงสร้างไฟล์ (รองรับไฟล์ของคุณโดยเฉพาะ)
+                    let dataToImport = [];
+                    if(j.data && Array.isArray(j.data)) dataToImport = j.data;
+                    else if(Array.isArray(j)) dataToImport = j;
+                    else if(typeof j==='object') dataToImport = Object.values(j);
+
+                    if(dataToImport.length===0){ alert("❌ ไม่พบข้อมูลในไฟล์"); return; }
+
+                    if(confirm(`⚠️ จะลบข้อมูลเก่าทิ้งทั้งหมด และนำเข้าใหม่ ${dataToImport.length} รายการ\nยืนยันหรือไม่? (ต้องแก้ไข Rules แล้ว)`)){
+                        document.body.style.cursor='wait';
+                        
+                        // 2. Clear All Data (ใช้ set null ได้เพราะแก้ Rules แล้ว)
+                        await set(ref(db, 'adsData'), null);
+
+                        // 3. Insert New Data (Loop for safety)
+                        const k="kjondabeat";
+                        for(const item of dataToImport){
+                            const {id, cloudId, ...c} = item; // ตัด ID เดิมทิ้ง ให้ Firebase สร้างใหม่
+                            await push(ref(db,'adsData'), {...c, securityKey:k});
+                        }
+                        
+                        document.body.style.cursor='default';
+                        alert("✅ Import สำเร็จ! ระบบจะรีโหลด"); location.reload();
                     }
-                } 
-            });
-            onValue(ref(db, 'adsData'), snap => { const raw = snap.val(); allData = raw ? Object.keys(raw).map(k => ({...raw[k], id: k})) : []; renderApp(); });
+                }catch(err){ document.body.style.cursor='default'; alert("Error: "+err.message); }
+                document.getElementById('fileInput').value='';
+            }; r.readAsText(f);
         };
 
-        window.toggleFilterInputs = () => {
-            const mode = document.getElementById('filterMode').value;
-            ['filter-month-group', 'filter-range-group', 'filter-day-group'].forEach(g => document.getElementById(g).classList.add('hidden-force'));
-            if (mode === 'month' || mode === 'year') document.getElementById('filter-month-group').classList.remove('hidden-force');
-            if (mode === 'range') document.getElementById('filter-range-group').classList.remove('hidden-force');
-            if (mode === 'day') document.getElementById('filter-day-group').classList.remove('hidden-force');
-            if (mode === 'year') document.getElementById('filterMonth').classList.add('hidden-force'); else document.getElementById('filterMonth').classList.remove('hidden-force');
-            currentPage = 1; renderApp();
+        window.toggleFilterInputs=()=>{
+            const m=document.getElementById('filterMode').value;
+            ['filter-month-group','filter-range-group','filter-day-group'].forEach(g=>document.getElementById(g).classList.add('hidden'));
+            if(m==='month'||m==='year') document.getElementById('filter-month-group').classList.remove('hidden');
+            if(m==='range') document.getElementById('filter-range-group').classList.remove('hidden');
+            if(m==='day') document.getElementById('filter-day-group').classList.remove('hidden');
+            if(m==='year') document.getElementById('filterMonth').classList.add('hidden'); else document.getElementById('filterMonth').classList.remove('hidden');
+            currentPage=1; renderApp();
         };
-
-        window.toggleAdviceGlobal = () => {
-            const isChecked = document.getElementById('adviceToggle').checked;
-            document.querySelectorAll('.advice-box').forEach(b => b.classList.toggle('advice-hidden', !isChecked));
-        };
-
-        window.renderApp = () => {
-            const mode = document.getElementById('filterMode').value; const fProd = document.getElementById('filterProduct').value;
-            filteredData = allData.filter(d => {
-                const date = new Date(d.date); let dateMatch = true;
-                if (mode === 'month') dateMatch = (date.getMonth() + 1) == document.getElementById('filterMonth').value && date.getFullYear() == document.getElementById('filterYear').value;
-                else if (mode === 'year') dateMatch = date.getFullYear() == document.getElementById('filterYear').value;
-                else if (mode === 'day') dateMatch = d.date === document.getElementById('filterDate').value;
-                else if (mode === 'range') { const start = document.getElementById('filterStart').value; const end = document.getElementById('filterEnd').value; if(start && end) dateMatch = d.date >= start && d.date <= end; }
-                return dateMatch && (fProd === 'all' || d.pageId === fProd);
+        window.toggleAdviceGlobal=()=>{ const c=document.getElementById('adviceToggle').checked; document.querySelectorAll('.advice-box').forEach(b=>b.classList.toggle('advice-hidden',!c)); };
+        window.renderApp=()=>{
+            const m=document.getElementById('filterMode').value, fp=document.getElementById('filterProduct').value;
+            filteredData=allData.filter(d=>{
+                const dt=new Date(d.date); let match=true;
+                if(m==='month') match=(dt.getMonth()+1)==document.getElementById('filterMonth').value && dt.getFullYear()==document.getElementById('filterYear').value;
+                else if(m==='year') match=dt.getFullYear()==document.getElementById('filterYear').value;
+                else if(m==='day') match=d.date===document.getElementById('filterDate').value;
+                else if(m==='range'){ const s=document.getElementById('filterStart').value, e=document.getElementById('filterEnd').value; if(s&&e) match=d.date>=s && d.date<=e; }
+                return match && (fp==='all'||d.pageId===fp);
             });
             renderStats(); renderCards(); renderTable(); lucide.createIcons();
         };
-
-        function renderStats() {
-            const s = filteredData.reduce((a,b)=>a+b.sales,0), a = filteredData.reduce((a,b)=>a+b.adSpend,0), o = filteredData.reduce((a,b)=>a+b.orders,0), i = filteredData.reduce((a,b)=>a+b.inquiries,0);
-            
-            document.getElementById('sum-sales').innerText = `฿${s.toLocaleString()}`; 
-            document.getElementById('sum-ads').innerText = `฿${a.toLocaleString()}`;
-            document.getElementById('sum-pct').innerText = s > 0 ? `${((a/s)*100).toFixed(1)}%` : '0%'; 
-            document.getElementById('sum-cpa').innerText = o > 0 ? `฿${(a/o).toFixed(0)}` : '0';
-            document.getElementById('sum-inq').innerText = i > 0 ? `฿${(a/i).toFixed(0)}` : '0'; 
-            document.getElementById('sum-roas').innerText = a > 0 ? (s/a).toFixed(2) : '0.0';
-
-            const goal = config.monthlyGoal, remain = Math.max(0, goal - s), pct = (s/goal)*100;
-            document.getElementById('ui-goal').innerText = `฿${goal.toLocaleString()}`;
-            document.getElementById('ui-progress-bar').style.width = `${Math.min(100, pct)}%`;
-            document.getElementById('ui-progress-text').innerText = `฿${s.toLocaleString()} / ขาดอีก ฿${remain.toLocaleString()}`;
-            document.getElementById('ui-percent').innerText = `${pct.toFixed(1)}%`;
-            
-            const days = new Set(filteredData.map(d=>d.date)).size || 1; document.getElementById('ui-avg-actual').innerText = `฿${(s/days).toLocaleString(undefined,{maximumFractionDigits:0})}`;
-            const now = new Date(), daysInM = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate(), daysLeft = Math.max(1, daysInM - now.getDate());
-            document.getElementById('ui-avg-required').innerText = `฿${(remain/daysLeft).toLocaleString(undefined,{maximumFractionDigits:0})}`;
+        function renderStats(){
+            const s=filteredData.reduce((a,b)=>a+b.sales,0), a=filteredData.reduce((a,b)=>a+b.adSpend,0), o=filteredData.reduce((a,b)=>a+b.orders,0), i=filteredData.reduce((a,b)=>a+b.inquiries,0);
+            document.getElementById('sum-sales').innerText=`฿${s.toLocaleString()}`; document.getElementById('sum-ads').innerText=`฿${a.toLocaleString()}`;
+            document.getElementById('sum-pct').innerText=s>0?`${((a/s)*100).toFixed(1)}%`:'0%'; document.getElementById('sum-cpa').innerText=o>0?`฿${(a/o).toFixed(0)}`:'0';
+            document.getElementById('sum-inq').innerText=i>0?`฿${(a/i).toFixed(0)}`:'0'; document.getElementById('sum-roas').innerText=a>0?(s/a).toFixed(2):'0.0';
+            const g=config.monthlyGoal, r=Math.max(0,g-s), pct=(s/g)*100;
+            document.getElementById('ui-goal').innerText=`฿${g.toLocaleString()}`;
+            document.getElementById('ui-progress-bar').style.width=`${Math.min(100,pct)}%`; document.getElementById('ui-progress-text').innerText=`฿${s.toLocaleString()} / ขาดอีก ฿${r.toLocaleString()}`; document.getElementById('ui-percent').innerText=`${pct.toFixed(1)}%`;
+            const days=new Set(filteredData.map(d=>d.date)).size||1, now=new Date(), dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+            document.getElementById('ui-avg-actual').innerText=`฿${(s/days).toLocaleString(undefined,{maximumFractionDigits:0})}`;
+            document.getElementById('ui-avg-required').innerText=`฿${(r/Math.max(1,dim-now.getDate())).toLocaleString(undefined,{maximumFractionDigits:0})}`;
         }
-
-        function renderCards() {
-            const container = document.getElementById('product-cards'), showAdvice = document.getElementById('adviceToggle').checked; container.innerHTML = '';
-            PRODUCTS.forEach(p => {
-                const pData = filteredData.filter(d => d.pageId === p.id);
-                const s = pData.reduce((a,b)=>a+b.sales,0);
-                const a = pData.reduce((a,b)=>a+b.adSpend,0);
-                const o = pData.reduce((a,b)=>a+b.orders,0);
-                const inq = pData.reduce((a,b)=>a+b.inquiries,0);
-                const pct = s > 0 ? (a/s)*100 : 0;
-                const roas = a > 0 ? s/a : 0;
-                const cpa = o > 0 ? a/o : 0;
-                const closeRate = inq > 0 ? (o/inq)*100 : 0;
-
-                let adviceHTML = '', adviceClass = '';
-                if (s === 0 && a === 0) { adviceClass = 'text-slate-400 bg-slate-50'; adviceHTML = '<span>รอข้อมูล...</span>'; } 
-                else if (pct < 70) { adviceClass = 'bg-emerald-50 text-emerald-800 border-emerald-100'; adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="rocket" size="18" class="text-emerald-600"></i><span class="h-bold">กำไรดี (${pct.toFixed(1)}%)</span></div><p class="text-xs">แอดถูกกว่าเป้า 70%! เพิ่มงบยิงแอดได้เลย</p>`; } 
-                else if (pct >= 70 && pct <= 80) { adviceClass = 'bg-indigo-50 text-indigo-800 border-indigo-100'; adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="check-circle" size="18" class="text-indigo-600"></i><span class="h-bold">ตามเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs">อยู่ในเกณฑ์ 70-80% คุมงบและรักษาระดับไว้</p>`; } 
-                else { adviceClass = 'bg-rose-50 text-rose-800 border-rose-100'; if (closeRate < 15) { adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" size="18" class="text-rose-600"></i><span class="h-bold">เกินเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs"><strong>ปรับแอดมินด่วน:</strong> อัตราปิดการขายต่ำ (${closeRate.toFixed(1)}%) ลูกค้าทักเยอะแต่ไม่ซื้อ</p>`; } else { adviceHTML = `<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" size="18" class="text-rose-600"></i><span class="h-bold">เกินเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs"><strong>ปรับแอด:</strong> ต้นทุนแอดสูงเกินไป ปิดตัวกินเงินทิ้ง</p>`; } }
-
-                container.innerHTML += `<div class="card-stat ${p.css}"><div><div class="flex justify-between items-start mb-6"><h3 class="h-bold text-xl text-slate-800">${p.id}</h3><i data-lucide="bar-chart-2" class="text-slate-300"></i></div><div class="space-y-4 mb-6"><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ยอดขาย</span><span class="text-2xl h-bold text-emerald-500">฿${s.toLocaleString()}</span></div><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ค่าแอด</span><span class="text-xl h-bold text-rose-500">฿${a.toLocaleString()}</span></div><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">CPA</span><span class="text-lg h-medium text-slate-600">฿${cpa.toFixed(0)}</span></div></div><div class="grid grid-cols-2 gap-3"><div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">% ADS</p><p class="text-xl h-bold ${pct>80?'text-rose-500':'text-slate-800'}">${pct.toFixed(1)}%</p></div><div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">STAT</p><p class="text-xl h-bold text-amber-500">${roas.toFixed(1)}</p></div></div></div><div class="advice-box ${adviceClass} ${showAdvice ? '' : 'advice-hidden'}">${adviceHTML}</div></div>`;
+        function renderCards(){
+            const c=document.getElementById('product-cards'), show=document.getElementById('adviceToggle').checked; c.innerHTML='';
+            PRODUCTS.forEach(p=>{
+                const d=filteredData.filter(x=>x.pageId===p.id), s=d.reduce((a,b)=>a+b.sales,0), a=d.reduce((a,b)=>a+b.adSpend,0), o=d.reduce((a,b)=>a+b.orders,0), inq=d.reduce((a,b)=>a+b.inquiries,0);
+                const pct=s>0?(a/s)*100:0, roas=a>0?s/a:0, cpa=o>0?a/o:0, cr=inq>0?(o/inq)*100:0;
+                let adv='', cls='';
+                if(s===0){ cls='bg-slate-50 text-slate-400'; adv='<span>No Data</span>'; }
+                else if(pct<70){ cls='bg-emerald-50 text-emerald-800 border-emerald-100'; adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="rocket" size="18" class="text-emerald-600"></i><span class="h-bold">กำไรดี (${pct.toFixed(1)}%)</span></div><p class="text-xs">แอดถูก เพิ่มงบได้!</p>`; }
+                else if(pct<=80){ cls='bg-indigo-50 text-indigo-800 border-indigo-100'; adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="check-circle" size="18" class="text-indigo-600"></i><span class="h-bold">ตามเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs">รักษาระดับไว้</p>`; }
+                else { cls='bg-rose-50 text-rose-800 border-rose-100'; adv=cr<15?`<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" size="18" class="text-rose-600"></i><span class="h-bold">เกินเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs">ปิดการขายต่ำ (${cr.toFixed(1)}%)</p>`:`<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-triangle" size="18" class="text-rose-600"></i><span class="h-bold">เกินเป้า (${pct.toFixed(1)}%)</span></div><p class="text-xs">ลดต้นทุนแอดด่วน</p>`; }
+                c.innerHTML+=`<div class="card-stat ${p.css}"><div><div class="flex justify-between items-start mb-6"><h3 class="h-bold text-xl text-slate-800">${p.id}</h3><i data-lucide="bar-chart-2" class="text-slate-300"></i></div><div class="space-y-4 mb-6"><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ยอดขาย</span><span class="text-2xl h-bold text-emerald-500">฿${s.toLocaleString()}</span></div><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ค่าแอด</span><span class="text-xl h-bold text-rose-500">฿${a.toLocaleString()}</span></div><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">CPA</span><span class="text-lg h-medium text-slate-600">฿${cpa.toFixed(0)}</span></div></div><div class="grid grid-cols-2 gap-3"><div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">% ADS</p><p class="text-xl h-bold ${pct>80?'text-rose-500':'text-slate-800'}">${pct.toFixed(1)}%</p></div><div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">STAT</p><p class="text-xl h-bold text-amber-500">${roas.toFixed(1)}</p></div></div></div><div class="advice-box ${cls} ${show?'':'advice-hidden'}">${adv}</div></div>`;
+            });
+        }
+        function renderTable(){
+            const sorted=[...filteredData].sort((a,b)=>new Date(b.date)-new Date(a.date)), total=sorted.length, pages=Math.ceil(total/ITEMS_PER_PAGE)||1;
+            if(currentPage>pages)currentPage=pages; if(currentPage<1)currentPage=1;
+            const start=(currentPage-1)*ITEMS_PER_PAGE, tbody=document.getElementById('tableBody'); tbody.innerHTML='';
+            document.getElementById('tx-count').innerText=`${total} items`; document.getElementById('pageInfo').innerText=`Page ${currentPage} of ${pages}`;
+            document.getElementById('prevPageBtn').disabled=currentPage===1; document.getElementById('nextPageBtn').disabled=currentPage===pages;
+            sorted.slice(start, start+ITEMS_PER_PAGE).forEach(i=>{
+                const cpa=i.orders>0?(i.adSpend/i.orders).toFixed(0):0; let cl='border-l-slate-300';
+                if(i.pageId==='เบต้าออยล์')cl='border-l-amber-500'; if(i.pageId==='เบต้าไลฟ์')cl='border-l-orange-800'; if(i.pageId==='แล็บฟาร์ม')cl='border-l-emerald-500';
+                tbody.innerHTML+=`<tr class="hover:bg-slate-50 transition border-l-[4px] ${cl}"><td class="p-4 h-medium text-slate-700">${new Date(i.date).toLocaleDateString('th-TH')}</td><td class="p-4"><span class="text-xs font-bold px-2 py-1 rounded border bg-white text-slate-500">${i.pageId}</span></td><td class="p-4 text-right h-bold text-emerald-600">฿${i.sales.toLocaleString()}</td><td class="p-4 text-right h-bold text-rose-500">฿${i.adSpend.toLocaleString()}</td><td class="p-4 text-right h-medium text-indigo-600">฿${cpa}</td><td class="p-4 text-slate-400 italic truncate max-w-[150px] text-xs">${i.note||'-'}</td><td class="p-4 text-center flex justify-center gap-2"><button onclick="window.editEntry('${i.id}')" class="text-indigo-400 hover:text-indigo-600"><i data-lucide="edit-3" size="18"></i></button><button onclick="window.deleteEntry('${i.id}')" class="text-rose-400 hover:text-rose-600"><i data-lucide="trash-2" size="18"></i></button></td></tr>`;
             });
             lucide.createIcons();
         }
-
-        window.changePage = (d) => { currentPage += d; renderTable(); };
-        window.toggleSidebar = () => document.getElementById('settingsSidebar').classList.toggle('open'); 
-        window.resetForm = () => { document.getElementById('adsForm').reset(); document.getElementById('editId').value = ''; document.getElementById('formDate').valueAsDate = new Date(); document.getElementById('cancelBtn').classList.add('hidden'); };
-        window.saveData = async () => {
-            const k = localStorage.getItem('ads_admin_key'), id = document.getElementById('editId').value;
-            const d = { pageId: document.getElementById('formPageId').value, date: document.getElementById('formDate').value, adSpend: parseFloat(document.getElementById('adSpend').value)||0, sales: parseFloat(document.getElementById('sales').value)||0, orders: parseInt(document.getElementById('orders').value)||0, inquiries: parseInt(document.getElementById('inquiries').value)||0, note: document.getElementById('note').value, securityKey: k, timestamp: Date.now() };
-            try { if(id) await update(ref(db, `adsData/${id}`), d); else await push(ref(db, 'adsData'), d); alert("✅ บันทึกสำเร็จ!"); resetForm(); } catch(e) { alert("❌ เซฟไม่สำเร็จ: รหัส Admin ผิด!"); }
+        window.changePage=(d)=>{currentPage+=d;renderTable()}; window.toggleSidebar=()=>document.getElementById('settingsSidebar').classList.toggle('open');
+        window.resetForm=()=>{document.getElementById('adsForm').reset();document.getElementById('editId').value='';document.getElementById('formDate').valueAsDate=new Date();document.getElementById('cancelBtn').classList.add('hidden');};
+        window.saveData=async()=>{
+            const k=localStorage.getItem('ads_admin_key'), id=document.getElementById('editId').value;
+            const d={pageId:document.getElementById('formPageId').value, date:document.getElementById('formDate').value, adSpend:parseFloat(document.getElementById('adSpend').value)||0, sales:parseFloat(document.getElementById('sales').value)||0, orders:parseInt(document.getElementById('orders').value)||0, inquiries:parseInt(document.getElementById('inquiries').value)||0, note:document.getElementById('note').value, securityKey:k, timestamp:Date.now()};
+            try{ if(id)await update(ref(db,`adsData/${id}`),d); else await push(ref(db,'adsData'),d); alert("✅ บันทึกสำเร็จ!"); resetForm(); }catch(e){alert("❌ Error: "+e.message);}
         };
-        window.editEntry = (id) => { const d = allData.find(x=>x.id===id); if(!d)return; document.getElementById('editId').value=id; document.getElementById('formPageId').value=d.pageId; document.getElementById('formDate').value=d.date; document.getElementById('adSpend').value=d.adSpend; document.getElementById('sales').value=d.sales; document.getElementById('orders').value=d.orders; document.getElementById('inquiries').value=d.inquiries; document.getElementById('note').value=d.note||''; document.getElementById('cancelBtn').classList.remove('hidden'); window.scrollTo({top:0,behavior:'smooth'}); };
-        window.deleteEntry = async (id) => { if(!confirm("ยืนยันลบ?"))return; const k = localStorage.getItem('ads_admin_key'); try { await update(ref(db,`adsData/${id}`),{securityKey:k,sales:null}); await remove(ref(db,`adsData/${id}`)); } catch(e) { alert("❌ ลบไม่ได้: รหัส Admin ผิด!"); } };
-        window.exportJSON = () => { const s = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData)); const n = document.createElement('a'); n.setAttribute("href", s); n.setAttribute("download", "backup_ads_data.json"); document.body.appendChild(n); n.click(); n.remove(); };
-        
-        // --- FIXED: TARGETED IMPORT LOGIC (Handle "data": [...] structure) ---
-        window.importJSON = (e) => { 
-            const f = e.target.files[0]; 
-            if(!f) return; 
-            const r = new FileReader(); 
-            r.onload = async (ev) => { 
-                try {
-                    const json = JSON.parse(ev.target.result);
-                    let dataToImport = [];
-
-                    // 1. Handle "data": [...] structure (File specific fix)
-                    if (json.data && Array.isArray(json.data)) {
-                        dataToImport = json.data;
-                    } 
-                    // 2. Handle direct Array [...]
-                    else if (Array.isArray(json)) {
-                        dataToImport = json;
-                    }
-                    // 3. Handle Firebase Object { "key": { ... } }
-                    else if (typeof json === 'object') {
-                        dataToImport = Object.values(json);
-                    }
-
-                    // Filter valid records only (must have date & pageId)
-                    dataToImport = dataToImport.filter(item => item.date && item.pageId);
-
-                    if (dataToImport.length === 0) { alert("❌ ไม่พบข้อมูลที่ถูกต้องในไฟล์"); return; }
-
-                    if (confirm(`พบข้อมูล ${dataToImport.length} รายการ\nต้องการล้างข้อมูลเดิมและนำเข้าใหม่หรือไม่?`)) {
-                        document.body.style.cursor = 'wait';
-                        
-                        // 1. SOFT WIPE (Loop Delete to avoid Permission Denied)
-                        if(allData.length > 0) {
-                            const deletePromises = allData.map(item => {
-                                if(item.id) return remove(ref(db, `adsData/${item.id}`));
-                            });
-                            await Promise.all(deletePromises);
-                        }
-
-                        // 2. INSERT NEW DATA
-                        const k = "kjondabeat";
-                        const insertPromises = dataToImport.map(item => {
-                            const cleanItem = {
-                                pageId: item.pageId, date: item.date,
-                                adSpend: parseFloat(item.adSpend||0), sales: parseFloat(item.sales||0),
-                                orders: parseInt(item.orders||0), inquiries: parseInt(item.inquiries||0),
-                                note: item.note||'', securityKey: k, timestamp: Date.now()
-                            };
-                            return push(ref(db,'adsData'), cleanItem);
-                        });
-                        await Promise.all(insertPromises);
-                        
-                        document.body.style.cursor = 'default';
-                        alert("✅ นำเข้าข้อมูลสำเร็จ!");
-                        location.reload(); 
-                    }
-                } catch(err) {
-                    document.body.style.cursor = 'default';
-                    alert("เกิดข้อผิดพลาด: "+err.message);
-                }
-                document.getElementById('fileInput').value = '';
-            }; 
-            r.readAsText(f); 
-        };
+        window.editEntry=(id)=>{const d=allData.find(x=>x.id===id);if(!d)return;document.getElementById('editId').value=id;document.getElementById('formPageId').value=d.pageId;document.getElementById('formDate').value=d.date;document.getElementById('adSpend').value=d.adSpend;document.getElementById('sales').value=d.sales;document.getElementById('orders').value=d.orders;document.getElementById('inquiries').value=d.inquiries;document.getElementById('note').value=d.note||'';document.getElementById('cancelBtn').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'});};
+        window.deleteEntry=async(id)=>{if(!confirm("ยืนยันลบ?"))return;const k=localStorage.getItem('ads_admin_key');try{await update(ref(db,`adsData/${id}`),{securityKey:k,sales:null});await remove(ref(db,`adsData/${id}`));}catch(e){alert("❌ Error: "+e.message);}};
+        window.exportJSON=()=>{const s="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(allData));const n=document.createElement('a');n.href=s;n.download="backup_ads_data.json";n.click();};
     </script>
 </body>
 </html>
