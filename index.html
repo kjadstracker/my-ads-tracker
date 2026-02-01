@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V9.6 - Open Dash</title>
+    <title>Ads Cloud Master V10.1 - Status Badge</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -14,58 +14,55 @@
         .h-bold { font-weight: 700; } 
         .h-medium { font-weight: 500; } 
         
-        /* UI HELPERS */
-        .admin-only { display: none !important; } /* ซ่อนเครื่องมือ Admin */
-        .show-admin .admin-only { display: flex !important; } /* แสดงเมื่อเป็น Admin */
-        .show-admin-block .admin-only { display: block !important; }
-        
+        /* UI ELEMENTS */
+        #lockOverlay { position: fixed; inset: 0; background-color: #0f172a; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.5s ease; }
+        .google-btn { display: flex; align-items: center; justify-content: center; background-color: white; color: #374151; padding: 0.75rem 1.5rem; border-radius: 9999px; font-weight: 600; cursor: pointer; gap: 12px; transition: transform 0.1s; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .google-btn:hover { background-color: #f9fafb; transform: translateY(-2px); }
+        .google-btn:active { transform: scale(0.95); }
+
         /* CARD STYLES */
-        .card-stat { 
-            display: flex; flex-direction: column; justify-content: space-between;
-            width: 100%; max-width: 280px; min-height: 520px; 
-            margin: 0 auto; border-radius: 2rem; border: 1px solid rgba(255, 255, 255, 0.6);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 1.5rem;
-            position: relative; overflow: hidden; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
-        }
+        .card-stat { display: flex; flex-direction: column; justify-content: space-between; width: 100%; max-width: 280px; min-height: 520px; margin: 0 auto; border-radius: 2rem; border: 1px solid rgba(255,255,255,0.6); padding: 1.5rem; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); transition: all 0.3s; }
         .card-stat:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -5px rgba(0,0,0,0.1); }
         .card-betaoil { border-top: 6px solid #f59e0b; background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%); }
         .card-betalife { border-top: 6px solid #78350f; background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%); }
         .card-labfarm { border-top: 6px solid #10b981; background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%); }
-
-        /* PORTFOLIO BOX */
-        .portfolio-box { 
-            background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); 
-            color: white; border-radius: 1.5rem; position: relative; overflow: hidden; 
-            box-shadow: 0 20px 50px -12px rgba(15, 23, 42, 0.25); 
-            border: 1px solid rgba(255,255,255,0.1);
-        }
+        
+        .portfolio-box { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); color: white; border-radius: 1.5rem; position: relative; overflow: hidden; box-shadow: 0 20px 50px -12px rgba(15, 23, 42, 0.25); border: 1px solid rgba(255,255,255,0.1); }
         .portfolio-glow { position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, rgba(0,0,0,0) 60%); pointer-events: none; }
-        
         .progress-bar-bg { background: #e2e8f0; height: 48px; border-radius: 24px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
-        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #10b981 0%, #059669 100%); transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
-        .progress-text-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); z-index: 10; pointer-events: none; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #10b981 0%, #059669 100%); transition: width 1s; }
+        .progress-text-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); pointer-events: none; }
         
-        .advice-box { margin-top: 1rem; padding: 1rem; border-radius: 1rem; font-size: 0.85rem; line-height: 1.4; background: rgba(255,255,255,0.95); border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: all 0.3s; }
+        .advice-box { margin-top: 1rem; padding: 1rem; border-radius: 1rem; font-size: 0.85rem; line-height: 1.4; background: rgba(255,255,255,0.95); border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
         .advice-hidden { display: none !important; }
         .hidden-force { display: none !important; }
-        .flex { display: flex; }
         
-        input, select { border: 2px solid #cbd5e1 !important; border-radius: 0.8rem !important; padding: 0.7rem 1rem !important; outline: none; transition: all 0.2s; font-size: 0.95rem; background-color: #fff; }
+        input, select { border: 2px solid #cbd5e1 !important; border-radius: 0.8rem !important; padding: 0.7rem 1rem !important; outline: none; transition: all 0.2s; font-size: 0.95rem; background-color: #fff; width: 100%; }
         input:focus, select:focus { border-color: #6366f1 !important; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
-        
         .sidebar { position: fixed; top: 0; right: 0; height: 100%; width: 320px; background: white; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transform: translateX(100%); transition: transform 0.3s ease; z-index: 2000; padding: 2rem; }
         .sidebar.open { transform: translateX(0); }
     </style>
 </head>
 <body id="appBody" class="p-4 md:p-8 pb-32">
 
-    <div id="mainContent">
+    <div id="lockOverlay">
+        <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-sm text-center space-y-8">
+            <div class="w-20 h-20 bg-indigo-600 rounded-3xl flex items-center justify-center mx-auto text-white shadow-xl shadow-indigo-200"><i data-lucide="shield-check" size="40"></i></div>
+            <div><h2 class="text-3xl h-bold text-slate-800">ADS CLOUD</h2><p class="text-slate-400 text-sm mt-2">Team Access Portal</p></div>
+            <button onclick="loginWithGoogle()" class="google-btn w-full"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg> Login with Google</button>
+            <p id="loginError" class="text-rose-500 text-xs font-bold hidden mt-2"></p>
+        </div>
+    </div>
+
+    <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V9.6 Open Dash</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.1 Status Badge</p></div></div>
+            
             <div class="flex items-center gap-3">
-                <div id="authStatus" class="px-3 py-1 rounded-full bg-slate-200 text-slate-500 text-xs h-bold flex items-center gap-2">
-                    <i data-lucide="eye" size="14"></i> View Only
+                <div id="adminSwitcher" class="hidden items-center gap-2 bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-100">
+                    <span class="text-[10px] h-bold text-indigo-600 uppercase">VIEWING:</span>
+                    <select id="profileSelector" class="bg-transparent border-none text-sm h-bold text-indigo-900 py-1 focus:ring-0 cursor-pointer" onchange="switchProfile(this.value)"></select>
                 </div>
                 <button onclick="toggleSidebar()" class="w-10 h-10 bg-white border rounded-xl flex items-center justify-center text-slate-500 hover:text-indigo-600 transition shadow-sm"><i data-lucide="settings" size="20"></i></button>
             </div>
@@ -75,15 +72,15 @@
             <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 relative overflow-hidden">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
                     <div>
-                        <div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="target" size="14"></i><span class="text-xs h-bold uppercase">เป้าหมายเดือนนี้</span></div>
-                        <div id="goalDisplay" class="flex items-center gap-3 group cursor-pointer" onclick="toggleGoalEdit(true)">
+                        <div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="target" size="14"></i><span class="text-xs h-bold uppercase">เป้าหมาย (ของบัญชีนี้)</span></div>
+                        <div class="flex items-center gap-3">
                             <div class="text-4xl h-bold text-slate-800" id="ui-goal">฿0</div>
-                            <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-indigo-50 group-hover:text-indigo-500 transition admin-only"><i data-lucide="edit-2" size="16"></i></div>
+                            <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 hover:text-indigo-500 transition cursor-pointer" onclick="toggleGoalEdit(true)"><i data-lucide="edit-2" size="16"></i></div>
                         </div>
-                        <div id="goalEdit" class="hidden flex items-center gap-2">
-                            <input type="number" id="goalInput" class="w-full text-xl h-bold text-slate-800 bg-slate-50 border-2 border-indigo-100 rounded-lg px-3 py-1 focus:border-indigo-500">
-                            <button onclick="saveGoal()" class="p-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 shadow-sm transition"><i data-lucide="check" size="20"></i></button>
-                            <button onclick="toggleGoalEdit(false)" class="p-2 bg-slate-200 text-slate-500 rounded-lg hover:bg-slate-300 transition"><i data-lucide="x" size="20"></i></button>
+                        <div id="goalEdit" class="hidden flex items-center gap-2 mt-2">
+                            <input type="number" id="goalInput" class="w-full text-lg h-bold bg-slate-50 border rounded-lg px-3 py-1">
+                            <button onclick="saveGoal()" class="p-2 bg-emerald-500 text-white rounded-lg"><i data-lucide="check" size="18"></i></button>
+                            <button onclick="toggleGoalEdit(false)" class="p-2 bg-slate-200 text-slate-500 rounded-lg"><i data-lucide="x" size="18"></i></button>
                         </div>
                     </div>
                     <div><div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="trending-up" size="14"></i><span class="text-xs h-bold uppercase">เฉลี่ยต่อวันจริง</span></div><div class="text-4xl h-bold text-emerald-500" id="ui-avg-actual">฿0</div></div>
@@ -91,30 +88,33 @@
                 </div>
                 <div class="space-y-3">
                     <div class="flex justify-between items-end"><span class="text-xs h-bold text-slate-400 uppercase tracking-widest">Progression Status</span><span class="text-2xl h-bold text-slate-800" id="ui-percent">0%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-text-overlay" id="ui-progress-text">฿0 / ขาดอีก ฿0</div><div id="ui-progress-bar" class="progress-bar-fill" style="width: 0%"></div></div>
+                    <div class="progress-bar-bg"><div class="progress-text-overlay" id="ui-progress-text">฿0 / ขาด ฿0</div><div id="ui-progress-bar" class="progress-bar-fill" style="width: 0%"></div></div>
                 </div>
             </div>
         </section>
 
-        <section class="max-w-7xl mx-auto mb-12 admin-only" id="inputSection">
+        <section class="max-w-7xl mx-auto mb-12">
             <div class="bg-white rounded-[1.5rem] p-8 shadow-lg border-t-4 border-indigo-600 w-full">
-                <h3 class="h-bold text-lg mb-6 flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center"><i data-lucide="plus" size="16"></i></div> ลงข้อมูลรายวัน (Admin)</h3>
+                <h3 class="h-bold text-lg mb-6 flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center"><i data-lucide="plus" size="16"></i></div> ลงข้อมูล (บันทึกลงบัญชีที่เลือกอยู่)</h3>
                 <form id="adsForm" class="grid grid-cols-2 md:grid-cols-6 gap-4">
                     <input type="hidden" id="editId">
                     <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="formPageId" class="w-full bg-slate-50"></select></div>
                     <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">วันที่</label><input type="date" id="formDate" class="w-full bg-slate-50" required></div>
-                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-rose-400 uppercase">ค่าแอด</label><input type="number" id="adSpend" placeholder="0" class="w-full bg-rose-50 text-rose-600 font-bold" step="any"></div>
-                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-emerald-500 uppercase">ยอดขาย</label><input type="number" id="sales" placeholder="0" class="w-full bg-emerald-50 text-emerald-600 font-bold" step="any"></div>
-                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-blue-400 uppercase">ออเดอร์</label><input type="number" id="orders" placeholder="0" class="w-full bg-blue-50 text-blue-600 font-bold"></div>
-                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-amber-400 uppercase">ทัก</label><input type="number" id="inquiries" placeholder="0" class="w-full bg-amber-50 text-amber-600 font-bold"></div>
-                    <div class="col-span-2 md:col-span-4 space-y-1"><input type="text" id="note" placeholder="บันทึกหมายเหตุ..." class="w-full bg-slate-50"></div>
-                    <div class="col-span-2 md:col-span-2 flex items-end gap-2"><button type="button" onclick="resetForm(true)" id="cancelBtn" class="hidden-force px-4 py-3 bg-slate-100 text-slate-500 rounded-xl"><i data-lucide="x"></i></button><button type="button" onclick="saveData()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">บันทึกข้อมูล</button></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-rose-400 uppercase">ค่าแอด</label><input type="number" id="adSpend" placeholder="0" class="text-rose-600 font-bold" step="any"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-emerald-500 uppercase">ยอดขาย</label><input type="number" id="sales" placeholder="0" class="text-emerald-600 font-bold" step="any"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-blue-400 uppercase">ออเดอร์</label><input type="number" id="orders" placeholder="0" class="text-blue-600 font-bold"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-amber-400 uppercase">ทัก</label><input type="number" id="inquiries" placeholder="0" class="text-amber-600 font-bold"></div>
+                    <div class="col-span-2 md:col-span-4 space-y-1"><input type="text" id="note" placeholder="บันทึกหมายเหตุ..."></div>
+                    <div class="col-span-2 md:col-span-2 flex items-end gap-2"><button type="button" onclick="resetForm(true)" id="cancelBtn" class="hidden-force px-4 py-3 bg-slate-100 rounded-xl"><i data-lucide="x"></i></button><button type="button" onclick="saveData()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg hover:bg-indigo-700 transition">บันทึกข้อมูล</button></div>
                 </form>
             </div>
         </section>
 
         <div class="max-w-7xl mx-auto mb-6 flex justify-between items-end">
-            <h3 class="h-bold text-xl text-slate-800">Performance Cards</h3>
+            <div>
+                <h3 class="h-bold text-xl text-slate-800">Performance Cards</h3>
+                <div id="roleBadge" class="hidden"></div> 
+            </div>
             <div class="flex items-center gap-3"><span class="text-xs h-bold text-slate-400 uppercase">Show Advice:</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="adviceToggle" class="sr-only peer" onchange="toggleAdviceGlobal()"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div></label></div>
         </div>
         <div id="product-cards" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 items-start justify-center"></div>
@@ -136,31 +136,17 @@
 
         <section class="max-w-7xl mx-auto mb-6">
             <div class="w-full bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                <div class="flex items-center gap-2 mb-4"><div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600"><i data-lucide="filter" size="16"></i></div><span class="text-sm h-bold uppercase text-slate-700">Smart Filter System</span></div>
+                <div class="flex items-center gap-2 mb-4"><div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600"><i data-lucide="filter" size="16"></i></div><span class="text-sm h-bold uppercase text-slate-700">Filter System</span></div>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                    <div class="space-y-1">
-                        <label class="text-[10px] h-bold text-slate-400 uppercase">เลือกโหมด (Filter Mode)</label>
-                        <select id="filterMode" onchange="toggleFilterInputs()" class="w-full">
-                            <option value="day">วัน</option>
-                            <option value="range">ช่วงวัน</option>
-                            <option value="week">สัปดาห์</option>
-                            <option value="14days">14 วัน</option>
-                            <option value="month">เดือน</option>
-                            <option value="quarter">ไตรมาส</option>
-                            <option value="year">ปี</option>
-                        </select>
-                    </div>
+                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">โหมด</label><select id="filterMode" onchange="toggleFilterInputs()"><option value="day">วัน</option><option value="range">ช่วงวัน</option><option value="week">สัปดาห์</option><option value="14days">14 วัน</option><option value="month">เดือน</option><option value="quarter">ไตรมาส</option><option value="year">ปี</option></select></div>
                     <div id="filter-dynamic-group" class="space-y-1 col-span-2"></div>
-                    <div class="space-y-1">
-                        <label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label>
-                        <select id="filterProduct" class="w-full"><option value="all">ทุกสินค้า</option></select>
-                    </div>
+                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="filterProduct"><option value="all">ทุกสินค้า</option></select></div>
                 </div>
             </div>
         </section>
 
         <section class="max-w-7xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-20">
-            <div class="p-6 border-b flex justify-between items-center bg-slate-50/50"><h3 class="h-bold text-lg text-slate-800 uppercase flex items-center gap-2"><i data-lucide="list" size="18"></i> ประวัติรายการ (Transaction History)</h3><span class="text-xs bg-slate-200 px-3 py-1 rounded-full h-bold text-slate-600" id="tx-count">0 items</span></div>
+            <div class="p-6 border-b flex justify-between items-center bg-slate-50/50"><h3 class="h-bold text-lg text-slate-800 uppercase flex items-center gap-2"><i data-lucide="list" size="18"></i> ประวัติรายการ</h3><span class="text-xs bg-slate-200 px-3 py-1 rounded-full h-bold text-slate-600" id="tx-count">0 items</span></div>
             <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-500 h-bold uppercase"><tr><th class="p-4">Date</th><th class="p-4">Product</th><th class="p-4 text-right">Sales</th><th class="p-4 text-right">Ads</th><th class="p-4 text-right">CPA</th><th class="p-4">Note</th><th class="p-4 text-center">Action</th></tr></thead><tbody id="tableBody" class="divide-y divide-slate-100"></tbody></table></div>
             <div class="p-4 bg-white border-t flex justify-between items-center"><p class="text-xs h-medium text-slate-400" id="pageInfo">Page 1 of 1</p><div class="flex gap-2"><button onclick="changePage(-1)" id="prevPageBtn" class="px-4 py-2 bg-slate-100 rounded-lg text-slate-600 hover:bg-slate-200 disabled:opacity-50 h-medium text-xs">Previous</button><button onclick="changePage(1)" id="nextPageBtn" class="px-4 py-2 bg-slate-100 rounded-lg text-slate-600 hover:bg-slate-200 disabled:opacity-50 h-medium text-xs">Next</button></div></div>
         </section>
@@ -168,26 +154,10 @@
 
     <div id="settingsSidebar" class="sidebar flex flex-col gap-6">
         <div class="flex justify-between items-center border-b pb-4"><h2 class="h-bold text-xl text-slate-800">MENU</h2><button onclick="toggleSidebar()" class="text-slate-400 hover:text-rose-500"><i data-lucide="x" size="24"></i></button></div>
-        
-        <div id="sidebarAuth" class="space-y-3">
-            <div id="loginSection">
-                <p class="text-xs text-slate-400 mb-2">Login for Edit Access:</p>
-                <button onclick="loginWithGoogle()" class="w-full py-3 bg-white border border-slate-200 rounded-xl flex items-center justify-center gap-2 hover:bg-slate-50 transition text-sm h-bold text-slate-700 shadow-sm"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg> Login with Google</button>
-            </div>
-            
-            <div id="logoutSection" class="hidden">
-                <div class="p-3 bg-indigo-50 rounded-xl mb-3 border border-indigo-100">
-                    <p class="text-[10px] text-indigo-400 uppercase h-bold">Logged in as:</p>
-                    <p id="userEmailDisplay" class="text-xs text-indigo-800 truncate"></p>
-                </div>
-                <button onclick="logout()" class="w-full py-3 bg-rose-50 text-rose-600 border border-rose-100 rounded-xl h-bold text-sm flex justify-center gap-2 hover:bg-rose-100 transition"><i data-lucide="log-out"></i> Logout</button>
-            </div>
-        </div>
-
-        <hr class="border-slate-100">
-        
-        <div class="mt-auto admin-only">
-            <p class="text-[10px] h-bold text-slate-400 uppercase mb-2">Admin Tools</p>
+        <div class="p-4 bg-indigo-50 rounded-xl mb-4 border border-indigo-100"><p class="text-[10px] text-indigo-400 uppercase h-bold">Logged in as:</p><p id="sidebarEmail" class="text-sm h-bold text-indigo-800 truncate">...</p></div>
+        <button onclick="logout()" class="w-full py-3 bg-rose-50 text-rose-600 border border-rose-100 rounded-xl h-bold text-sm flex justify-center gap-2 hover:bg-rose-100 transition"><i data-lucide="log-out"></i> Logout</button>
+        <div class="mt-auto">
+            <p class="text-xs text-slate-400 mb-2 uppercase h-bold">Current Profile Action:</p>
             <button onclick="exportJSON()" class="w-full py-3 bg-slate-800 text-white rounded-xl h-bold text-sm flex justify-center gap-2 mb-3"><i data-lucide="download"></i> Backup Data</button>
             <label class="w-full py-3 bg-amber-500 text-white rounded-xl h-bold text-sm flex justify-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload"></i> Import (Replace) <input type="file" hidden onchange="importJSON(event)"></label>
         </div>
@@ -195,152 +165,121 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-        import { getDatabase, ref, push, onValue, remove, update, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+        import { getDatabase, ref, push, onValue, remove, update, set, off } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
 
         const firebaseConfig = { apiKey: "AIzaSyBMHbzxijgu_fb5NzXb0QtySb6v7U9osu4", authDomain: "adstrackerkj.firebaseapp.com", databaseURL: "https://adstrackerkj-default-rtdb.asia-southeast1.firebasedatabase.app/", projectId: "adstrackerkj" };
         const app = initializeApp(firebaseConfig); const db = getDatabase(app); const auth = getAuth(app); const provider = new GoogleAuthProvider();
 
         // -------------------------------------------------------------
-        // 🔒 ADMIN WHITELIST (แก้ตรงนี้!)
+        // 🔒 CONFIG
         // -------------------------------------------------------------
-        const ADMIN_EMAILS = [
-            "thinnakorn.prima1@gmail.com",  // <--- ใส่เมลคุณ
-            "dogkadoop22@@gmail.com"        // <--- ใส่เมลทีมงาน (ถ้ามี)
+        const ADMIN_EMAILS = ["thinnakorn.prima1@gmail.com"]; 
+        const TEAM_MEMBERS = [
+            "thinnakorn.prima1@gmail.com", // Admin Profile
+            "thinnakorn.prima2@gmail.com"  // Staff Profile
         ];
         // -------------------------------------------------------------
 
-        let allData=[], filteredData=[], config={monthlyGoal:1000000}, currentPage=1; const ITEMS_PER_PAGE=10;
+        let allData=[], filteredData=[], config={monthlyGoal:1000000}, currentPage=1, currentBucket='', currentListener=null;
         const PRODUCTS=[{id:"เบต้าออยล์",css:"card-betaoil"},{id:"เบต้าไลฟ์",css:"card-betalife"},{id:"แล็บฟาร์ม",css:"card-labfarm"}];
 
-        // --- AUTH ---
-        window.loginWithGoogle = async () => {
-            try { await signInWithPopup(auth, provider); } catch (e) { alert("Login Error: "+e.message); }
+        const sanitize = (email) => email.replace(/\./g, '_').replace(/@/g, '_');
+
+        window.loginWithGoogle = async () => { try { await setPersistence(auth, browserSessionPersistence); await signInWithPopup(auth, provider); } catch (e) { alert("Login Error: "+e.message); } };
+        window.logout = () => signOut(auth).then(()=>window.location.reload());
+
+        function loadBucket(bucketName) {
+            if(currentListener) off(currentListener); 
+            currentBucket = bucketName;
+            document.body.dataset.currentBucket = bucketName;
+
+            onValue(ref(db, `adsData/${bucketName}/config`), snap => {
+                if(snap.exists()) { config={...config,...snap.val()}; document.getElementById('goalInput').value=config.monthlyGoal; renderApp(); }
+                else { config.monthlyGoal=1000000; document.getElementById('goalInput').value=1000000; renderApp(); }
+            });
+
+            currentListener = onValue(ref(db, `adsData/${bucketName}/records`), snap => {
+                const r = snap.val();
+                allData = r ? Object.keys(r).map(k=>({...r[k],id:k})) : [];
+                renderApp();
+            });
+        }
+
+        window.switchProfile = (bucket) => {
+            const sel = document.getElementById('profileSelector');
+            const name = sel.options[sel.selectedIndex].text;
+            loadBucket(bucket);
         };
-        window.logout = () => signOut(auth);
 
         window.onload = () => {
             lucide.createIcons(); document.getElementById('formDate').valueAsDate=new Date();
             const pSelect=document.getElementById('formPageId'); const fSelect=document.getElementById('filterProduct'); 
             PRODUCTS.forEach(p=>{ pSelect.innerHTML+=`<option value="${p.id}">${p.id}</option>`; fSelect.innerHTML+=`<option value="${p.id}">${p.id}</option>`; });
 
-            // Auth State Listener
             onAuthStateChanged(auth, (user) => {
-                const body = document.getElementById('appBody');
-                const statusBadge = document.getElementById('authStatus');
-                const loginSec = document.getElementById('loginSection');
-                const logoutSec = document.getElementById('logoutSection');
+                if (user) {
+                    if (TEAM_MEMBERS.length > 0 && !TEAM_MEMBERS.includes(user.email)) {
+                        document.getElementById('loginError').innerText = "❌ No Permission"; 
+                        document.getElementById('loginError').classList.remove('hidden'); signOut(auth); return;
+                    }
 
-                if (user && ADMIN_EMAILS.includes(user.email)) {
-                    // IS ADMIN
-                    body.classList.add('show-admin'); 
-                    body.classList.add('show-admin-block');
-                    statusBadge.innerHTML = `<i data-lucide="check-circle" size="14"></i> Admin Mode`;
-                    statusBadge.className = "px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs h-bold flex items-center gap-2";
+                    document.getElementById('lockOverlay').style.display='none';
+                    document.getElementById('mainContent').style.display='block';
+                    document.getElementById('sidebarEmail').innerText = user.email;
                     
-                    loginSec.classList.add('hidden');
-                    logoutSec.classList.remove('hidden');
-                    document.getElementById('userEmailDisplay').innerText = user.email;
+                    const myBucket = sanitize(user.email);
+                    const badge = document.getElementById('roleBadge');
+
+                    if (ADMIN_EMAILS.includes(user.email)) {
+                        document.getElementById('adminSwitcher').classList.remove('hidden');
+                        document.getElementById('adminSwitcher').classList.add('flex');
+                        
+                        // Admin Badge
+                        badge.className = "mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-100 text-indigo-700 text-xs h-bold border border-indigo-200";
+                        badge.innerHTML = `<i data-lucide="shield-check" size="14"></i> ADMINISTRATOR: ${user.email}`;
+                        badge.classList.remove('hidden');
+
+                        const sel = document.getElementById('profileSelector');
+                        sel.innerHTML = '';
+                        TEAM_MEMBERS.forEach(email => {
+                            const val = sanitize(email);
+                            const label = email === user.email ? `${email} (Me)` : email;
+                            sel.innerHTML += `<option value="${val}" ${email===user.email?'selected':''}>${label}</option>`;
+                        });
+                    } else {
+                        // Staff Badge
+                        badge.className = "mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 text-slate-500 text-xs h-bold border border-slate-200";
+                        badge.innerHTML = `<i data-lucide="user" size="14"></i> STAFF ACCESS: ${user.email}`;
+                        badge.classList.remove('hidden');
+                    }
+
+                    loadBucket(myBucket);
+                    toggleFilterInputs(); 
+                    lucide.createIcons();
                 } else {
-                    // GUEST / UNAUTHORIZED
-                    body.classList.remove('show-admin');
-                    body.classList.remove('show-admin-block');
-                    statusBadge.innerHTML = `<i data-lucide="eye" size="14"></i> View Only`;
-                    statusBadge.className = "px-3 py-1 rounded-full bg-slate-200 text-slate-500 text-xs h-bold flex items-center gap-2";
-                    
-                    loginSec.classList.remove('hidden');
-                    logoutSec.classList.add('hidden');
-                    if(user) alert("❌ อีเมลนี้ไม่มีสิทธิ์แก้ไขข้อมูล (View Only Mode)");
+                    document.getElementById('lockOverlay').style.display='flex';
+                    document.getElementById('mainContent').style.display='none';
                 }
-                lucide.createIcons();
             });
-
-            toggleFilterInputs(); 
             document.getElementById('filterProduct').addEventListener('change',()=>{currentPage=1;renderApp()});
-            onValue(ref(db,'config'),snap=>{ if(snap.exists()){ config={...config,...snap.val()}; document.getElementById('goalInput').value=config.monthlyGoal; renderApp(); } });
-            onValue(ref(db,'adsData'),snap=>{ const r=snap.val(); allData=r?Object.keys(r).map(k=>({...r[k],id:k})):[]; renderApp(); });
         };
 
-        // --- FILTER ---
-        window.toggleFilterInputs = () => {
-            const m = document.getElementById('filterMode').value, c = document.getElementById('filter-dynamic-group'), t = new Date().toISOString().split('T')[0]; c.innerHTML = '';
-            if(m==='day') c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full" value="${t}" onchange="renderApp()">`;
-            else if(m==='range') c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">จาก - ถึง</label><div class="flex gap-2"><input type="date" id="filterStart" class="w-full" onchange="renderApp()"><input type="date" id="filterEnd" class="w-full" onchange="renderApp()"></div>`;
-            else if(m==='week') c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เลือกสัปดาห์</label><input type="date" id="filterWeek" class="w-full" value="${t}" onchange="renderApp()">`;
-            else if(m==='14days') c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เริ่ม (14 วัน)</label><input type="date" id="filter14" class="w-full" value="${t}" onchange="renderApp()">`;
-            else if(m==='month'){ c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full" onchange="renderApp()"></select><select id="filterYear" class="w-full" onchange="renderApp()"></select></div>`; setupMonthYear(); }
-            else if(m==='quarter'){ c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ไตรมาส/ปี</label><div class="flex gap-2"><select id="filterQ" class="w-full" onchange="renderApp()"><option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option></select><select id="filterYearQ" class="w-full" onchange="renderApp()"></select></div>`; setupYear('filterYearQ'); }
-            else if(m==='year'){ c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ปี</label><select id="filterYearOnly" class="w-full" onchange="renderApp()"></select>`; setupYear('filterYearOnly'); }
-            currentPage = 1; setTimeout(renderApp, 100);
-        };
-        function setupMonthYear() { const m=document.getElementById('filterMonth'), n=new Date(); ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."].forEach((v,i)=>m.innerHTML+=`<option value="${i+1}" ${i===n.getMonth()?'selected':''}>${v}</option>`); setupYear('filterYear'); }
-        function setupYear(id) { const y=document.getElementById(id), c=new Date().getFullYear(); for(let i=c; i>=2024; i--) y.innerHTML+=`<option value="${i}">${i}</option>`; }
+        window.saveData=async()=>{const id=document.getElementById('editId').value,d={pageId:document.getElementById('formPageId').value,date:document.getElementById('formDate').value,adSpend:parseFloat(document.getElementById('adSpend').value)||0,sales:parseFloat(document.getElementById('sales').value)||0,orders:parseInt(document.getElementById('orders').value)||0,inquiries:parseInt(document.getElementById('inquiries').value)||0,note:document.getElementById('note').value,timestamp:Date.now()};try{const p=`adsData/${currentBucket}/records`;if(id)await update(ref(db,`${p}/${id}`),d);else await push(ref(db,p),d);alert(`✅ Saved to: ${currentBucket}`);currentPage=1;document.getElementById('filterMode').value='month';setupMonthYear();window.toggleFilterInputs();resetForm();}catch(e){alert("Error: "+e.message);}};
+        window.saveGoal=()=>{const v=parseFloat(document.getElementById('goalInput').value);if(v>0){set(ref(db,`adsData/${currentBucket}/config/monthlyGoal`),v);toggleGoalEdit(false);}};
+        window.deleteEntry=async(id)=>{if(!confirm("Delete?"))return;await remove(ref(db,`adsData/${currentBucket}/records/${id}`));};
+        window.importJSON=(e)=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=async(ev)=>{try{const j=JSON.parse(ev.target.result);let dt=[];if(j.data&&Array.isArray(j.data))dt=j.data;else if(Array.isArray(j))dt=j;else if(typeof j==='object')dt=Object.values(j);if(dt.length===0){alert("No Data");return;}if(confirm(`⚠️ Import to [${currentBucket}]?\n(Old data will be CLEARED)`)){document.body.style.cursor='wait';const p=`adsData/${currentBucket}/records`;await set(ref(db,p),null);for(const i of dt)await push(ref(db,p),i);document.body.style.cursor='default';alert("✅ Import Success");location.reload();}}catch(e){alert("Error: "+e.message);}document.getElementById('fileInput').value='';};r.readAsText(f);};
 
-        window.renderApp = () => {
-            const m=document.getElementById('filterMode').value, fp=document.getElementById('filterProduct').value;
-            filteredData=allData.filter(d=>{
-                const dt=new Date(d.date); let match=true;
-                if(m==='day') match=d.date===document.getElementById('filterDate').value;
-                else if(m==='range'){ const s=document.getElementById('filterStart').value, e=document.getElementById('filterEnd').value; if(s&&e) match=d.date>=s && d.date<=e; }
-                else if(m==='week'){ const s=new Date(document.getElementById('filterWeek').value), day=s.getDay()||7; if(day!==1)s.setHours(-24*(day-1)); const start=s.toISOString().split('T')[0]; s.setDate(s.getDate()+6); const end=s.toISOString().split('T')[0]; match=d.date>=start && d.date<=end; }
-                else if(m==='14days'){ const s=new Date(document.getElementById('filter14').value), e=new Date(s); e.setDate(e.getDate()+13); match=d.date>=s.toISOString().split('T')[0] && d.date<=e.toISOString().split('T')[0]; }
-                else if(m==='month') match=(dt.getMonth()+1)==document.getElementById('filterMonth').value && dt.getFullYear()==document.getElementById('filterYear').value;
-                else if(m==='quarter'){ const q=parseInt(document.getElementById('filterQ').value), mo=dt.getMonth()+1; match=dt.getFullYear()==document.getElementById('filterYearQ').value && ((q===1&&mo<=3)||(q===2&&mo>3&&mo<=6)||(q===3&&mo>6&&mo<=9)||(q===4&&mo>9)); }
-                else if(m==='year') match=dt.getFullYear()==document.getElementById('filterYearOnly').value;
-                return match && (fp==='all'||d.pageId===fp);
-            });
-            renderStats(); renderCards(); renderTable(); lucide.createIcons();
-        };
-
-        function renderTable(){
-            const sorted=[...filteredData].sort((a,b)=>new Date(b.date)-new Date(a.date)), total=sorted.length, pages=Math.ceil(total/ITEMS_PER_PAGE)||1;
-            if(currentPage>pages)currentPage=pages; if(currentPage<1)currentPage=1;
-            const start=(currentPage-1)*ITEMS_PER_PAGE, paginated=sorted.slice(start, start+ITEMS_PER_PAGE), tbody=document.getElementById('tableBody'); tbody.innerHTML='';
-            document.getElementById('tx-count').innerText=`${total} items`; document.getElementById('pageInfo').innerText=`Page ${currentPage} of ${pages}`;
-            document.getElementById('prevPageBtn').disabled=currentPage===1; document.getElementById('nextPageBtn').disabled=currentPage===pages;
-            
-            paginated.forEach(i=>{
-                const cpa=i.orders>0?(i.adSpend/i.orders).toFixed(0):0;
-                let rowClass='hover:bg-slate-50 border-l-slate-300', badgeClass='bg-slate-100 text-slate-500';
-                if(i.pageId==='เบต้าออยล์'){ rowClass='hover:bg-amber-50/80 bg-amber-50/30 border-l-amber-500'; badgeClass='bg-amber-100 text-amber-700 border-amber-200'; }
-                else if(i.pageId==='เบต้าไลฟ์'){ rowClass='hover:bg-orange-50/80 bg-orange-50/30 border-l-orange-800'; badgeClass='bg-orange-100 text-orange-900 border-orange-200'; }
-                else if(i.pageId==='แล็บฟาร์ม'){ rowClass='hover:bg-emerald-50/80 bg-emerald-50/30 border-l-emerald-500'; badgeClass='bg-emerald-100 text-emerald-700 border-emerald-200'; }
-                tbody.innerHTML+=`<tr class="transition border-l-[4px] border-b border-slate-100 ${rowClass}"><td class="p-4 h-medium text-slate-700">${new Date(i.date).toLocaleDateString('th-TH')}</td><td class="p-4"><span class="text-xs h-bold px-2 py-1 rounded border ${badgeClass}">${i.pageId}</span></td><td class="p-4 text-right h-bold text-slate-700">฿${parseFloat(i.sales).toLocaleString()}</td><td class="p-4 text-right h-bold text-slate-500">฿${parseFloat(i.adSpend).toLocaleString()}</td><td class="p-4 text-right h-medium text-indigo-600">฿${cpa}</td><td class="p-4 text-slate-400 italic truncate max-w-[150px] text-xs">${i.note||'-'}</td><td class="p-4 text-center admin-only"><div class="flex justify-center gap-2"><button onclick="window.editEntry('${i.id}')" class="text-indigo-400 hover:text-indigo-600"><i data-lucide="edit-3" size="18"></i></button><button onclick="window.deleteEntry('${i.id}')" class="text-rose-400 hover:text-rose-600"><i data-lucide="trash-2" size="18"></i></button></div></td></tr>`;
-            });
-            lucide.createIcons();
-        }
-
-        function renderStats(){
-            const s=filteredData.reduce((a,b)=>a+(parseFloat(b.sales)||0),0), a=filteredData.reduce((a,b)=>a+(parseFloat(b.adSpend)||0),0), o=filteredData.reduce((a,b)=>a+(parseInt(b.orders)||0),0), i=filteredData.reduce((a,b)=>a+(parseInt(b.inquiries)||0),0);
-            document.getElementById('sum-sales').innerText=`฿${s.toLocaleString()}`; document.getElementById('sum-ads').innerText=`฿${a.toLocaleString()}`;
-            document.getElementById('sum-pct').innerText=s>0?`${((a/s)*100).toFixed(1)}%`:'0%'; document.getElementById('sum-cpa').innerText=o>0?`฿${(a/o).toFixed(0)}`:'0';
-            document.getElementById('sum-inq').innerText=i>0?`฿${(a/i).toFixed(0)}`:'0'; document.getElementById('sum-roas').innerText=a>0?(s/a).toFixed(2):'0.0';
-            const goal=config.monthlyGoal, remain=Math.max(0,goal-s), pct=(s/goal)*100;
-            document.getElementById('ui-goal').innerText=`฿${goal.toLocaleString()}`; document.getElementById('ui-progress-bar').style.width=`${Math.min(100,pct)}%`; document.getElementById('ui-progress-text').innerText=`฿${s.toLocaleString()} / ขาดอีก ฿${remain.toLocaleString()}`; document.getElementById('ui-percent').innerText=`${pct.toFixed(1)}%`;
-            const days=new Set(filteredData.map(d=>d.date)).size||1, now=new Date(), dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
-            document.getElementById('ui-avg-actual').innerText=`฿${(s/days).toLocaleString(undefined,{maximumFractionDigits:0})}`; document.getElementById('ui-avg-required').innerText=`฿${(remain/Math.max(1,dim-now.getDate())).toLocaleString(undefined,{maximumFractionDigits:0})}`;
-        }
-
-        function renderCards(){
-            const container=document.getElementById('product-cards'), showAdvice=document.getElementById('adviceToggle').checked; container.innerHTML='';
-            PRODUCTS.forEach(p=>{
-                const d=filteredData.filter(x=>x.pageId===p.id), s=d.reduce((a,b)=>a+(parseFloat(b.sales)||0),0), a=d.reduce((a,b)=>a+(parseFloat(b.adSpend)||0),0), o=d.reduce((a,b)=>a+(parseInt(b.orders)||0),0), inq=d.reduce((a,b)=>a+(parseInt(b.inquiries)||0),0);
-                const pct=s>0?(a/s)*100:0, roas=a>0?s/a:0, cpa=o>0?a/o:0, cr=inq>0?(o/inq)*100:0;
-                let adv='', cls=''; if(s===0){ cls='bg-slate-50 text-slate-400'; adv='<span>รอข้อมูล...</span>'; } else if(pct<60){ cls='bg-emerald-100 text-emerald-800 border-emerald-300'; adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="flame" size="18" class="text-rose-500"></i><span class="h-bold">นาทีทอง! (Scale Up)</span></div><p class="text-xs">แอดถูกมาก (${pct.toFixed(1)}%) รีบอัดงบเพิ่มด่วน!</p>`; } else if(pct<=75){ cls='bg-green-50 text-green-800 border-green-200'; adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="trending-up" size="18" class="text-green-600"></i><span class="h-bold">กำไรดี (Step Up)</span></div><p class="text-xs">อยู่ในเกณฑ์ดี (${pct.toFixed(1)}%) ทยอยเพิ่มงบได้</p>`; } else if(pct<=85){ cls='bg-amber-50 text-amber-800 border-amber-200'; adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-circle" size="18" class="text-amber-600"></i><span class="h-bold">เฝ้าระวัง (Maintain)</span></div><p class="text-xs">ห้ามเพิ่มงบ! คุมให้ยอดนิ่ง (${pct.toFixed(1)}%)</p>`; } else { cls='bg-rose-50 text-rose-800 border-rose-200'; adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="x-octagon" size="18" class="text-rose-600"></i><span class="h-bold">อันตราย! (Optimize)</span></div><p class="text-xs">ขาดทุนแล้ว (${pct.toFixed(1)}%) ลดงบ/ปิดตัวด่วน</p>`; }
-                container.innerHTML+=`<div class="card-stat ${p.css}"><div><div class="flex justify-between items-start mb-6"><h3 class="h-bold text-xl text-slate-800">${p.id}</h3><i data-lucide="bar-chart-2" class="text-slate-300"></i></div><div class="space-y-4 mb-6"><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ยอดขาย</span><span class="text-2xl h-bold text-emerald-500">฿${s.toLocaleString()}</span></div><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ค่าแอด</span><span class="text-xl h-bold text-rose-500">฿${a.toLocaleString()}</span></div><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">CPA</span><span class="text-lg h-medium text-slate-600">฿${cpa.toFixed(0)}</span></div></div><div class="grid grid-cols-2 gap-3"><div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">% ADS</p><p class="text-xl h-bold ${pct>80?'text-rose-500':'text-slate-800'}">${pct.toFixed(1)}%</p></div><div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">STAT</p><p class="text-xl h-bold text-amber-500">${roas.toFixed(1)}</p></div></div></div><div class="advice-box ${cls} ${showAdvice?'':'advice-hidden'}">${adv}</div></div>`;
-            });
-            lucide.createIcons();
-        }
-
-        window.saveData=async()=>{ const k="kjondabeat", id=document.getElementById('editId').value, d={pageId:document.getElementById('formPageId').value, date:document.getElementById('formDate').value, adSpend:parseFloat(document.getElementById('adSpend').value)||0, sales:parseFloat(document.getElementById('sales').value)||0, orders:parseInt(document.getElementById('orders').value)||0, inquiries:parseInt(document.getElementById('inquiries').value)||0, note:document.getElementById('note').value, securityKey:k, timestamp:Date.now()}; try{ if(id)await update(ref(db,`adsData/${id}`),d); else await push(ref(db,'adsData'),d); alert("✅ บันทึกสำเร็จ!"); currentPage=1; document.getElementById('filterMode').value='month'; const t=new Date(); document.getElementById('filterMonth').value=t.getMonth()+1; document.getElementById('filterYear').value=t.getFullYear(); window.toggleFilterInputs(); resetForm(); }catch(e){alert("❌ Error: "+e.message);} };
-        window.resetForm=(full=false)=>{ document.getElementById('adsForm').reset(); document.getElementById('editId').value=''; document.getElementById('formDate').valueAsDate=new Date(); if(full)document.getElementById('cancelBtn').classList.add('hidden-force'); };
-        window.toggleGoalEdit=(s)=>{ const b=document.body.classList.contains('show-admin'); if(!b)return; document.getElementById('goalDisplay').classList.toggle('hidden',s); document.getElementById('goalEdit').classList.toggle('hidden',!s); document.getElementById('goalEdit').classList.toggle('flex',s); if(s)document.getElementById('goalInput').value=config.monthlyGoal; };
-        window.saveAdminKey=(v)=>{}; window.toggleSidebar=()=>document.getElementById('settingsSidebar').classList.toggle('open'); window.updateGoal=(v)=>{const k="kjondabeat"; set(ref(db,'config/monthlyGoal'),parseFloat(v));};
-        window.editEntry=(id)=>{const d=allData.find(x=>x.id===id);if(!d)return;document.getElementById('editId').value=id;document.getElementById('formPageId').value=d.pageId;document.getElementById('formDate').value=d.date;document.getElementById('adSpend').value=d.adSpend;document.getElementById('sales').value=d.sales;document.getElementById('orders').value=d.orders;document.getElementById('inquiries').value=d.inquiries;document.getElementById('note').value=d.note||'';document.getElementById('cancelBtn').classList.remove('hidden-force');window.scrollTo({top:document.getElementById('inputSection').offsetTop-100,behavior:'smooth'});};
-        window.deleteEntry=async(id)=>{if(!confirm("ยืนยันลบ?"))return;const k="kjondabeat";try{await update(ref(db,`adsData/${id}`),{securityKey:k,sales:null});await remove(ref(db,`adsData/${id}`));}catch(e){alert("❌ Error: "+e.message);}};
-        window.exportJSON=()=>{const s="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(allData));const n=document.createElement('a');n.href=s;n.download="backup_ads_data.json";n.click();};
-        window.importJSON=(e)=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=async(ev)=>{try{const j=JSON.parse(ev.target.result);let dt=[];if(j.data && Array.isArray(j.data))dt=j.data;else if(Array.isArray(j))dt=j;else if(typeof j==='object')dt=Object.values(j);if(dt.length===0){alert("❌ ไม่พบข้อมูล");return;}if(confirm(`นำเข้า ${dt.length} รายการ (ล้างของเก่า)?`)){document.body.style.cursor='wait';if(allData.length>0)for(const i of allData)if(i.id)await remove(ref(db,`adsData/${i.id}`));const k="kjondabeat";for(const i of dt)await push(ref(db,'adsData'),{...i,securityKey:k});document.body.style.cursor='default';alert("✅ Import สำเร็จ");location.reload();}}catch(e){document.body.style.cursor='default';alert("Error: "+e.message);}document.getElementById('fileInput').value='';};r.readAsText(f);};
-        window.saveGoal=()=>{const v=parseFloat(document.getElementById('goalInput').value);if(v>0){set(ref(db,'config/monthlyGoal'),v);toggleGoalEdit(false);}};
+        window.toggleFilterInputs=()=>{const m=document.getElementById('filterMode').value,c=document.getElementById('filter-dynamic-group'),t=new Date().toISOString().split('T')[0];c.innerHTML='';if(m==='day')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full" value="${t}" onchange="renderApp()">`;else if(m==='range')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">จาก - ถึง</label><div class="flex gap-2"><input type="date" id="filterStart" class="w-full" onchange="renderApp()"><input type="date" id="filterEnd" class="w-full" onchange="renderApp()"></div>`;else if(m==='week')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เลือกสัปดาห์</label><input type="date" id="filterWeek" class="w-full" value="${t}" onchange="renderApp()">`;else if(m==='14days')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เริ่ม (14 วัน)</label><input type="date" id="filter14" class="w-full" value="${t}" onchange="renderApp()">`;else if(m==='month'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full" onchange="renderApp()"></select><select id="filterYear" class="w-full" onchange="renderApp()"></select></div>`;setupMonthYear();}else if(m==='quarter'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ไตรมาส/ปี</label><div class="flex gap-2"><select id="filterQ" class="w-full" onchange="renderApp()"><option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option></select><select id="filterYearQ" class="w-full" onchange="renderApp()"></select></div>`;setupYear('filterYearQ');}else if(m==='year'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ปี</label><select id="filterYearOnly" class="w-full" onchange="renderApp()"></select>`;setupYear('filterYearOnly');}currentPage=1;setTimeout(renderApp,100);};
+        function setupMonthYear(){const m=document.getElementById('filterMonth'),n=new Date();["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."].forEach((v,i)=>m.innerHTML+=`<option value="${i+1}" ${i===n.getMonth()?'selected':''}>${v}</option>`);setupYear('filterYear');}
+        function setupYear(id){const y=document.getElementById(id),c=new Date().getFullYear();for(let i=c;i>=2024;i--)y.innerHTML+=`<option value="${i}">${i}</option>`;}
+        window.renderApp=()=>{const m=document.getElementById('filterMode').value,fp=document.getElementById('filterProduct').value;filteredData=allData.filter(d=>{const dt=new Date(d.date);let match=true;if(m==='day')match=d.date===document.getElementById('filterDate').value;else if(m==='range'){const s=document.getElementById('filterStart').value,e=document.getElementById('filterEnd').value;if(s&&e)match=d.date>=s&&d.date<=e;}else if(m==='week'){const s=new Date(document.getElementById('filterWeek').value),day=s.getDay()||7;if(day!==1)s.setHours(-24*(day-1));const start=s.toISOString().split('T')[0];s.setDate(s.getDate()+6);const end=s.toISOString().split('T')[0];match=d.date>=start&&d.date<=end;}else if(m==='14days'){const s=new Date(document.getElementById('filter14').value),e=new Date(s);e.setDate(e.getDate()+13);match=d.date>=s.toISOString().split('T')[0]&&d.date<=e.toISOString().split('T')[0];}else if(m==='month')match=(dt.getMonth()+1)==document.getElementById('filterMonth').value&&dt.getFullYear()==document.getElementById('filterYear').value;else if(m==='quarter'){const q=parseInt(document.getElementById('filterQ').value),mo=dt.getMonth()+1;match=dt.getFullYear()==document.getElementById('filterYearQ').value&&((q===1&&mo<=3)||(q===2&&mo>3&&mo<=6)||(q===3&&mo>6&&mo<=9)||(q===4&&mo>9));}else if(m==='year')match=dt.getFullYear()==document.getElementById('filterYearOnly').value;return match&&(fp==='all'||d.pageId===fp);});renderStats();renderCards();renderTable();lucide.createIcons();};
+        function renderStats(){const s=filteredData.reduce((a,b)=>a+(parseFloat(b.sales)||0),0),a=filteredData.reduce((a,b)=>a+(parseFloat(b.adSpend)||0),0),o=filteredData.reduce((a,b)=>a+(parseInt(b.orders)||0),0),i=filteredData.reduce((a,b)=>a+(parseInt(b.inquiries)||0),0);document.getElementById('sum-sales').innerText=`฿${s.toLocaleString()}`;document.getElementById('sum-ads').innerText=`฿${a.toLocaleString()}`;document.getElementById('sum-pct').innerText=s>0?`${((a/s)*100).toFixed(1)}%`:'0%';document.getElementById('sum-cpa').innerText=o>0?`฿${(a/o).toFixed(0)}`:'0';document.getElementById('sum-inq').innerText=i>0?`฿${(a/i).toFixed(0)}`:'0';document.getElementById('sum-roas').innerText=a>0?(s/a).toFixed(2):'0.0';const goal=config.monthlyGoal,remain=Math.max(0,goal-s),pct=(s/goal)*100;document.getElementById('ui-goal').innerText=`฿${goal.toLocaleString()}`;document.getElementById('ui-progress-bar').style.width=`${Math.min(100,pct)}%`;document.getElementById('ui-progress-text').innerText=`฿${s.toLocaleString()} / ขาด ฿${remain.toLocaleString()}`;document.getElementById('ui-percent').innerText=`${pct.toFixed(1)}%`;const days=new Set(filteredData.map(d=>d.date)).size||1,now=new Date(),dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();document.getElementById('ui-avg-actual').innerText=`฿${(s/days).toLocaleString(undefined,{maximumFractionDigits:0})}`;document.getElementById('ui-avg-required').innerText=`฿${(remain/Math.max(1,dim-now.getDate())).toLocaleString(undefined,{maximumFractionDigits:0})}`;}
+        function renderCards(){const c=document.getElementById('product-cards'),sh=document.getElementById('adviceToggle').checked;c.innerHTML='';PRODUCTS.forEach(p=>{const d=filteredData.filter(x=>x.pageId===p.id),s=d.reduce((a,b)=>a+(parseFloat(b.sales)||0),0),a=d.reduce((a,b)=>a+(parseFloat(b.adSpend)||0),0),pct=s>0?(a/s)*100:0;let adv='',cls='';if(s===0){cls='bg-slate-50 text-slate-400';adv='Waiting...';}else if(pct<60){cls='bg-emerald-100 text-emerald-800 border-emerald-300';adv='Scale Up!';}else if(pct<=75){cls='bg-green-50 text-green-800 border-green-200';adv='Step Up';}else if(pct<=85){cls='bg-amber-50 text-amber-800 border-amber-200';adv='Maintain';}else{cls='bg-rose-50 text-rose-800 border-rose-200';adv='Optimize';}c.innerHTML+=`<div class="card-stat ${p.css}"><div><h3 class="h-bold text-xl">${p.id}</h3><div class="mt-4"><p class="text-xs text-slate-400">SALES</p><p class="text-2xl h-bold text-emerald-600">฿${s.toLocaleString()}</p></div><div class="mt-2"><p class="text-xs text-slate-400">ADS</p><p class="text-xl h-bold text-rose-500">฿${a.toLocaleString()}</p></div></div><div class="advice-box ${cls} ${sh?'':'advice-hidden'}">${adv}</div></div>`;});}
+        function renderTable(){const s=[...filteredData].sort((a,b)=>new Date(b.date)-new Date(a.date)),t=document.getElementById('tableBody');t.innerHTML='';s.slice(0,50).forEach(i=>{let rc='hover:bg-slate-50 border-l-slate-300',bc='bg-slate-100 text-slate-500';if(i.pageId==='เบต้าออยล์'){rc='hover:bg-amber-50/80 bg-amber-50/30 border-l-amber-500';bc='bg-amber-100 text-amber-700';}else if(i.pageId==='เบต้าไลฟ์'){rc='hover:bg-orange-50/80 bg-orange-50/30 border-l-orange-800';bc='bg-orange-100 text-orange-900';}else if(i.pageId==='แล็บฟาร์ม'){rc='hover:bg-emerald-50/80 bg-emerald-50/30 border-l-emerald-500';bc='bg-emerald-100 text-emerald-700';}t.innerHTML+=`<tr class="transition border-l-[4px] border-b border-slate-100 ${rc}"><td class="p-4">${new Date(i.date).toLocaleDateString('th-TH')}</td><td class="p-4"><span class="text-xs px-2 py-1 rounded ${bc}">${i.pageId}</span></td><td class="p-4 text-right">฿${parseFloat(i.sales).toLocaleString()}</td><td class="p-4 text-right">฿${parseFloat(i.adSpend).toLocaleString()}</td><td class="p-4 text-right">฿${(i.orders>0?(i.adSpend/i.orders).toFixed(0):0)}</td><td class="p-4 text-xs">${i.note||'-'}</td><td class="p-4 text-center"><button onclick="window.editEntry('${i.id}')" class="text-indigo-500"><i data-lucide="edit-3" size="16"></i></button><button onclick="window.deleteEntry('${i.id}')" class="text-rose-500 ml-2"><i data-lucide="trash-2" size="16"></i></button></td></tr>`;});lucide.createIcons();}
+        window.resetForm=(full=false)=>{document.getElementById('adsForm').reset();document.getElementById('editId').value='';document.getElementById('formDate').valueAsDate=new Date();if(full)document.getElementById('cancelBtn').classList.add('hidden-force');};
+        window.toggleGoalEdit=(s)=>{document.getElementById('goalDisplay').classList.toggle('hidden',s);document.getElementById('goalEdit').classList.toggle('hidden',!s);document.getElementById('goalEdit').classList.toggle('flex',s);if(s)document.getElementById('goalInput').value=config.monthlyGoal;};
+        window.saveAdminKey=(v)=>{}; window.toggleSidebar=()=>document.getElementById('settingsSidebar').classList.toggle('open'); window.exportJSON=()=>{const s="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(allData));const n=document.createElement('a');n.href=s;n.download=`backup_${currentBucket}.json`;n.click();};
     </script>
 </body>
 </html>
