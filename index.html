@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V10.3 - Universal Fix</title>
+    <title>Ads Cloud Master V10.3 - Universal Import</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -64,7 +64,7 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.3 Final Fix</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.3 Universal Fix</p></div></div>
             
             <div class="flex items-center gap-3">
                 <div id="adminSwitcher" class="hidden items-center gap-2 bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-100">
@@ -179,7 +179,7 @@
         const app = initializeApp(firebaseConfig); const db = getDatabase(app);
 
         // -------------------------------------------------------------
-        // 🔒 CONFIG: BUCKET CODES (กำหนดรหัสและชื่อถังตรงนี้)
+        // 🔒 CONFIG: ACCESS CODES
         // -------------------------------------------------------------
         const ACCESS_CODES = {
             "kjmaster": { role: "ADMIN", bucket: "adsData_master", name: "KJ Master (Admin)" }, 
@@ -192,7 +192,7 @@
         const PRODUCTS=[{id:"เบต้าออยล์",css:"card-betaoil"},{id:"เบต้าไลฟ์",css:"card-betalife"},{id:"แล็บฟาร์ม",css:"card-labfarm"}];
 
         // --- AUTH: MANUAL CODE CHECK ---
-        window.checkAccessCode = () => {
+        window.loginWithCode = () => {
             const code = document.getElementById('accessCode').value;
             if (ACCESS_CODES[code]) {
                 const user = ACCESS_CODES[code];
@@ -203,7 +203,7 @@
             }
         };
         // Trigger login on Enter key
-        window.loginWithCode = window.checkAccessCode;
+        window.checkAccessCode = () => { if(event.key === 'Enter') window.loginWithCode(); };
 
         function initializeSession(user) {
             currentUser = user;
@@ -224,7 +224,7 @@
                 document.getElementById('adminSwitcher').classList.add('flex');
                 
                 const sel = document.getElementById('profileSelector');
-                sel.innerHTML = `<option value="${user.bucket}">My Bucket (Master)</option>`;
+                sel.innerHTML = `<option value="${user.bucket}">My Bucket</option>`;
                 Object.values(ACCESS_CODES).forEach(u => {
                     if (u.bucket !== user.bucket) sel.innerHTML += `<option value="${u.bucket}">${u.name}</option>`;
                 });
@@ -242,19 +242,23 @@
         // --- CORE: DATA LOADER ---
         function loadDataForBucket(bucketName) {
             if (currentListener) off(currentListener);
-            document.body.dataset.currentBucket = bucketName; // Tag for save logic
+            document.body.dataset.currentBucket = bucketName;
+            document.getElementById('currentBucketDisplay').innerText = bucketName;
 
-            // Load Goal
             onValue(ref(db, `adsData/${bucketName}/config`), snap => {
                 if(snap.exists()) { config = {...config, ...snap.val()}; document.getElementById('goalInput').value = config.monthlyGoal; renderApp(); }
                 else { config.monthlyGoal = 1000000; document.getElementById('goalInput').value = 1000000; renderApp(); }
             });
 
-            // Load Records
             currentListener = onValue(ref(db, `adsData/${bucketName}/records`), snap => {
                 const r = snap.val();
                 allData = r ? Object.keys(r).map(k => ({...r[k], id: k})) : [];
                 renderApp();
+            }, (error) => {
+                // DETECT PERMISSION ERROR
+                if(error.code === "PERMISSION_DENIED") {
+                    alert("🚨 ACCESS DENIED: กรุณาไปแก้ Firebase Database Rules ให้เป็น '.read': true, '.write': true");
+                }
             });
         }
 
@@ -281,7 +285,7 @@
             document.getElementById('filterProduct').addEventListener('change',()=>{currentPage=1;renderApp()});
         };
 
-        // --- SAVE/EDIT/DELETE (Scoped) ---
+        // --- SAVE/EDIT/DELETE ---
         window.saveData = async () => {
             const bucket = document.body.dataset.currentBucket;
             if(!bucket) return;
@@ -295,14 +299,9 @@
         };
 
         window.updateGoal = (v) => { const b=document.body.dataset.currentBucket; if(b) set(ref(db, `adsData/${b}/config/monthlyGoal`), parseFloat(v)); };
-        
-        window.deleteEntry = async (id) => {
-            if(!confirm("Delete?")) return;
-            const b=document.body.dataset.currentBucket;
-            if(b) await remove(ref(db, `adsData/${b}/records/${id}`));
-        };
+        window.deleteEntry = async (id) => { if(!confirm("Delete?")) return; const b=document.body.dataset.currentBucket; if(b) await remove(ref(db, `adsData/${b}/records/${id}`)); };
 
-        // --- UNIVERSAL IMPORT (Fix for Old Backups) ---
+        // --- UNIVERSAL IMPORT (The Fix) ---
         window.importJSON = (e) => {
             const f = e.target.files[0]; if(!f) return;
             const r = new FileReader();
@@ -323,7 +322,7 @@
                     if (dt.length === 0) { alert("❌ No valid data found in file!"); return; }
                     
                     const bucket = document.body.dataset.currentBucket;
-                    if(confirm(`⚠️ Import to [${bucket}]?\nFound: ${dt.length} items\n(Old data will be CLEARED)`)){
+                    if(confirm(`⚠️ Import ${dt.length} items to [${bucket}]?\n(Old data will be CLEARED)`)){
                         document.body.style.cursor='wait';
                         const path = `adsData/${bucket}/records`;
                         await set(ref(db, path), null);
@@ -336,7 +335,7 @@
             r.readAsText(f);
         };
 
-        // --- RENDER LOGIC (Standard V8.5) ---
+        // --- RENDER LOGIC ---
         window.toggleFilterInputs=()=>{const m=document.getElementById('filterMode').value,c=document.getElementById('filter-dynamic-group'),t=new Date().toISOString().split('T')[0];c.innerHTML='';if(m==='day')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full" value="${t}" onchange="renderApp()">`;else if(m==='range')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">จาก - ถึง</label><div class="flex gap-2"><input type="date" id="filterStart" class="w-full" onchange="renderApp()"><input type="date" id="filterEnd" class="w-full" onchange="renderApp()"></div>`;else if(m==='week')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เลือกสัปดาห์</label><input type="date" id="filterWeek" class="w-full" value="${t}" onchange="renderApp()">`;else if(m==='14days')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เริ่ม (14 วัน)</label><input type="date" id="filter14" class="w-full" value="${t}" onchange="renderApp()">`;else if(m==='month'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full" onchange="renderApp()"></select><select id="filterYear" class="w-full" onchange="renderApp()"></select></div>`;setupMonthYear();}else if(m==='quarter'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ไตรมาส/ปี</label><div class="flex gap-2"><select id="filterQ" class="w-full" onchange="renderApp()"><option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option></select><select id="filterYearQ" class="w-full" onchange="renderApp()"></select></div>`;setupYear('filterYearQ');}else if(m==='year'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ปี</label><select id="filterYearOnly" class="w-full" onchange="renderApp()"></select>`;setupYear('filterYearOnly');}currentPage=1;setTimeout(renderApp,100);};
         function setupMonthYear(){const m=document.getElementById('filterMonth'),n=new Date();["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."].forEach((v,i)=>m.innerHTML+=`<option value="${i+1}" ${i===n.getMonth()?'selected':''}>${v}</option>`);setupYear('filterYear');}
         function setupYear(id){const y=document.getElementById(id),c=new Date().getFullYear();for(let i=c;i>=2024;i--)y.innerHTML+=`<option value="${i}">${i}</option>`;}
