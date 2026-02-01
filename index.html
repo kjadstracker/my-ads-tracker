@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V10.3 - Final Fix</title>
+    <title>Ads Cloud Master V10.3 - Universal Fix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -179,7 +179,7 @@
         const app = initializeApp(firebaseConfig); const db = getDatabase(app);
 
         // -------------------------------------------------------------
-        // 🔒 CONFIG: BUCKET CODES (รหัสผ่าน)
+        // 🔒 CONFIG: BUCKET CODES (กำหนดรหัสและชื่อถังตรงนี้)
         // -------------------------------------------------------------
         const ACCESS_CODES = {
             "kjmaster": { role: "ADMIN", bucket: "adsData_master", name: "KJ Master (Admin)" }, 
@@ -192,7 +192,7 @@
         const PRODUCTS=[{id:"เบต้าออยล์",css:"card-betaoil"},{id:"เบต้าไลฟ์",css:"card-betalife"},{id:"แล็บฟาร์ม",css:"card-labfarm"}];
 
         // --- AUTH: MANUAL CODE CHECK ---
-        window.loginWithCode = () => {
+        window.checkAccessCode = () => {
             const code = document.getElementById('accessCode').value;
             if (ACCESS_CODES[code]) {
                 const user = ACCESS_CODES[code];
@@ -203,7 +203,7 @@
             }
         };
         // Trigger login on Enter key
-        window.checkAccessCode = () => { if(event.key === 'Enter') window.loginWithCode(); };
+        window.loginWithCode = window.checkAccessCode;
 
         function initializeSession(user) {
             currentUser = user;
@@ -243,7 +243,6 @@
         function loadDataForBucket(bucketName) {
             if (currentListener) off(currentListener);
             document.body.dataset.currentBucket = bucketName; // Tag for save logic
-            document.getElementById('currentBucketDisplay').innerText = bucketName;
 
             // Load Goal
             onValue(ref(db, `adsData/${bucketName}/config`), snap => {
@@ -375,7 +374,7 @@
         }
 
         function renderTable(){const s=[...filteredData].sort((a,b)=>new Date(b.date)-new Date(a.date)),t=document.getElementById('tableBody');t.innerHTML='';s.slice(0,50).forEach(i=>{let rc='hover:bg-slate-50 border-l-slate-300',bc='bg-slate-100 text-slate-500';if(i.pageId==='เบต้าออยล์'){rc='hover:bg-amber-50/80 bg-amber-50/30 border-l-amber-500';bc='bg-amber-100 text-amber-700';}else if(i.pageId==='เบต้าไลฟ์'){rc='hover:bg-orange-50/80 bg-orange-50/30 border-l-orange-800';bc='bg-orange-100 text-orange-900';}else if(i.pageId==='แล็บฟาร์ม'){rc='hover:bg-emerald-50/80 bg-emerald-50/30 border-l-emerald-500';bc='bg-emerald-100 text-emerald-700';}t.innerHTML+=`<tr class="transition border-l-[4px] border-b border-slate-100 ${rc}"><td class="p-4">${new Date(i.date).toLocaleDateString('th-TH')}</td><td class="p-4"><span class="text-xs px-2 py-1 rounded ${bc}">${i.pageId}</span></td><td class="p-4 text-right">฿${parseFloat(i.sales).toLocaleString()}</td><td class="p-4 text-right">฿${parseFloat(i.adSpend).toLocaleString()}</td><td class="p-4 text-right">฿${(i.orders>0?(i.adSpend/i.orders).toFixed(0):0)}</td><td class="p-4 text-xs">${i.note||'-'}</td><td class="p-4 text-center"><button onclick="window.editEntry('${i.id}')" class="text-indigo-500"><i data-lucide="edit-3" size="16"></i></button><button onclick="window.deleteEntry('${i.id}')" class="text-rose-500 ml-2"><i data-lucide="trash-2" size="16"></i></button></td></tr>`;});lucide.createIcons();}
-        window.resetForm=(full=false)=>{document.getElementById('adsForm').reset();document.getElementById('editId').value='';document.getElementById('formDate').valueAsDate=new Date();if(full)document.getElementById('cancelBtn').classList.add('hidden');};
+        window.resetForm=(full=false)=>{document.getElementById('adsForm').reset();document.getElementById('editId').value='';document.getElementById('formDate').valueAsDate=new Date();if(full)document.getElementById('cancelBtn').classList.add('hidden-force');};
         window.toggleGoalEdit=(s)=>{document.getElementById('goalDisplay').classList.toggle('hidden',s);document.getElementById('goalEdit').classList.toggle('hidden',!s);document.getElementById('goalEdit').classList.toggle('flex',s);if(s)document.getElementById('goalInput').value=config.monthlyGoal;};
         window.saveAdminKey=(v)=>{}; window.toggleSidebar=()=>document.getElementById('settingsSidebar').classList.toggle('open'); window.exportJSON=()=>{const s="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(allData));const n=document.createElement('a');n.href=s;n.download=`backup_${document.body.dataset.currentBucket}.json`;n.click();};
         window.saveGoal=()=>{const v=parseFloat(document.getElementById('goalInput').value);if(v>0){set(ref(db,`${document.body.dataset.currentBucket}/config/monthlyGoal`),v);toggleGoalEdit(false);}};
