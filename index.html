@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V8.4 - Secure & Scale</title>
+    <title>Ads Cloud Master V8.5 - Perfect Hybrid</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -20,7 +20,7 @@
         /* CARD STYLES */
         .card-stat { 
             display: flex; flex-direction: column; justify-content: space-between;
-            width: 100%; max-width: 280px; min-height: 520px; /* เพิ่มความสูงนิดหน่อยให้ Advice */
+            width: 100%; max-width: 280px; min-height: 520px; 
             margin: 0 auto; border-radius: 2rem; border: 1px solid rgba(255, 255, 255, 0.6);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 1.5rem;
             position: relative; overflow: hidden; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
@@ -43,7 +43,6 @@
         .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #10b981 0%, #059669 100%); transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
         .progress-text-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); z-index: 10; pointer-events: none; }
         
-        /* ADVICE BOX (Improved) */
         .advice-box { margin-top: 1rem; padding: 1rem; border-radius: 1rem; font-size: 0.85rem; line-height: 1.4; background: rgba(255,255,255,0.95); border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: all 0.3s; }
         .advice-hidden { display: none !important; }
         .hidden-force { display: none !important; }
@@ -73,38 +72,11 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V8.4 Secure & Scale</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="shield-check"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V8.5 Perfect Hybrid</p></div></div>
             <button onclick="toggleSidebar()" class="w-10 h-10 bg-white border rounded-xl flex items-center justify-center text-slate-500 hover:text-indigo-600 transition shadow-sm"><i data-lucide="settings" size="20"></i></button>
         </header>
 
-        <div class="max-w-7xl mx-auto mb-6 flex justify-between items-end">
-            <h3 class="h-bold text-xl text-slate-800">Performance Cards</h3>
-            <div class="flex items-center gap-3">
-                <span class="text-xs h-bold text-slate-400 uppercase">เปิดคำแนะนำ (Scale Advice):</span>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" id="adviceToggle" class="sr-only peer" onchange="toggleAdviceGlobal()">
-                    <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
-                </label>
-            </div>
-        </div>
-        <div id="product-cards" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 items-start justify-center"></div>
-
-        <section class="max-w-7xl mx-auto mb-12">
-            <div class="portfolio-box p-10 md:p-12 shadow-2xl relative overflow-hidden">
-                <div class="portfolio-glow"></div>
-                <h3 class="text-center text-sm h-bold text-indigo-300 uppercase tracking-[0.3em] mb-12 relative z-10">ภาพรวมธุรกิจ (PORTFOLIO SUMMARY)</h3>
-                <div class="grid grid-cols-2 md:grid-cols-6 gap-y-10 gap-x-4 text-center relative z-10">
-                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ยอดขายรวม</p><div class="text-3xl md:text-4xl h-bold text-emerald-400 drop-shadow-lg" id="sum-sales">฿0</div></div>
-                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ค่าแอดรวม</p><div class="text-3xl md:text-4xl h-bold text-rose-400 drop-shadow-lg" id="sum-ads">฿0</div></div>
-                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">% ค่าแอด</p><div class="text-3xl md:text-4xl h-bold text-white drop-shadow-lg" id="sum-pct">0%</div></div>
-                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">CPA เฉลี่ย</p><div class="text-2xl md:text-3xl h-bold text-indigo-400" id="sum-cpa">฿0</div></div>
-                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ทักเฉลี่ย</p><div class="text-2xl md:text-3xl h-bold text-blue-400" id="sum-inq">฿0</div></div>
-                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ROAS เฉลี่ย</p><div class="text-3xl md:text-4xl h-bold text-amber-400 drop-shadow-lg" id="sum-roas">0.0</div></div>
-                </div>
-            </div>
-        </section>
-
-        <section class="max-w-7xl mx-auto mb-12">
+        <section class="max-w-7xl mx-auto mb-10">
             <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 relative overflow-hidden">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
                     <div>
@@ -143,6 +115,33 @@
                     <div class="col-span-2 md:col-span-4 space-y-1"><input type="text" id="note" placeholder="บันทึกหมายเหตุ..." class="w-full bg-slate-50"></div>
                     <div class="col-span-2 md:col-span-2 flex items-end gap-2"><button type="button" onclick="resetForm(true)" id="cancelBtn" class="hidden-force px-4 py-3 bg-slate-100 text-slate-500 rounded-xl"><i data-lucide="x"></i></button><button type="button" onclick="saveData()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">บันทึกข้อมูล</button></div>
                 </form>
+            </div>
+        </section>
+
+        <div class="max-w-7xl mx-auto mb-6 flex justify-between items-end">
+            <h3 class="h-bold text-xl text-slate-800">Performance Cards</h3>
+            <div class="flex items-center gap-3">
+                <span class="text-xs h-bold text-slate-400 uppercase">เปิดคำแนะนำ (Scale Advice):</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="adviceToggle" class="sr-only peer" onchange="toggleAdviceGlobal()">
+                    <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                </label>
+            </div>
+        </div>
+        <div id="product-cards" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 items-start justify-center"></div>
+
+        <section class="max-w-7xl mx-auto mb-12">
+            <div class="portfolio-box p-10 md:p-12 shadow-2xl relative overflow-hidden">
+                <div class="portfolio-glow"></div>
+                <h3 class="text-center text-sm h-bold text-indigo-300 uppercase tracking-[0.3em] mb-12 relative z-10">ภาพรวมธุรกิจ (PORTFOLIO SUMMARY)</h3>
+                <div class="grid grid-cols-2 md:grid-cols-6 gap-y-10 gap-x-4 text-center relative z-10">
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ยอดขายรวม</p><div class="text-3xl md:text-4xl h-bold text-emerald-400 drop-shadow-lg" id="sum-sales">฿0</div></div>
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ค่าแอดรวม</p><div class="text-3xl md:text-4xl h-bold text-rose-400 drop-shadow-lg" id="sum-ads">฿0</div></div>
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">% ค่าแอด</p><div class="text-3xl md:text-4xl h-bold text-white drop-shadow-lg" id="sum-pct">0%</div></div>
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">CPA เฉลี่ย</p><div class="text-2xl md:text-3xl h-bold text-indigo-400" id="sum-cpa">฿0</div></div>
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ทักเฉลี่ย</p><div class="text-2xl md:text-3xl h-bold text-blue-400" id="sum-inq">฿0</div></div>
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ROAS เฉลี่ย</p><div class="text-3xl md:text-4xl h-bold text-amber-400 drop-shadow-lg" id="sum-roas">0.0</div></div>
+                </div>
             </div>
         </section>
 
@@ -196,9 +195,8 @@
         window.checkUnlock=()=>{
             const p=document.getElementById('unlockPass').value;
             if(p==='kjondabeat'){ 
-                // Unlock & Save to Session Storage (Dies when tab closed)
-                document.getElementById('lockOverlay').style.opacity='0';
-                setTimeout(()=>{ 
+                document.getElementById('lockOverlay').style.opacity='0'; 
+                setTimeout(()=>{
                     document.getElementById('lockOverlay').style.display='none'; 
                     document.getElementById('mainContent').style.display='block';
                 },500);
@@ -211,7 +209,6 @@
             lucide.createIcons(); document.getElementById('formDate').valueAsDate=new Date();
             const pSelect=document.getElementById('formPageId'); const fSelect=document.getElementById('filterProduct'); PRODUCTS.forEach(p=>{ pSelect.innerHTML+=`<option value="${p.id}">${p.id}</option>`; fSelect.innerHTML+=`<option value="${p.id}">${p.id}</option>`; });
             
-            // CHECK SESSION
             if(sessionStorage.getItem('ads_access_granted')) {
                 document.getElementById('lockOverlay').style.display='none';
                 document.getElementById('mainContent').style.display='block';
@@ -223,7 +220,7 @@
             onValue(ref(db,'adsData'),snap=>{ const r=snap.val(); allData=r?Object.keys(r).map(k=>({...r[k],id:k})):[]; renderApp(); });
         };
 
-        // --- FILTER LOGIC (Same) ---
+        // --- FILTER ---
         window.toggleFilterInputs = () => {
             const m = document.getElementById('filterMode').value, c = document.getElementById('filter-dynamic-group'), t = new Date().toISOString().split('T')[0]; c.innerHTML = '';
             if(m==='day') c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full" value="${t}" onchange="renderApp()">`;
@@ -266,7 +263,7 @@
             document.getElementById('ui-avg-actual').innerText=`฿${(s/days).toLocaleString(undefined,{maximumFractionDigits:0})}`; document.getElementById('ui-avg-required').innerText=`฿${(remain/Math.max(1,dim-now.getDate())).toLocaleString(undefined,{maximumFractionDigits:0})}`;
         }
 
-        // --- CARDS (REAL SCALE ADVICE) ---
+        // --- CARDS (Scale Advice) ---
         function renderCards(){
             const container=document.getElementById('product-cards'), showAdvice=document.getElementById('adviceToggle').checked; container.innerHTML='';
             PRODUCTS.forEach(p=>{
@@ -274,34 +271,24 @@
                 const pct=s>0?(a/s)*100:0, roas=a>0?s/a:0, cpa=o>0?a/o:0, cr=inq>0?(o/inq)*100:0;
                 
                 let adv='', cls='';
-                if(s===0){ 
-                    cls='bg-slate-50 text-slate-400'; adv='<span>รอข้อมูล...</span>'; 
-                } else if(pct < 60){ 
-                    cls='bg-emerald-100 text-emerald-800 border-emerald-300'; 
-                    adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="flame" size="18" class="text-rose-500"></i><span class="h-bold">นาทีทอง! (Scale Up)</span></div><p class="text-xs">แอดถูกมาก (${pct.toFixed(1)}%) รีบอัดงบเพิ่มด่วน!</p>`; 
-                } else if(pct <= 75){ 
-                    cls='bg-green-50 text-green-800 border-green-200'; 
-                    adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="trending-up" size="18" class="text-green-600"></i><span class="h-bold">กำไรดี (Step Up)</span></div><p class="text-xs">อยู่ในเกณฑ์ดี (${pct.toFixed(1)}%) ทยอยเพิ่มงบได้</p>`; 
-                } else if(pct <= 85){ 
-                    cls='bg-amber-50 text-amber-800 border-amber-200'; 
-                    adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-circle" size="18" class="text-amber-600"></i><span class="h-bold">เฝ้าระวัง (Maintain)</span></div><p class="text-xs">ห้ามเพิ่มงบ! คุมให้ยอดนิ่ง (${pct.toFixed(1)}%)</p>`; 
-                } else { 
-                    cls='bg-rose-50 text-rose-800 border-rose-200'; 
-                    adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="x-octagon" size="18" class="text-rose-600"></i><span class="h-bold">อันตราย! (Optimize)</span></div><p class="text-xs">ขาดทุนแล้ว (${pct.toFixed(1)}%) ลดงบ/ปิดตัวด่วน</p>`; 
-                }
+                if(s===0){ cls='bg-slate-50 text-slate-400'; adv='<span>รอข้อมูล...</span>'; }
+                else if(pct<60){ cls='bg-emerald-100 text-emerald-800 border-emerald-300'; adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="flame" size="18" class="text-rose-500"></i><span class="h-bold">นาทีทอง! (Scale Up)</span></div><p class="text-xs">แอดถูกมาก (${pct.toFixed(1)}%) รีบอัดงบเพิ่มด่วน!</p>`; }
+                else if(pct<=75){ cls='bg-green-50 text-green-800 border-green-200'; adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="trending-up" size="18" class="text-green-600"></i><span class="h-bold">กำไรดี (Step Up)</span></div><p class="text-xs">อยู่ในเกณฑ์ดี (${pct.toFixed(1)}%) ทยอยเพิ่มงบได้</p>`; }
+                else if(pct<=85){ cls='bg-amber-50 text-amber-800 border-amber-200'; adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="alert-circle" size="18" class="text-amber-600"></i><span class="h-bold">เฝ้าระวัง (Maintain)</span></div><p class="text-xs">ห้ามเพิ่มงบ! คุมให้ยอดนิ่ง (${pct.toFixed(1)}%)</p>`; }
+                else { cls='bg-rose-50 text-rose-800 border-rose-200'; adv=`<div class="flex items-center gap-2 mb-1"><i data-lucide="x-octagon" size="18" class="text-rose-600"></i><span class="h-bold">อันตราย! (Optimize)</span></div><p class="text-xs">ขาดทุนแล้ว (${pct.toFixed(1)}%) ลดงบ/ปิดตัวด่วน</p>`; }
 
                 container.innerHTML+=`<div class="card-stat ${p.css}"><div><div class="flex justify-between items-start mb-6"><h3 class="h-bold text-xl text-slate-800">${p.id}</h3><i data-lucide="bar-chart-2" class="text-slate-300"></i></div><div class="space-y-4 mb-6"><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ยอดขาย</span><span class="text-2xl h-bold text-emerald-500">฿${s.toLocaleString()}</span></div><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">ค่าแอด</span><span class="text-xl h-bold text-rose-500">฿${a.toLocaleString()}</span></div><div class="flex justify-between items-end"><span class="text-xs h-medium text-slate-400 uppercase">CPA</span><span class="text-lg h-medium text-slate-600">฿${cpa.toFixed(0)}</span></div></div><div class="grid grid-cols-2 gap-3"><div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">% ADS</p><p class="text-xl h-bold ${pct>80?'text-rose-500':'text-slate-800'}">${pct.toFixed(1)}%</p></div><div class="bg-slate-50 rounded-xl p-3 text-center"><p class="text-[10px] h-bold text-slate-400 uppercase">STAT</p><p class="text-xl h-bold text-amber-500">${roas.toFixed(1)}</p></div></div></div><div class="advice-box ${cls} ${showAdvice?'':'advice-hidden'}">${adv}</div></div>`;
             });
             lucide.createIcons();
         }
 
-        // --- COLOR HISTORY ---
         function renderTable(){
             const sorted=[...filteredData].sort((a,b)=>new Date(b.date)-new Date(a.date)), total=sorted.length, pages=Math.ceil(total/ITEMS_PER_PAGE)||1;
             if(currentPage>pages)currentPage=pages; if(currentPage<1)currentPage=1;
             const start=(currentPage-1)*ITEMS_PER_PAGE, paginated=sorted.slice(start, start+ITEMS_PER_PAGE), tbody=document.getElementById('tableBody'); tbody.innerHTML='';
             document.getElementById('tx-count').innerText=`${total} items`; document.getElementById('pageInfo').innerText=`Page ${currentPage} of ${pages}`;
             document.getElementById('prevPageBtn').disabled=currentPage===1; document.getElementById('nextPageBtn').disabled=currentPage===pages;
+            
             paginated.forEach(i=>{
                 const cpa=i.orders>0?(i.adSpend/i.orders).toFixed(0):0;
                 let rowClass='hover:bg-slate-50 border-l-slate-300', badgeClass='bg-slate-100 text-slate-500';
