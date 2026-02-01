@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V10.16 - Year Filter Fixed</title>
+    <title>Ads Cloud Master V10.17 - Edit Fixed</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -76,7 +76,7 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.16 Year Fix</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.17 Edit Fix</p></div></div>
             <div class="flex items-center gap-3">
                 <div id="adminSwitcher" class="hidden items-center gap-2 bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-100">
                     <span class="text-[10px] h-bold text-indigo-600 uppercase">ADMIN VIEW:</span>
@@ -120,7 +120,7 @@
                     <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-blue-400 uppercase">ออเดอร์</label><input type="number" id="orders" placeholder="0" class="w-full bg-blue-50 text-blue-600 font-bold"></div>
                     <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-amber-400 uppercase">ทัก</label><input type="number" id="inquiries" placeholder="0" class="w-full bg-amber-50 text-amber-600 font-bold"></div>
                     <div class="col-span-2 md:col-span-4 space-y-1"><input type="text" id="note" placeholder="บันทึกหมายเหตุ..."></div>
-                    <div class="col-span-2 md:col-span-2 flex items-end gap-2"><button type="button" onclick="resetForm(true)" id="cancelBtn" class="hidden-force px-4 py-3 bg-slate-100 rounded-xl"><i data-lucide="x"></i></button><button type="button" onclick="saveData()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg hover:bg-indigo-700 transition">บันทึกข้อมูล</button></div>
+                    <div class="col-span-2 md:col-span-2 flex items-end gap-2"><button type="button" onclick="resetForm(true)" id="cancelBtn" class="hidden-force px-4 py-3 bg-slate-100 rounded-xl hover:bg-slate-200 transition"><i data-lucide="x"></i></button><button type="button" onclick="saveData()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg hover:bg-indigo-700 transition">บันทึกข้อมูล</button></div>
                 </form>
             </div>
         </section>
@@ -331,7 +331,24 @@
             document.getElementById('adsForm').reset();
             document.getElementById('editId').value='';
             document.getElementById('formDate').valueAsDate=new Date();
-            if(full)document.getElementById('cancelBtn').classList.add('hidden-force');
+            document.getElementById('cancelBtn').classList.add('hidden-force'); // Hide cancel button
+        };
+        
+        // NEW: Edit Functionality
+        window.editEntry = (id) => {
+            const item = allData.find(x => x.id === id);
+            if (!item) return;
+            document.getElementById('editId').value = item.id;
+            document.getElementById('formPageId').value = item.pageId;
+            document.getElementById('formDate').value = item.date;
+            document.getElementById('adSpend').value = item.adSpend;
+            document.getElementById('sales').value = item.sales;
+            document.getElementById('orders').value = item.orders;
+            document.getElementById('inquiries').value = item.inquiries;
+            document.getElementById('note').value = item.note || '';
+            
+            document.getElementById('cancelBtn').classList.remove('hidden-force'); // Show cancel button
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top
         };
         
         window.toggleGoalEdit=(s)=>{
@@ -355,10 +372,9 @@
             else if(m==='month'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full" onchange="renderApp()"></select><select id="filterYear" class="w-full" onchange="renderApp()"></select></div>`;setupMonthYear();}
             else if(m==='quarter'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ไตรมาส/ปี</label><div class="flex gap-2"><select id="filterQ" class="w-full" onchange="renderApp()"><option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option></select><select id="filterYearQ" class="w-full" onchange="renderApp()"></select></div>`;setupYear('filterYearQ');}
             else if(m==='year'){
-                // FIX: Year Input Logic
                 c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ปี</label><select id="filterYearOnly" class="w-full" onchange="renderApp()"></select>`;
                 setupYear('filterYearOnly');
-                document.getElementById('filterYearOnly').value = new Date().getFullYear(); // Auto select current year
+                document.getElementById('filterYearOnly').value = new Date().getFullYear();
             }
             currentPage=1;setTimeout(renderApp,100);
         };
