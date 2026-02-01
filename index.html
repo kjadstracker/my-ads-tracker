@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V10.13 - Fixed Goal & Pagination</title>
+    <title>Ads Cloud Master V10.15 - Refresh & Spin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -13,6 +13,10 @@
         body { font-family: 'Kanit', sans-serif; background-color: #f8fafc; font-size: var(--base-fsize); color: #334155; }
         .h-bold { font-weight: 700; } .h-medium { font-weight: 500; }
         
+        /* SPIN ANIMATION */
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .spin-anim { animation: spin 1s linear infinite; }
+
         /* LOCK SCREEN */
         #lockOverlay { position: fixed; inset: 0; background-color: #0f172a; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.3s ease; }
         
@@ -72,12 +76,12 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.13 Fixed</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.15 Refresh & Spin</p></div></div>
             <div class="flex items-center gap-3">
                 <div id="adminSwitcher" class="hidden items-center gap-2 bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-100">
                     <span class="text-[10px] h-bold text-indigo-600 uppercase">ADMIN VIEW:</span>
                     <select id="profileSelector" class="bg-transparent border-none text-sm h-bold text-indigo-900 py-1 focus:ring-0 cursor-pointer" onchange="switchProfile(this.value)"></select>
-                    <button onclick="switchProfile(document.getElementById('profileSelector').value)" class="p-1 bg-white rounded-md text-indigo-500 hover:text-indigo-700 shadow-sm border border-indigo-100" title="Force Refresh"><i data-lucide="refresh-cw" size="14"></i></button>
+                    <button onclick="refreshDashboard()" id="refreshBtn" class="p-1 bg-white rounded-md text-indigo-500 hover:text-indigo-700 shadow-sm border border-indigo-100 transition" title="Force Refresh"><i data-lucide="refresh-cw" size="14"></i></button>
                 </div>
                 <button onclick="toggleSidebar()" class="w-10 h-10 bg-white border rounded-xl flex items-center justify-center text-slate-500 hover:text-indigo-600 transition shadow-sm"><i data-lucide="settings" size="20"></i></button>
             </div>
@@ -196,7 +200,8 @@
         };
         const PRODUCTS = [{id:"เบต้าออยล์",css:"card-head-betaoil"},{id:"เบต้าไลฟ์",css:"card-head-betalife"},{id:"แล็บฟาร์ม",css:"card-head-labfarm"}];
         
-        let allData=[], filteredData=[], config={monthlyGoal:1000000}, currentPage=1, currentUser={role:'', bucket:'', name:''}, currentListener=null;
+        // FIX: currentUnsubscribe stores the function
+        let allData=[], filteredData=[], config={monthlyGoal:1000000}, currentPage=1, currentUser={role:'', bucket:'', name:''}, currentUnsubscribe=null;
 
         // AUTH
         window.loginWithCode = () => { const c=document.getElementById('accessCode').value; if(ACCESS_CODES[c]){ sessionStorage.setItem('ads_user_code',c); initializeSession(ACCESS_CODES[c]); } else document.getElementById('loginError').classList.remove('hidden'); };
@@ -219,21 +224,34 @@
         }
 
         // DATA LOADER & AUTO-DATE
-        function loadDataForBucket(bucket) {
-            if(currentListener) off(currentListener);
-            allData = []; renderApp();
-
-            document.body.dataset.currentBucket = bucket; document.getElementById('currentBucketDisplay').innerText = bucket;
-            // FIX: Load Config (Goal) for specific bucket
+        window.loadDataForBucket = (bucket) => {
+            // FIX: Correct Unsubscribe logic for V9
+            if(typeof currentUnsubscribe === 'function') {
+                currentUnsubscribe(); // Stop listening to old bucket
+            }
+            
+            // Visual Reset
+            allData = []; 
+            renderApp();
+            
+            document.body.dataset.currentBucket = bucket; 
+            document.getElementById('currentBucketDisplay').innerText = bucket;
+            
             onValue(ref(db, `adsData/${bucket}/config`), snap => { 
                 if(snap.exists()) { config={...config,...snap.val()}; }
-                else { config.monthlyGoal = 1000000; } // Default if no config
+                else { config.monthlyGoal = 1000000; }
                 document.getElementById('goalInput').value=config.monthlyGoal; 
                 renderApp(); 
             });
             
-            currentListener = onValue(ref(db, `adsData/${bucket}/records`), snap => { 
+            // Start listening to new bucket
+            currentUnsubscribe = onValue(ref(db, `adsData/${bucket}/records`), snap => { 
                 const r=snap.val(); allData=r?Object.keys(r).map(k=>({...r[k],id:k})):[]; 
+                
+                // Stop spin animation if refresh button was clicked
+                const btn = document.getElementById('refreshBtn').querySelector('svg');
+                if(btn) btn.classList.remove('spin-anim');
+
                 if(allData.length > 0) {
                     const latest = allData.reduce((a,b)=> (a.date > b.date ? a : b));
                     const d = new Date(latest.date);
@@ -241,9 +259,22 @@
                     document.getElementById('filterYear').value = d.getFullYear();
                 }
                 renderApp(); 
-            }, (error)=>{ if(error.code==="PERMISSION_DENIED") alert("🚨 ACCESS DENIED: Please set Firebase Rules to true"); });
-        }
+            }, (error)=>{ 
+                if(error.code==="PERMISSION_DENIED") alert("🚨 ACCESS DENIED: Please set Firebase Rules to true"); 
+            });
+        };
+        
         window.switchProfile = (v) => loadDataForBucket(v);
+        
+        window.refreshDashboard = () => {
+            // Add spin animation
+            const btn = document.getElementById('refreshBtn').querySelector('svg');
+            if(btn) btn.classList.add('spin-anim');
+            
+            // Force Reload
+            const bucket = document.body.dataset.currentBucket;
+            loadDataForBucket(bucket);
+        };
 
         // IMPORT
         window.importJSON = (e) => {
@@ -307,10 +338,9 @@
             if(full)document.getElementById('cancelBtn').classList.add('hidden-force');
         };
         
-        // FIX: Toggle Goal Edit now works because UI ID exists
         window.toggleGoalEdit=(s)=>{
-            document.getElementById('ui-goal').classList.toggle('hidden',s); // Hide Text
-            document.getElementById('goalEdit').classList.toggle('hidden',!s); // Show Input
+            document.getElementById('ui-goal').classList.toggle('hidden',s);
+            document.getElementById('goalEdit').classList.toggle('hidden',!s);
             document.getElementById('goalEdit').classList.toggle('flex',s);
             if(s)document.getElementById('goalInput').value=config.monthlyGoal;
         };
@@ -330,7 +360,6 @@
         };
 
         function renderStats(){const s=filteredData.reduce((a,b)=>a+(parseFloat(b.sales)||0),0),a=filteredData.reduce((a,b)=>a+(parseFloat(b.adSpend)||0),0),o=filteredData.reduce((a,b)=>a+(parseInt(b.orders)||0),0),i=filteredData.reduce((a,b)=>a+(parseInt(b.inquiries)||0),0);document.getElementById('sum-sales').innerText=`฿${s.toLocaleString()}`;document.getElementById('sum-ads').innerText=`฿${a.toLocaleString()}`;document.getElementById('sum-pct').innerText=s>0?`${((a/s)*100).toFixed(1)}%`:'0%';document.getElementById('sum-cpa').innerText=o>0?`฿${(a/o).toFixed(0)}`:'0';document.getElementById('sum-inq').innerText=i>0?`฿${(a/i).toFixed(0)}`:'0';document.getElementById('sum-roas').innerText=a>0?(s/a).toFixed(2):'0.0';const goal=config.monthlyGoal,remain=Math.max(0,goal-s),pct=(s/goal)*100;document.getElementById('ui-goal').innerText=`฿${goal.toLocaleString()}`;document.getElementById('ui-progress-bar').style.width=`${Math.min(100,pct)}%`;document.getElementById('ui-progress-text').innerText=`฿${s.toLocaleString()} / ขาด ฿${remain.toLocaleString()}`;document.getElementById('ui-percent').innerText=`${pct.toFixed(1)}%`;const days=new Set(filteredData.map(d=>d.date)).size||1,now=new Date(),dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();document.getElementById('ui-avg-actual').innerText=`฿${(s/days).toLocaleString(undefined,{maximumFractionDigits:0})}`;document.getElementById('ui-avg-required').innerText=`฿${(remain/Math.max(1,dim-now.getDate())).toLocaleString(undefined,{maximumFractionDigits:0})}`;}
-        
         function renderCards(){
             const c=document.getElementById('product-cards'),sh=document.getElementById('adviceToggle').checked;c.innerHTML='';
             PRODUCTS.forEach(p=>{
@@ -347,13 +376,11 @@
             lucide.createIcons();
         }
         
-        // FIX: Pagination limit to 10
         function renderTable(){
             const s=[...filteredData].sort((a,b)=>new Date(b.date)-new Date(a.date));
             const t=document.getElementById('tableBody');
             t.innerHTML='';
             
-            // Limit 10 per page
             const pageSize=10;
             const start=(currentPage-1)*pageSize;
             const paged=s.slice(start, start+pageSize);
