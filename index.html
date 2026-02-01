@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V10.9 - Final Masterpiece</title>
+    <title>Ads Cloud Master V10.10 - Color & Logic Fix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         :root { --base-fsize: 16px; }
-        body { font-family: 'Kanit', sans-serif; background-color: #f1f5f9; font-size: var(--base-fsize); color: #334155; }
+        body { font-family: 'Kanit', sans-serif; background-color: #f8fafc; font-size: var(--base-fsize); color: #334155; }
         .h-bold { font-weight: 700; } .h-medium { font-weight: 500; }
         
         /* LOCK SCREEN */
@@ -27,16 +27,22 @@
         }
         .card-stat:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15); }
         
-        .card-head-betaoil { background: linear-gradient(135deg, #d97706 0%, #b45309 100%); color: white; }
-        .card-head-betalife { background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); color: white; }
-        .card-head-labfarm { background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; }
+        /* --- NEW COLOR THEMES (V10.10) --- */
+        /* Beta Oil: Yellow/Gold Tone */
+        .card-head-betaoil { background: linear-gradient(135deg, #ca8a04 0%, #a16207 100%); color: white; } 
+        /* Beta Life: Brown Tone */
+        .card-head-betalife { background: linear-gradient(135deg, #78350f 0%, #451a03 100%); color: white; } 
+        /* Lab Farm: Green Tone */
+        .card-head-labfarm { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; }
 
+        /* METRIC GRID */
         .metric-box { background-color: #f8fafc; border-radius: 0.75rem; padding: 0.75rem; text-align: center; border: 1px solid #e2e8f0; }
         .metric-label { font-size: 0.7rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
         .metric-value { font-size: 1.1rem; font-weight: 700; color: #1e293b; }
         
         .text-good { color: #16a34a; } .text-warn { color: #d97706; } .text-bad { color: #dc2626; }
 
+        /* PORTFOLIO & UI */
         .portfolio-box { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); color: white; border-radius: 1.5rem; position: relative; overflow: hidden; box-shadow: 0 20px 50px -12px rgba(15, 23, 42, 0.25); border: 1px solid rgba(255,255,255,0.1); }
         .progress-bar-bg { background: #e2e8f0; height: 48px; border-radius: 24px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #10b981 0%, #059669 100%); transition: width 1s; }
@@ -69,7 +75,7 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.9 Final Master</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.10 Color & Logic Fix</p></div></div>
             <div class="flex items-center gap-3">
                 <div id="adminSwitcher" class="hidden items-center gap-2 bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-100">
                     <span class="text-[10px] h-bold text-indigo-600 uppercase">ADMIN VIEW:</span>
@@ -171,11 +177,27 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
         import { getDatabase, ref, push, onValue, remove, update, set, off } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
-        const firebaseConfig = { apiKey: "AIzaSyBMHbzxijgu_fb5NzXb0QtySb6v7U9osu4", authDomain: "adstrackerkj.firebaseapp.com", databaseURL: "https://adstrackerkj-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "adstrackerkj", storageBucket: "adstrackerkj.firebasestorage.app", messagingSenderId: "791146621049", appId: "1:791146621049:web:f2e0c0ec480d1951a24ca8", measurementId: "G-ZBNTZWYCEY" };
+        // *** YOUR FIREBASE CONFIG ***
+        const firebaseConfig = {
+            apiKey: "AIzaSyBMHbzxijgu_fb5NzXb0QtySb6v7U9osu4",
+            authDomain: "adstrackerkj.firebaseapp.com",
+            databaseURL: "https://adstrackerkj-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "adstrackerkj",
+            storageBucket: "adstrackerkj.firebasestorage.app",
+            messagingSenderId: "791146621049",
+            appId: "1:791146621049:web:f2e0c0ec480d1951a24ca8",
+            measurementId: "G-ZBNTZWYCEY"
+        };
         const app = initializeApp(firebaseConfig); const db = getDatabase(app);
 
-        // CONFIG
-        const ACCESS_CODES = { "kjmaster": { role: "ADMIN", bucket: "adsData_master", name: "KJ Master (Admin)" }, "teamkj01": { role: "USER", bucket: "adsData_team01", name: "Team KJ 01" }, "teamkj02": { role: "USER", bucket: "adsData_team02", name: "Team KJ 02" }, "teamkj03": { role: "USER", bucket: "adsData_team03", name: "Team KJ 03" } };
+        // CONFIG: ACCESS CODES & BUCKETS
+        const ACCESS_CODES = { 
+            "kjmaster": { role: "ADMIN", bucket: "adsData_master", name: "KJ Master (Admin)" }, 
+            "teamkj01": { role: "USER", bucket: "adsData_team01", name: "Team KJ 01" },
+            "teamkj02": { role: "USER", bucket: "adsData_team02", name: "Team KJ 02" },
+            "teamkj03": { role: "USER", bucket: "adsData_team03", name: "Team KJ 03" }
+        };
+        // UPDATED COLORS
         const PRODUCTS = [{id:"เบต้าออยล์",css:"card-head-betaoil"},{id:"เบต้าไลฟ์",css:"card-head-betalife"},{id:"แล็บฟาร์ม",css:"card-head-labfarm"}];
         
         let allData=[], filteredData=[], config={monthlyGoal:1000000}, currentPage=1, currentUser={role:'', bucket:'', name:''}, currentListener=null;
@@ -202,12 +224,18 @@
 
         // DATA LOADER & AUTO-DATE
         function loadDataForBucket(bucket) {
+            // FIX: Detach old listener first
             if(currentListener) off(currentListener);
+            
+            // FIX: Clear Data to prevent ghosting
+            allData = []; renderApp();
+
             document.body.dataset.currentBucket = bucket; document.getElementById('currentBucketDisplay').innerText = bucket;
             onValue(ref(db, `adsData/${bucket}/config`), snap => { if(snap.exists()) { config={...config,...snap.val()}; document.getElementById('goalInput').value=config.monthlyGoal; renderApp(); } });
+            
+            // Attach new listener
             currentListener = onValue(ref(db, `adsData/${bucket}/records`), snap => { 
                 const r=snap.val(); allData=r?Object.keys(r).map(k=>({...r[k],id:k})):[]; 
-                // Auto-Set Filter to Latest Date if exists
                 if(allData.length > 0) {
                     const latest = allData.reduce((a,b)=> (a.date > b.date ? a : b));
                     const d = new Date(latest.date);
@@ -219,7 +247,7 @@
         }
         window.switchProfile = (v) => loadDataForBucket(v);
 
-        // UNIVERSAL IMPORT
+        // IMPORT
         window.importJSON = (e) => {
             const f = e.target.files[0]; if(!f) return;
             const r = new FileReader();
@@ -239,10 +267,8 @@
                         document.body.style.cursor='wait';
                         const path = `adsData/${bucket}/records`;
                         await set(ref(db, path), null);
-                        // Batch Write Logic (Simple Loop for now as <1000 items is fast)
                         for(const i of dt) await push(ref(db, path), i);
                         document.body.style.cursor='default'; alert("✅ Import Success"); 
-                        // Force Refresh
                         loadDataForBucket(bucket);
                     }
                 } catch(e) { document.body.style.cursor='default'; alert("Import Error: " + e.message); }
@@ -251,6 +277,7 @@
             r.readAsText(f);
         };
 
+        // UI & UTILS
         window.onload=()=>{
             lucide.createIcons(); document.getElementById('formDate').valueAsDate=new Date();
             const pSelect=document.getElementById('formPageId'), fSelect=document.getElementById('filterProduct');
@@ -268,7 +295,7 @@
         window.toggleGoalEdit=(s)=>{document.getElementById('goalDisplay').classList.toggle('hidden',s);document.getElementById('goalEdit').classList.toggle('hidden',!s);document.getElementById('goalEdit').classList.toggle('flex',s);if(s)document.getElementById('goalInput').value=config.monthlyGoal;};
         window.toggleSidebar=()=>document.getElementById('settingsSidebar').classList.toggle('open');
         
-        // RENDER & METRICS
+        // RENDER LOGIC
         window.toggleFilterInputs=()=>{const m=document.getElementById('filterMode').value,c=document.getElementById('filter-dynamic-group'),t=new Date().toISOString().split('T')[0];c.innerHTML='';if(m==='day')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full" value="${t}" onchange="renderApp()">`;else if(m==='range')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">จาก - ถึง</label><div class="flex gap-2"><input type="date" id="filterStart" class="w-full" onchange="renderApp()"><input type="date" id="filterEnd" class="w-full" onchange="renderApp()"></div>`;else if(m==='week')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เลือกสัปดาห์</label><input type="date" id="filterWeek" class="w-full" value="${t}" onchange="renderApp()">`;else if(m==='14days')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เริ่ม (14 วัน)</label><input type="date" id="filter14" class="w-full" value="${t}" onchange="renderApp()">`;else if(m==='month'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full" onchange="renderApp()"></select><select id="filterYear" class="w-full" onchange="renderApp()"></select></div>`;setupMonthYear();}else if(m==='quarter'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ไตรมาส/ปี</label><div class="flex gap-2"><select id="filterQ" class="w-full" onchange="renderApp()"><option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option></select><select id="filterYearQ" class="w-full" onchange="renderApp()"></select></div>`;setupYear('filterYearQ');}else if(m==='year'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ปี</label><select id="filterYearOnly" class="w-full" onchange="renderApp()"></select>`;setupYear('filterYearOnly');}currentPage=1;setTimeout(renderApp,100);};
         function setupMonthYear(){const m=document.getElementById('filterMonth'),n=new Date();["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."].forEach((v,i)=>m.innerHTML+=`<option value="${i+1}" ${i===n.getMonth()?'selected':''}>${v}</option>`);setupYear('filterYear');}
         function setupYear(id){const y=document.getElementById(id),c=new Date().getFullYear();for(let i=c;i>=2024;i--)y.innerHTML+=`<option value="${i}">${i}</option>`;}
