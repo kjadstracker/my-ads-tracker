@@ -3,48 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V10.5 - Metrics Focus</title>
+    <title>Ads Cloud Master V10.9 - Final Masterpiece</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         :root { --base-fsize: 16px; }
-        body { font-family: 'Kanit', sans-serif; background-color: #f8fafc; font-size: var(--base-fsize); color: #334155; }
+        body { font-family: 'Kanit', sans-serif; background-color: #f1f5f9; font-size: var(--base-fsize); color: #334155; }
         .h-bold { font-weight: 700; } .h-medium { font-weight: 500; }
         
         /* LOCK SCREEN */
         #lockOverlay { position: fixed; inset: 0; background-color: #0f172a; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.3s ease; }
         
-        /* CARD REDESIGN */
+        /* CARD STYLES */
         .card-stat { 
             display: flex; flex-direction: column; justify-content: space-between;
             width: 100%; max-width: 320px; min-height: 480px; 
             margin: 0 auto; border-radius: 1.5rem; 
             background: white; border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s; padding: 1.25rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s; overflow: hidden;
         }
-        .card-stat:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        .card-stat:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15); }
         
-        /* Header Colors for Cards */
-        .card-head-betaoil { background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); color: #9a3412; }
-        .card-head-betalife { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); color: #991b1b; }
-        .card-head-labfarm { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); color: #065f46; }
+        .card-head-betaoil { background: linear-gradient(135deg, #d97706 0%, #b45309 100%); color: white; }
+        .card-head-betalife { background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); color: white; }
+        .card-head-labfarm { background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; }
 
-        /* METRIC GRID */
-        .metric-box { background-color: #f8fafc; border-radius: 0.75rem; padding: 0.75rem; text-align: center; border: 1px solid #f1f5f9; }
-        .metric-label { font-size: 0.7rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
-        .metric-value { font-size: 1.1rem; font-weight: 700; color: #334155; }
+        .metric-box { background-color: #f8fafc; border-radius: 0.75rem; padding: 0.75rem; text-align: center; border: 1px solid #e2e8f0; }
+        .metric-label { font-size: 0.7rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+        .metric-value { font-size: 1.1rem; font-weight: 700; color: #1e293b; }
         
-        /* Highlight Colors */
-        .text-good { color: #10b981; } /* Green */
-        .text-warn { color: #f59e0b; } /* Orange */
-        .text-bad { color: #ef4444; }  /* Red */
+        .text-good { color: #16a34a; } .text-warn { color: #d97706; } .text-bad { color: #dc2626; }
 
-        /* PORTFOLIO & UI */
         .portfolio-box { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); color: white; border-radius: 1.5rem; position: relative; overflow: hidden; box-shadow: 0 20px 50px -12px rgba(15, 23, 42, 0.25); border: 1px solid rgba(255,255,255,0.1); }
-        .progress-bar-bg { background: #e2e8f0; height: 48px; border-radius: 24px; overflow: hidden; position: relative; }
+        .progress-bar-bg { background: #e2e8f0; height: 48px; border-radius: 24px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #10b981 0%, #059669 100%); transition: width 1s; }
         .progress-text-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); pointer-events: none; }
         
@@ -63,9 +57,9 @@
     <div id="lockOverlay">
         <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-sm text-center space-y-8">
             <div class="w-20 h-20 bg-indigo-600 rounded-3xl flex items-center justify-center mx-auto text-white shadow-xl shadow-indigo-200"><i data-lucide="key" size="40"></i></div>
-            <div><h2 class="text-3xl h-bold text-slate-800">ADS CLOUD</h2><p class="text-slate-400 text-sm mt-2">กรุณาใส่รหัสเพื่อเข้าใช้งาน</p></div>
+            <div><h2 class="text-3xl h-bold text-slate-800">ADS CLOUD</h2><p class="text-slate-400 text-sm mt-2">Enter Access Code</p></div>
             <div class="space-y-4">
-                <input type="password" id="accessCode" placeholder="Access Code..." class="w-full text-center text-lg py-3 bg-slate-50 border-2 border-slate-100 focus:border-indigo-500 rounded-xl" onkeyup="if(event.key==='Enter') loginWithCode()">
+                <input type="password" id="accessCode" placeholder="รหัสผ่าน..." class="w-full text-center text-lg py-3 bg-slate-50 border-2 border-slate-100 focus:border-indigo-500 rounded-xl" onkeyup="if(event.key==='Enter') loginWithCode()">
                 <button onclick="loginWithCode()" class="w-full py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg hover:bg-indigo-700 transition transform active:scale-95">LOGIN</button>
                 <p id="loginError" class="text-rose-500 text-xs font-bold hidden">รหัสไม่ถูกต้อง!</p>
             </div>
@@ -75,11 +69,10 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="bar-chart-2"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.5 Metrics Focus</p></div></div>
-            
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.9 Final Master</p></div></div>
             <div class="flex items-center gap-3">
                 <div id="adminSwitcher" class="hidden items-center gap-2 bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-100">
-                    <span class="text-[10px] h-bold text-indigo-600 uppercase">ส่องดู:</span>
+                    <span class="text-[10px] h-bold text-indigo-600 uppercase">ADMIN VIEW:</span>
                     <select id="profileSelector" class="bg-transparent border-none text-sm h-bold text-indigo-900 py-1 focus:ring-0 cursor-pointer" onchange="switchProfile(this.value)"></select>
                 </div>
                 <button onclick="toggleSidebar()" class="w-10 h-10 bg-white border rounded-xl flex items-center justify-center text-slate-500 hover:text-indigo-600 transition shadow-sm"><i data-lucide="settings" size="20"></i></button>
@@ -95,11 +88,7 @@
                             <div class="text-4xl h-bold text-slate-800" id="ui-goal">฿0</div>
                             <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 hover:text-indigo-500 transition cursor-pointer" onclick="toggleGoalEdit(true)"><i data-lucide="edit-2" size="16"></i></div>
                         </div>
-                        <div id="goalEdit" class="hidden flex items-center gap-2 mt-2">
-                            <input type="number" id="goalInput" class="w-full text-lg h-bold bg-slate-50 border rounded-lg px-3 py-1">
-                            <button onclick="saveGoal()" class="p-2 bg-emerald-500 text-white rounded-lg"><i data-lucide="check" size="18"></i></button>
-                            <button onclick="toggleGoalEdit(false)" class="p-2 bg-slate-200 text-slate-500 rounded-lg"><i data-lucide="x" size="18"></i></button>
-                        </div>
+                        <div id="goalEdit" class="hidden flex items-center gap-2 mt-2"><input type="number" id="goalInput" class="w-full text-lg h-bold bg-slate-50 border rounded-lg px-3 py-1"><button onclick="saveGoal()" class="p-2 bg-emerald-500 text-white rounded-lg"><i data-lucide="check" size="18"></i></button><button onclick="toggleGoalEdit(false)" class="p-2 bg-slate-200 text-slate-500 rounded-lg"><i data-lucide="x" size="18"></i></button></div>
                     </div>
                     <div><div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="trending-up" size="14"></i><span class="text-xs h-bold uppercase">เฉลี่ยต่อวันจริง</span></div><div class="text-4xl h-bold text-emerald-500" id="ui-avg-actual">฿0</div></div>
                     <div><div class="flex items-center gap-2 text-amber-500 mb-1"><i data-lucide="zap" size="14"></i><span class="text-xs h-bold uppercase">ยอดต้องทำ/วัน</span></div><div class="text-4xl h-bold text-amber-500" id="ui-avg-required">฿0</div></div>
@@ -113,7 +102,7 @@
 
         <section class="max-w-7xl mx-auto mb-12">
             <div class="bg-white rounded-[1.5rem] p-8 shadow-lg border-t-4 border-indigo-600 w-full">
-                <h3 class="h-bold text-lg mb-6 flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center"><i data-lucide="plus" size="16"></i></div> ลงข้อมูลรายวัน <span id="currentBucketDisplay" class="text-xs bg-indigo-100 text-indigo-600 px-2 py-1 rounded-full ml-2">...</span></h3>
+                <h3 class="h-bold text-lg mb-6 flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center"><i data-lucide="plus" size="16"></i></div> ลงข้อมูล (บันทึก: <span id="currentBucketDisplay" class="text-indigo-600 ml-1 h-bold">...</span>)</h3>
                 <form id="adsForm" class="grid grid-cols-2 md:grid-cols-6 gap-4">
                     <input type="hidden" id="editId">
                     <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="formPageId" class="w-full bg-slate-50"></select></div>
@@ -129,11 +118,8 @@
         </section>
 
         <div class="max-w-7xl mx-auto mb-6 flex justify-between items-end">
-            <div>
-                <h3 class="h-bold text-xl text-slate-800">Performance Cards</h3>
-                <div id="roleBadge" class="hidden mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs h-bold border"></div> 
-            </div>
-            <div class="flex items-center gap-3"><span class="text-xs h-bold text-slate-400 uppercase">Show Advice:</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="adviceToggle" class="sr-only peer" onchange="toggleAdviceGlobal()"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div></label></div>
+            <div><h3 class="h-bold text-xl text-slate-800">Performance Cards</h3><div id="roleBadge" class="hidden mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs h-bold border"></div></div>
+            <div class="flex items-center gap-3"><span class="text-xs h-bold text-slate-400 uppercase">Show Advice:</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="adviceToggle" class="sr-only peer" onchange="window.renderApp()"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div></label></div>
         </div>
         <div id="product-cards" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 items-start justify-center"></div>
 
@@ -156,7 +142,7 @@
             <div class="w-full bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                 <div class="flex items-center gap-2 mb-4"><div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600"><i data-lucide="filter" size="16"></i></div><span class="text-sm h-bold uppercase text-slate-700">Filter System</span></div>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">โหมด</label><select id="filterMode" onchange="toggleFilterInputs()"><option value="day">วัน</option><option value="range">ช่วงวัน</option><option value="week">สัปดาห์</option><option value="14days">14 วัน</option><option value="month">เดือน</option><option value="quarter">ไตรมาส</option><option value="year">ปี</option></select></div>
+                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">โหมด</label><select id="filterMode" onchange="toggleFilterInputs()"><option value="month">เดือน</option><option value="day">วัน</option><option value="range">ช่วงวัน</option><option value="year">ปี</option></select></div>
                     <div id="filter-dynamic-group" class="space-y-1 col-span-2"></div>
                     <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="filterProduct"><option value="all">ทุกสินค้า</option></select></div>
                 </div>
@@ -185,154 +171,104 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
         import { getDatabase, ref, push, onValue, remove, update, set, off } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
-        const firebaseConfig = { apiKey: "AIzaSyBMHbzxijgu_fb5NzXb0QtySb6v7U9osu4", authDomain: "adstrackerkj.firebaseapp.com", databaseURL: "https://adstrackerkj-default-rtdb.asia-southeast1.firebasedatabase.app/", projectId: "adstrackerkj" };
+        const firebaseConfig = { apiKey: "AIzaSyBMHbzxijgu_fb5NzXb0QtySb6v7U9osu4", authDomain: "adstrackerkj.firebaseapp.com", databaseURL: "https://adstrackerkj-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "adstrackerkj", storageBucket: "adstrackerkj.firebasestorage.app", messagingSenderId: "791146621049", appId: "1:791146621049:web:f2e0c0ec480d1951a24ca8", measurementId: "G-ZBNTZWYCEY" };
         const app = initializeApp(firebaseConfig); const db = getDatabase(app);
 
-        // -------------------------------------------------------------
-        // 🔒 CONFIG: ACCESS CODES
-        // -------------------------------------------------------------
-        const ACCESS_CODES = {
-            "kjmaster": { role: "ADMIN", bucket: "adsData_master", name: "KJ Master (Admin)" }, 
-            "teamkj01": { role: "USER",  bucket: "adsData_team01", name: "Team KJ 01 (Staff)" }
-        };
-        // -------------------------------------------------------------
+        // CONFIG
+        const ACCESS_CODES = { "kjmaster": { role: "ADMIN", bucket: "adsData_master", name: "KJ Master (Admin)" }, "teamkj01": { role: "USER", bucket: "adsData_team01", name: "Team KJ 01" }, "teamkj02": { role: "USER", bucket: "adsData_team02", name: "Team KJ 02" }, "teamkj03": { role: "USER", bucket: "adsData_team03", name: "Team KJ 03" } };
+        const PRODUCTS = [{id:"เบต้าออยล์",css:"card-head-betaoil"},{id:"เบต้าไลฟ์",css:"card-head-betalife"},{id:"แล็บฟาร์ม",css:"card-head-labfarm"}];
+        
+        let allData=[], filteredData=[], config={monthlyGoal:1000000}, currentPage=1, currentUser={role:'', bucket:'', name:''}, currentListener=null;
 
-        let allData=[], filteredData=[], config={monthlyGoal:1000000}, currentPage=1;
-        let currentUser={role:'', bucket:'', name:''}, currentListener=null;
-        const PRODUCTS=[{id:"เบต้าออยล์",css:"card-head-betaoil"},{id:"เบต้าไลฟ์",css:"card-head-betalife"},{id:"แล็บฟาร์ม",css:"card-head-labfarm"}];
-
-        // --- AUTH ---
-        window.loginWithCode = () => {
-            const code = document.getElementById('accessCode').value;
-            if (ACCESS_CODES[code]) {
-                const user = ACCESS_CODES[code];
-                sessionStorage.setItem('ads_user_code', code);
-                initializeSession(user);
-            } else {
-                document.getElementById('loginError').classList.remove('hidden');
-            }
-        };
-        window.checkAccessCode = () => { if(event.key === 'Enter') window.loginWithCode(); };
-
-        function initializeSession(user) {
-            currentUser = user;
-            document.getElementById('lockOverlay').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
-            document.getElementById('sidebarRole').innerText = user.name;
-            document.getElementById('currentBucketDisplay').innerText = user.bucket;
-            
-            const badge = document.getElementById('roleBadge');
-            badge.classList.remove('hidden');
-            if (user.role === 'ADMIN') {
-                badge.className = "mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-100 text-indigo-700 text-xs h-bold border border-indigo-200";
-                badge.innerHTML = `<i data-lucide="shield-check" size="14"></i> ${user.name}`;
-                document.getElementById('adminSwitcher').classList.remove('hidden');
-                document.getElementById('adminSwitcher').classList.add('flex');
-                
-                const sel = document.getElementById('profileSelector');
-                sel.innerHTML = `<option value="${user.bucket}">My Bucket</option>`;
-                Object.values(ACCESS_CODES).forEach(u => {
-                    if (u.bucket !== user.bucket) sel.innerHTML += `<option value="${u.bucket}">${u.name}</option>`;
-                });
-            } else {
-                badge.className = "mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 text-slate-500 text-xs h-bold border border-slate-200";
-                badge.innerHTML = `<i data-lucide="user" size="14"></i> ${user.name}`;
-            }
-            lucide.createIcons();
-            loadDataForBucket(user.bucket);
-            toggleFilterInputs();
-        }
-
+        // AUTH
+        window.loginWithCode = () => { const c=document.getElementById('accessCode').value; if(ACCESS_CODES[c]){ sessionStorage.setItem('ads_user_code',c); initializeSession(ACCESS_CODES[c]); } else document.getElementById('loginError').classList.remove('hidden'); };
+        window.checkAccessCode = () => { if(event.key==='Enter') window.loginWithCode(); };
         window.logout = () => { sessionStorage.clear(); window.location.reload(); };
 
-        // --- CORE: DATA LOADER ---
-        function loadDataForBucket(bucketName) {
-            if (currentListener) off(currentListener);
-            document.body.dataset.currentBucket = bucketName;
-            document.getElementById('currentBucketDisplay').innerText = bucketName;
-
-            onValue(ref(db, `adsData/${bucketName}/config`), snap => {
-                if(snap.exists()) { config = {...config, ...snap.val()}; document.getElementById('goalInput').value = config.monthlyGoal; renderApp(); }
-                else { config.monthlyGoal = 1000000; document.getElementById('goalInput').value = 1000000; renderApp(); }
-            });
-
-            currentListener = onValue(ref(db, `adsData/${bucketName}/records`), snap => {
-                const r = snap.val();
-                allData = r ? Object.keys(r).map(k => ({...r[k], id: k})) : [];
-                renderApp();
-            }, (error) => {
-                if(error.code === "PERMISSION_DENIED") alert("🚨 ACCESS DENIED: กรุณาไปแก้ Rules ใน Firebase Console");
-            });
+        function initializeSession(user) {
+            currentUser = user; document.getElementById('lockOverlay').style.display='none'; document.getElementById('mainContent').style.display='block';
+            document.getElementById('sidebarRole').innerText = user.name; document.getElementById('currentBucketDisplay').innerText = user.bucket;
+            const b = document.getElementById('roleBadge'); b.classList.remove('hidden');
+            if(user.role==='ADMIN'){
+                b.className="mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-100 text-indigo-700 text-xs h-bold border border-indigo-200"; b.innerHTML=`<i data-lucide="shield-check" size="14"></i> ${user.name}`;
+                document.getElementById('adminSwitcher').classList.remove('hidden'); document.getElementById('adminSwitcher').classList.add('flex');
+                const s=document.getElementById('profileSelector'); s.innerHTML=`<option value="${user.bucket}">My Bucket</option>`;
+                Object.values(ACCESS_CODES).forEach(u=>{ if(u.bucket!==user.bucket) s.innerHTML+=`<option value="${u.bucket}">${u.name}</option>`; });
+            } else {
+                b.className="mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 text-slate-500 text-xs h-bold border border-slate-200"; b.innerHTML=`<i data-lucide="user" size="14"></i> ${user.name}`;
+            }
+            lucide.createIcons(); loadDataForBucket(user.bucket); toggleFilterInputs();
         }
 
-        window.switchProfile = (bucket) => {
-            const sel = document.getElementById('profileSelector');
-            const name = sel.options[sel.selectedIndex].text;
-            const badge = document.getElementById('roleBadge');
-            badge.innerHTML = `<i data-lucide="eye" size="14"></i> Viewing: ${name}`;
-            loadDataForBucket(bucket);
-        };
+        // DATA LOADER & AUTO-DATE
+        function loadDataForBucket(bucket) {
+            if(currentListener) off(currentListener);
+            document.body.dataset.currentBucket = bucket; document.getElementById('currentBucketDisplay').innerText = bucket;
+            onValue(ref(db, `adsData/${bucket}/config`), snap => { if(snap.exists()) { config={...config,...snap.val()}; document.getElementById('goalInput').value=config.monthlyGoal; renderApp(); } });
+            currentListener = onValue(ref(db, `adsData/${bucket}/records`), snap => { 
+                const r=snap.val(); allData=r?Object.keys(r).map(k=>({...r[k],id:k})):[]; 
+                // Auto-Set Filter to Latest Date if exists
+                if(allData.length > 0) {
+                    const latest = allData.reduce((a,b)=> (a.date > b.date ? a : b));
+                    const d = new Date(latest.date);
+                    document.getElementById('filterMonth').value = d.getMonth()+1;
+                    document.getElementById('filterYear').value = d.getFullYear();
+                }
+                renderApp(); 
+            }, (error)=>{ if(error.code==="PERMISSION_DENIED") alert("🚨 ACCESS DENIED: Please set Firebase Rules to true"); });
+        }
+        window.switchProfile = (v) => loadDataForBucket(v);
 
-        window.onload = () => {
-            lucide.createIcons(); document.getElementById('formDate').valueAsDate = new Date();
-            const pSelect=document.getElementById('formPageId'); const fSelect=document.getElementById('filterProduct'); 
-            PRODUCTS.forEach(p=>{ pSelect.innerHTML+=`<option value="${p.id}">${p.id}</option>`; fSelect.innerHTML+=`<option value="${p.id}">${p.id}</option>`; });
-
-            const savedCode = sessionStorage.getItem('ads_user_code');
-            if (savedCode && ACCESS_CODES[savedCode]) {
-                initializeSession(ACCESS_CODES[savedCode]);
-            } else {
-                document.getElementById('lockOverlay').style.display = 'flex';
-                document.getElementById('mainContent').style.display = 'none';
-            }
-            document.getElementById('filterProduct').addEventListener('change',()=>{currentPage=1;renderApp()});
-        };
-
-        // --- SAVE/EDIT/DELETE ---
-        window.saveData = async () => {
-            const bucket = document.body.dataset.currentBucket;
-            if(!bucket) return;
-            const id = document.getElementById('editId').value;
-            const d = { pageId: document.getElementById('formPageId').value, date: document.getElementById('formDate').value, adSpend: parseFloat(document.getElementById('adSpend').value)||0, sales: parseFloat(document.getElementById('sales').value)||0, orders: parseInt(document.getElementById('orders').value)||0, inquiries: parseInt(document.getElementById('inquiries').value)||0, note: document.getElementById('note').value, timestamp: Date.now() };
-            try { 
-                const path = `adsData/${bucket}/records`;
-                if(id) await update(ref(db, `${path}/${id}`), d); else await push(ref(db, path), d);
-                alert(`✅ Saved to [${bucket}]`); currentPage=1; document.getElementById('filterMode').value='month'; setupMonthYear(); window.toggleFilterInputs(); resetForm(); 
-            } catch(e) { alert("Error: "+e.message); }
-        };
-
-        window.updateGoal = (v) => { const b=document.body.dataset.currentBucket; if(b) set(ref(db, `adsData/${b}/config/monthlyGoal`), parseFloat(v)); };
-        window.deleteEntry = async (id) => { if(!confirm("Delete?")) return; const b=document.body.dataset.currentBucket; if(b) await remove(ref(db, `adsData/${b}/records/${id}`)); };
-
-        // --- UNIVERSAL IMPORT (Fix) ---
+        // UNIVERSAL IMPORT
         window.importJSON = (e) => {
             const f = e.target.files[0]; if(!f) return;
             const r = new FileReader();
             r.onload = async (ev) => {
                 try {
-                    const raw = JSON.parse(ev.target.result);
+                    let rawContent = ev.target.result; if(rawContent.charCodeAt(0) === 0xFEFF) rawContent = rawContent.slice(1);
+                    const raw = JSON.parse(rawContent);
                     let dt = [];
-                    if (raw.data && Array.isArray(raw.data)) { dt = raw.data; } 
-                    else if (Array.isArray(raw)) { dt = raw; }
-                    else if (typeof raw === 'object') { dt = Object.values(raw); }
+                    if (raw.data && Array.isArray(raw.data)) dt = raw.data;
+                    else if (Array.isArray(raw)) dt = raw;
+                    else if (typeof raw === 'object') dt = Object.values(raw);
 
-                    if (dt.length === 0) { alert("❌ No valid data found!"); return; }
+                    if (dt.length === 0) { alert("❌ No valid data!"); return; }
                     
                     const bucket = document.body.dataset.currentBucket;
                     if(confirm(`⚠️ Import ${dt.length} items to [${bucket}]?\n(Old data will be CLEARED)`)){
                         document.body.style.cursor='wait';
                         const path = `adsData/${bucket}/records`;
                         await set(ref(db, path), null);
+                        // Batch Write Logic (Simple Loop for now as <1000 items is fast)
                         for(const i of dt) await push(ref(db, path), i);
-                        document.body.style.cursor='default'; alert("✅ Import Success"); location.reload();
+                        document.body.style.cursor='default'; alert("✅ Import Success"); 
+                        // Force Refresh
+                        loadDataForBucket(bucket);
                     }
-                } catch(e) { alert("Error: "+e.message); }
+                } catch(e) { document.body.style.cursor='default'; alert("Import Error: " + e.message); }
                 document.getElementById('fileInput').value = '';
             };
             r.readAsText(f);
         };
 
-        // --- RENDER LOGIC (METRICS GRID) ---
+        window.onload=()=>{
+            lucide.createIcons(); document.getElementById('formDate').valueAsDate=new Date();
+            const pSelect=document.getElementById('formPageId'), fSelect=document.getElementById('filterProduct');
+            PRODUCTS.forEach(p=>{ pSelect.innerHTML+=`<option value="${p.id}">${p.id}</option>`; fSelect.innerHTML+=`<option value="${p.id}">${p.id}</option>`; });
+            const savedCode=sessionStorage.getItem('ads_user_code');
+            if(savedCode && ACCESS_CODES[savedCode]) initializeSession(ACCESS_CODES[savedCode]);
+            else { document.getElementById('lockOverlay').style.display='flex'; document.getElementById('mainContent').style.display='none'; }
+            document.getElementById('filterProduct').addEventListener('change',()=>{currentPage=1;renderApp()});
+        };
+        window.saveData=async()=>{const b=document.body.dataset.currentBucket; if(!b)return; const id=document.getElementById('editId').value, d={pageId:document.getElementById('formPageId').value, date:document.getElementById('formDate').value, adSpend:parseFloat(document.getElementById('adSpend').value)||0, sales:parseFloat(document.getElementById('sales').value)||0, orders:parseInt(document.getElementById('orders').value)||0, inquiries:parseInt(document.getElementById('inquiries').value)||0, note:document.getElementById('note').value, timestamp:Date.now()}; try{const p=`adsData/${b}/records`; if(id)await update(ref(db,`${p}/${id}`),d); else await push(ref(db,p),d); alert("✅ Saved!"); currentPage=1; loadDataForBucket(b); resetForm();}catch(e){alert(e.message);}};
+        window.saveGoal=()=>{const v=parseFloat(document.getElementById('goalInput').value);if(v>0){set(ref(db,`adsData/${document.body.dataset.currentBucket}/config/monthlyGoal`),v);toggleGoalEdit(false);}};
+        window.deleteEntry=async(id)=>{if(!confirm("Delete?"))return;await remove(ref(db,`adsData/${document.body.dataset.currentBucket}/records/${id}`));};
+        window.exportJSON=()=>{const s="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(allData));const n=document.createElement('a');n.href=s;n.download=`backup_${document.body.dataset.currentBucket}.json`;n.click();};
+        window.resetForm=(full=false)=>{document.getElementById('adsForm').reset();document.getElementById('editId').value='';document.getElementById('formDate').valueAsDate=new Date();if(full)document.getElementById('cancelBtn').classList.add('hidden-force');};
+        window.toggleGoalEdit=(s)=>{document.getElementById('goalDisplay').classList.toggle('hidden',s);document.getElementById('goalEdit').classList.toggle('hidden',!s);document.getElementById('goalEdit').classList.toggle('flex',s);if(s)document.getElementById('goalInput').value=config.monthlyGoal;};
+        window.toggleSidebar=()=>document.getElementById('settingsSidebar').classList.toggle('open');
+        
+        // RENDER & METRICS
         window.toggleFilterInputs=()=>{const m=document.getElementById('filterMode').value,c=document.getElementById('filter-dynamic-group'),t=new Date().toISOString().split('T')[0];c.innerHTML='';if(m==='day')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full" value="${t}" onchange="renderApp()">`;else if(m==='range')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">จาก - ถึง</label><div class="flex gap-2"><input type="date" id="filterStart" class="w-full" onchange="renderApp()"><input type="date" id="filterEnd" class="w-full" onchange="renderApp()"></div>`;else if(m==='week')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เลือกสัปดาห์</label><input type="date" id="filterWeek" class="w-full" value="${t}" onchange="renderApp()">`;else if(m==='14days')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เริ่ม (14 วัน)</label><input type="date" id="filter14" class="w-full" value="${t}" onchange="renderApp()">`;else if(m==='month'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full" onchange="renderApp()"></select><select id="filterYear" class="w-full" onchange="renderApp()"></select></div>`;setupMonthYear();}else if(m==='quarter'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ไตรมาส/ปี</label><div class="flex gap-2"><select id="filterQ" class="w-full" onchange="renderApp()"><option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option></select><select id="filterYearQ" class="w-full" onchange="renderApp()"></select></div>`;setupYear('filterYearQ');}else if(m==='year'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ปี</label><select id="filterYearOnly" class="w-full" onchange="renderApp()"></select>`;setupYear('filterYearOnly');}currentPage=1;setTimeout(renderApp,100);};
         function setupMonthYear(){const m=document.getElementById('filterMonth'),n=new Date();["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."].forEach((v,i)=>m.innerHTML+=`<option value="${i+1}" ${i===n.getMonth()?'selected':''}>${v}</option>`);setupYear('filterYear');}
         function setupYear(id){const y=document.getElementById(id),c=new Date().getFullYear();for(let i=c;i>=2024;i--)y.innerHTML+=`<option value="${i}">${i}</option>`;}
@@ -345,47 +281,16 @@
                 const d=filteredData.filter(x=>x.pageId===p.id),s=d.reduce((a,b)=>a+(parseFloat(b.sales)||0),0),a=d.reduce((a,b)=>a+(parseFloat(b.adSpend)||0),0),o=d.reduce((a,b)=>a+(parseInt(b.orders)||0),0),i=d.reduce((a,b)=>a+(parseInt(b.inquiries)||0),0);
                 const pct=s>0?(a/s)*100:0, cpa=o>0?a/o:0, cpi=i>0?a/i:0, roas=a>0?s/a:0;
                 let adv='',cls='';
-                
-                if(s===0 || isNaN(s)){ 
-                    cls='bg-slate-50 border-slate-200'; adv='<div class="flex items-center justify-center gap-2 h-full text-slate-400"><i data-lucide="clock" size="18"></i> รอข้อมูล...</div>'; 
-                } else if(pct<60){ 
-                    cls='bg-emerald-50 border-emerald-200'; adv=`<div class="flex items-center gap-2 mb-1 text-emerald-800"><i data-lucide="flame" size="18" class="text-rose-500"></i><span class="h-bold">นาทีทอง! (Scale Up)</span></div><p class="text-xs text-emerald-600">แอดถูก (${pct.toFixed(1)}%) รีบเพิ่มงบ!</p>`; 
-                } else if(pct<=75){ 
-                    cls='bg-green-50 border-green-200'; adv=`<div class="flex items-center gap-2 mb-1 text-green-800"><i data-lucide="trending-up" size="18" class="text-green-600"></i><span class="h-bold">กำไรดี (Step Up)</span></div><p class="text-xs text-green-600">อยู่ในเกณฑ์ดี ทยอยเพิ่มงบ</p>`; 
-                } else if(pct<=85){ 
-                    cls='bg-amber-50 border-amber-200'; adv=`<div class="flex items-center gap-2 mb-1 text-amber-800"><i data-lucide="alert-circle" size="18" class="text-amber-600"></i><span class="h-bold">เฝ้าระวัง (Maintain)</span></div><p class="text-xs text-amber-600">ห้ามเพิ่มงบ คุมยอดให้นิ่ง</p>`; 
-                } else { 
-                    cls='bg-rose-50 border-rose-200'; adv=`<div class="flex items-center gap-2 mb-1 text-rose-800"><i data-lucide="x-octagon" size="18" class="text-rose-600"></i><span class="h-bold">อันตราย! (Optimize)</span></div><p class="text-xs text-rose-600">ขาดทุนแล้ว ลดงบด่วน</p>`; 
-                }
-                
-                c.innerHTML+=`
-                <div class="card-stat">
-                    <div class="${p.css} p-4 -m-6 mb-6 h-24 flex flex-col justify-center text-white shadow-sm">
-                        <h3 class="h-bold text-2xl drop-shadow-md text-center">${p.id}</h3>
-                    </div>
-                    <div class="flex-1 space-y-4 pt-6">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="text-center"><p class="text-[10px] text-slate-400 uppercase">ยอดขาย</p><p class="text-xl h-bold text-emerald-600">฿${s.toLocaleString()}</p></div>
-                            <div class="text-center"><p class="text-[10px] text-slate-400 uppercase">ค่าแอด</p><p class="text-xl h-bold text-rose-500">฿${a.toLocaleString()}</p></div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3 mt-4">
-                            <div class="metric-box"><p class="metric-label">% AD</p><p class="metric-value ${pct>80?'text-bad':pct<60?'text-good':'text-warn'}">${pct.toFixed(1)}%</p></div>
-                            <div class="metric-box"><p class="metric-label">ROAS</p><p class="metric-value">${roas.toFixed(2)}</p></div>
-                            <div class="metric-box"><p class="metric-label">CPA</p><p class="metric-value">฿${cpa.toFixed(0)}</p></div>
-                            <div class="metric-box"><p class="metric-label">COST/CHAT</p><p class="metric-value">฿${cpi.toFixed(0)}</p></div>
-                        </div>
-                    </div>
-                    <div class="advice-box ${cls} ${sh?'':'advice-hidden'} mt-4">${adv}</div>
-                </div>`;
+                if(s===0||isNaN(s)){cls='bg-slate-50 border-slate-200';adv='<div class="flex items-center justify-center gap-2 h-full text-slate-400"><i data-lucide="clock" size="18"></i> รอข้อมูล...</div>';}
+                else if(pct<60){cls='bg-emerald-50 border-emerald-200';adv=`<div class="flex items-center gap-2 mb-1 text-emerald-800"><i data-lucide="flame" size="18" class="text-rose-500"></i><span class="h-bold">นาทีทอง!</span></div><p class="text-xs text-emerald-600">แอดถูก (${pct.toFixed(1)}%) อัดงบเพิ่มเลย!</p>`;}
+                else if(pct<=75){cls='bg-green-50 border-green-200';adv=`<div class="flex items-center gap-2 mb-1 text-green-800"><i data-lucide="trending-up" size="18" class="text-green-600"></i><span class="h-bold">กำไรดี</span></div><p class="text-xs text-green-600">อยู่ในเกณฑ์ดี ทยอยเพิ่มงบ</p>`;}
+                else if(pct<=85){cls='bg-amber-50 border-amber-200';adv=`<div class="flex items-center gap-2 mb-1 text-amber-800"><i data-lucide="alert-circle" size="18" class="text-amber-600"></i><span class="h-bold">เฝ้าระวัง</span></div><p class="text-xs text-amber-600">ห้ามเพิ่มงบ คุมยอดให้นิ่ง</p>`;}
+                else{cls='bg-rose-50 border-rose-200';adv=`<div class="flex items-center gap-2 mb-1 text-rose-800"><i data-lucide="x-octagon" size="18" class="text-rose-600"></i><span class="h-bold">อันตราย!</span></div><p class="text-xs text-rose-600">ขาดทุนแล้ว ลดงบด่วน</p>`;}
+                c.innerHTML+=`<div class="card-stat"><div class="${p.css} p-4 -m-6 mb-6 h-24 flex flex-col justify-center text-white shadow-sm"><h3 class="h-bold text-2xl drop-shadow-md text-center">${p.id}</h3></div><div class="flex-1 space-y-4 pt-6"><div class="grid grid-cols-2 gap-4"><div class="text-center"><p class="text-[10px] text-slate-400 uppercase">ยอดขาย</p><p class="text-xl h-bold text-emerald-600">฿${s.toLocaleString()}</p></div><div class="text-center"><p class="text-[10px] text-slate-400 uppercase">ค่าแอด</p><p class="text-xl h-bold text-rose-500">฿${a.toLocaleString()}</p></div></div><div class="grid grid-cols-2 gap-3 mt-4"><div class="metric-box"><p class="metric-label">% AD</p><p class="metric-value ${pct>80?'text-bad':pct<60?'text-good':'text-warn'}">${pct.toFixed(1)}%</p></div><div class="metric-box"><p class="metric-label">ROAS</p><p class="metric-value">${roas.toFixed(2)}</p></div><div class="metric-box"><p class="metric-label">CPA</p><p class="metric-value">฿${cpa.toFixed(0)}</p></div><div class="metric-box"><p class="metric-label">COST/CHAT</p><p class="metric-value">฿${cpi.toFixed(0)}</p></div></div></div><div class="advice-box ${cls} ${sh?'':'advice-hidden'} mt-4">${adv}</div></div>`;
             });
             lucide.createIcons();
         }
-
         function renderTable(){const s=[...filteredData].sort((a,b)=>new Date(b.date)-new Date(a.date)),t=document.getElementById('tableBody');t.innerHTML='';s.slice(0,50).forEach(i=>{let rc='hover:bg-slate-50 border-l-slate-300',bc='bg-slate-100 text-slate-500';if(i.pageId==='เบต้าออยล์'){rc='hover:bg-amber-50/80 bg-amber-50/30 border-l-amber-500';bc='bg-amber-100 text-amber-700';}else if(i.pageId==='เบต้าไลฟ์'){rc='hover:bg-orange-50/80 bg-orange-50/30 border-l-orange-800';bc='bg-orange-100 text-orange-900';}else if(i.pageId==='แล็บฟาร์ม'){rc='hover:bg-emerald-50/80 bg-emerald-50/30 border-l-emerald-500';bc='bg-emerald-100 text-emerald-700';}t.innerHTML+=`<tr class="transition border-l-[4px] border-b border-slate-100 ${rc}"><td class="p-4">${new Date(i.date).toLocaleDateString('th-TH')}</td><td class="p-4"><span class="text-xs px-2 py-1 rounded ${bc}">${i.pageId}</span></td><td class="p-4 text-right">฿${parseFloat(i.sales).toLocaleString()}</td><td class="p-4 text-right">฿${parseFloat(i.adSpend).toLocaleString()}</td><td class="p-4 text-right">฿${(i.orders>0?(i.adSpend/i.orders).toFixed(0):0)}</td><td class="p-4 text-xs">${i.note||'-'}</td><td class="p-4 text-center"><button onclick="window.editEntry('${i.id}')" class="text-indigo-500"><i data-lucide="edit-3" size="16"></i></button><button onclick="window.deleteEntry('${i.id}')" class="text-rose-500 ml-2"><i data-lucide="trash-2" size="16"></i></button></td></tr>`;});lucide.createIcons();}
-        window.resetForm=(full=false)=>{document.getElementById('adsForm').reset();document.getElementById('editId').value='';document.getElementById('formDate').valueAsDate=new Date();if(full)document.getElementById('cancelBtn').classList.add('hidden-force');};
-        window.toggleGoalEdit=(s)=>{document.getElementById('goalDisplay').classList.toggle('hidden',s);document.getElementById('goalEdit').classList.toggle('hidden',!s);document.getElementById('goalEdit').classList.toggle('flex',s);if(s)document.getElementById('goalInput').value=config.monthlyGoal;};
-        window.saveAdminKey=(v)=>{}; window.toggleSidebar=()=>document.getElementById('settingsSidebar').classList.toggle('open'); window.exportJSON=()=>{const s="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(allData));const n=document.createElement('a');n.href=s;n.download=`backup_${document.body.dataset.currentBucket}.json`;n.click();};
-        window.saveGoal=()=>{const v=parseFloat(document.getElementById('goalInput').value);if(v>0){set(ref(db,`${document.body.dataset.currentBucket}/config/monthlyGoal`),v);toggleGoalEdit(false);}};
     </script>
 </body>
 </html>
