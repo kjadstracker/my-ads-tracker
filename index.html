@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V10.15 - Refresh & Spin</title>
+    <title>Ads Cloud Master V10.16 - Year Filter Fixed</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -76,7 +76,7 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.15 Refresh & Spin</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.16 Year Fix</p></div></div>
             <div class="flex items-center gap-3">
                 <div id="adminSwitcher" class="hidden items-center gap-2 bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-100">
                     <span class="text-[10px] h-bold text-indigo-600 uppercase">ADMIN VIEW:</span>
@@ -200,7 +200,7 @@
         };
         const PRODUCTS = [{id:"เบต้าออยล์",css:"card-head-betaoil"},{id:"เบต้าไลฟ์",css:"card-head-betalife"},{id:"แล็บฟาร์ม",css:"card-head-labfarm"}];
         
-        // FIX: currentUnsubscribe stores the function
+        // GLOBAL VARS
         let allData=[], filteredData=[], config={monthlyGoal:1000000}, currentPage=1, currentUser={role:'', bucket:'', name:''}, currentUnsubscribe=null;
 
         // AUTH
@@ -223,14 +223,12 @@
             lucide.createIcons(); loadDataForBucket(user.bucket); toggleFilterInputs();
         }
 
-        // DATA LOADER & AUTO-DATE
+        // DATA LOADER
         window.loadDataForBucket = (bucket) => {
-            // FIX: Correct Unsubscribe logic for V9
             if(typeof currentUnsubscribe === 'function') {
-                currentUnsubscribe(); // Stop listening to old bucket
+                currentUnsubscribe(); 
             }
             
-            // Visual Reset
             allData = []; 
             renderApp();
             
@@ -244,19 +242,20 @@
                 renderApp(); 
             });
             
-            // Start listening to new bucket
             currentUnsubscribe = onValue(ref(db, `adsData/${bucket}/records`), snap => { 
                 const r=snap.val(); allData=r?Object.keys(r).map(k=>({...r[k],id:k})):[]; 
                 
-                // Stop spin animation if refresh button was clicked
                 const btn = document.getElementById('refreshBtn').querySelector('svg');
                 if(btn) btn.classList.remove('spin-anim');
 
                 if(allData.length > 0) {
                     const latest = allData.reduce((a,b)=> (a.date > b.date ? a : b));
                     const d = new Date(latest.date);
-                    document.getElementById('filterMonth').value = d.getMonth()+1;
-                    document.getElementById('filterYear').value = d.getFullYear();
+                    // Update Month Filter Default if not in Year mode
+                    if(document.getElementById('filterMode').value === 'month') {
+                        document.getElementById('filterMonth').value = d.getMonth()+1;
+                        document.getElementById('filterYear').value = d.getFullYear();
+                    }
                 }
                 renderApp(); 
             }, (error)=>{ 
@@ -267,11 +266,8 @@
         window.switchProfile = (v) => loadDataForBucket(v);
         
         window.refreshDashboard = () => {
-            // Add spin animation
             const btn = document.getElementById('refreshBtn').querySelector('svg');
             if(btn) btn.classList.add('spin-anim');
-            
-            // Force Reload
             const bucket = document.body.dataset.currentBucket;
             loadDataForBucket(bucket);
         };
@@ -349,13 +345,44 @@
         // PAGINATION & RENDER
         window.changePage=(d)=>{currentPage+=d;renderApp();};
 
-        window.toggleFilterInputs=()=>{const m=document.getElementById('filterMode').value,c=document.getElementById('filter-dynamic-group'),t=new Date().toISOString().split('T')[0];c.innerHTML='';if(m==='day')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full" value="${t}" onchange="renderApp()">`;else if(m==='range')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">จาก - ถึง</label><div class="flex gap-2"><input type="date" id="filterStart" class="w-full" onchange="renderApp()"><input type="date" id="filterEnd" class="w-full" onchange="renderApp()"></div>`;else if(m==='week')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เลือกสัปดาห์</label><input type="date" id="filterWeek" class="w-full" value="${t}" onchange="renderApp()">`;else if(m==='14days')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เริ่ม (14 วัน)</label><input type="date" id="filter14" class="w-full" value="${t}" onchange="renderApp()">`;else if(m==='month'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full" onchange="renderApp()"></select><select id="filterYear" class="w-full" onchange="renderApp()"></select></div>`;setupMonthYear();}else if(m==='quarter'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ไตรมาส/ปี</label><div class="flex gap-2"><select id="filterQ" class="w-full" onchange="renderApp()"><option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option></select><select id="filterYearQ" class="w-full" onchange="renderApp()"></select></div>`;setupYear('filterYearQ');}else if(m==='year'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ปี</label><select id="filterYearOnly" class="w-full" onchange="renderApp()"></select>`;setupYear('filterYearOnly');}currentPage=1;setTimeout(renderApp,100);};
+        window.toggleFilterInputs=()=>{
+            const m=document.getElementById('filterMode').value,c=document.getElementById('filter-dynamic-group'),t=new Date().toISOString().split('T')[0];
+            c.innerHTML='';
+            if(m==='day')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full" value="${t}" onchange="renderApp()">`;
+            else if(m==='range')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">จาก - ถึง</label><div class="flex gap-2"><input type="date" id="filterStart" class="w-full" onchange="renderApp()"><input type="date" id="filterEnd" class="w-full" onchange="renderApp()"></div>`;
+            else if(m==='week')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เลือกสัปดาห์</label><input type="date" id="filterWeek" class="w-full" value="${t}" onchange="renderApp()">`;
+            else if(m==='14days')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เริ่ม (14 วัน)</label><input type="date" id="filter14" class="w-full" value="${t}" onchange="renderApp()">`;
+            else if(m==='month'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full" onchange="renderApp()"></select><select id="filterYear" class="w-full" onchange="renderApp()"></select></div>`;setupMonthYear();}
+            else if(m==='quarter'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ไตรมาส/ปี</label><div class="flex gap-2"><select id="filterQ" class="w-full" onchange="renderApp()"><option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option></select><select id="filterYearQ" class="w-full" onchange="renderApp()"></select></div>`;setupYear('filterYearQ');}
+            else if(m==='year'){
+                // FIX: Year Input Logic
+                c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ปี</label><select id="filterYearOnly" class="w-full" onchange="renderApp()"></select>`;
+                setupYear('filterYearOnly');
+                document.getElementById('filterYearOnly').value = new Date().getFullYear(); // Auto select current year
+            }
+            currentPage=1;setTimeout(renderApp,100);
+        };
+
         function setupMonthYear(){const m=document.getElementById('filterMonth'),n=new Date();["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."].forEach((v,i)=>m.innerHTML+=`<option value="${i+1}" ${i===n.getMonth()?'selected':''}>${v}</option>`);setupYear('filterYear');}
-        function setupYear(id){const y=document.getElementById(id),c=new Date().getFullYear();for(let i=c;i>=2024;i--)y.innerHTML+=`<option value="${i}">${i}</option>`;}
+        
+        function setupYear(id){
+            const y=document.getElementById(id),c=new Date().getFullYear();
+            y.innerHTML = '';
+            for(let i=c;i>=2024;i--) y.innerHTML+=`<option value="${i}">${i}</option>`;
+        }
         
         window.renderApp=()=>{
             const m=document.getElementById('filterMode').value,fp=document.getElementById('filterProduct').value;
-            filteredData=allData.filter(d=>{const dt=new Date(d.date);let match=true;if(m==='day')match=d.date===document.getElementById('filterDate').value;else if(m==='range'){const s=document.getElementById('filterStart').value,e=document.getElementById('filterEnd').value;if(s&&e)match=d.date>=s&&d.date<=e;}else if(m==='week'){const s=new Date(document.getElementById('filterWeek').value),day=s.getDay()||7;if(day!==1)s.setHours(-24*(day-1));const start=s.toISOString().split('T')[0];s.setDate(s.getDate()+6);const end=s.toISOString().split('T')[0];match=d.date>=start&&d.date<=end;}else if(m==='14days'){const s=new Date(document.getElementById('filter14').value),e=new Date(s);e.setDate(e.getDate()+13);match=d.date>=s.toISOString().split('T')[0]&&d.date<=e.toISOString().split('T')[0];}else if(m==='month')match=(dt.getMonth()+1)==document.getElementById('filterMonth').value&&dt.getFullYear()==document.getElementById('filterYear').value;else if(m==='quarter'){const q=parseInt(document.getElementById('filterQ').value),mo=dt.getMonth()+1;match=dt.getFullYear()==document.getElementById('filterYearQ').value&&((q===1&&mo<=3)||(q===2&&mo>3&&mo<=6)||(q===3&&mo>6&&mo<=9)||(q===4&&mo>9));}else if(m==='year')match=dt.getFullYear()==document.getElementById('filterYearOnly').value;return match&&(fp==='all'||d.pageId===fp);});
+            filteredData=allData.filter(d=>{const dt=new Date(d.date);let match=true;
+                if(m==='day')match=d.date===document.getElementById('filterDate').value;
+                else if(m==='range'){const s=document.getElementById('filterStart').value,e=document.getElementById('filterEnd').value;if(s&&e)match=d.date>=s&&d.date<=e;}
+                else if(m==='week'){const s=new Date(document.getElementById('filterWeek').value),day=s.getDay()||7;if(day!==1)s.setHours(-24*(day-1));const start=s.toISOString().split('T')[0];s.setDate(s.getDate()+6);const end=s.toISOString().split('T')[0];match=d.date>=start&&d.date<=end;}
+                else if(m==='14days'){const s=new Date(document.getElementById('filter14').value),e=new Date(s);e.setDate(e.getDate()+13);match=d.date>=s.toISOString().split('T')[0]&&d.date<=e.toISOString().split('T')[0];}
+                else if(m==='month')match=(dt.getMonth()+1)==document.getElementById('filterMonth').value&&dt.getFullYear()==document.getElementById('filterYear').value;
+                else if(m==='quarter'){const q=parseInt(document.getElementById('filterQ').value),mo=dt.getMonth()+1;match=dt.getFullYear()==document.getElementById('filterYearQ').value&&((q===1&&mo<=3)||(q===2&&mo>3&&mo<=6)||(q===3&&mo>6&&mo<=9)||(q===4&&mo>9));}
+                else if(m==='year')match=dt.getFullYear()==document.getElementById('filterYearOnly').value;
+                return match&&(fp==='all'||d.pageId===fp);
+            });
             renderStats();renderCards();renderTable();lucide.createIcons();
         };
 
