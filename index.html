@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V10.21 - Anti-Freeze</title>
+    <title>Ads Cloud Master V10.22 - Stable Goals</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -19,7 +19,6 @@
 
         /* OVERLAYS */
         #lockOverlay { position: fixed; inset: 0; background-color: #0f172a; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-        #loadingOverlay { position: fixed; inset: 0; background-color: rgba(255,255,255,0.9); backdrop-filter: blur(4px); z-index: 5000; display: none; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.3s; }
         
         /* CARD STYLES */
         .card-stat { 
@@ -72,31 +71,15 @@
         </div>
     </div>
 
-    <div id="loadingOverlay">
-        <div id="loadingState" class="flex flex-col items-center gap-4">
-            <i data-lucide="loader-2" size="48" class="text-indigo-600 spin-anim"></i>
-            <p class="text-indigo-900 h-bold animate-pulse">กำลังโหลดข้อมูล...</p>
-        </div>
-        <div id="timeoutState" class="hidden flex flex-col items-center gap-4 text-center">
-            <div class="w-16 h-16 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center mb-2"><i data-lucide="wifi-off" size="32"></i></div>
-            <h3 class="text-xl h-bold text-slate-800">เชื่อมต่อล่าช้าผิดปกติ</h3>
-            <p class="text-sm text-slate-500 max-w-xs">ระบบใช้เวลานานเกินไปในการดึงข้อมูลจาก Cloud</p>
-            <div class="flex gap-3 mt-4">
-                <button onclick="retryLoad()" class="px-6 py-2 bg-indigo-600 text-white rounded-lg h-bold shadow-lg hover:bg-indigo-700 transition flex items-center gap-2"><i data-lucide="refresh-cw" size="16"></i> ลองใหม่</button>
-                <button onclick="forceEnter()" class="px-6 py-2 bg-slate-200 text-slate-600 rounded-lg h-bold hover:bg-slate-300 transition flex items-center gap-2"><i data-lucide="log-in" size="16"></i> เข้าใช้งานเลย</button>
-            </div>
-        </div>
-    </div>
-
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.21 Anti-Freeze</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.22 Stable Goals</p></div></div>
             <div class="flex items-center gap-3">
                 <div id="adminSwitcher" class="hidden items-center gap-2 bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-100">
                     <span class="text-[10px] h-bold text-indigo-600 uppercase">ADMIN VIEW:</span>
                     <select id="profileSelector" class="bg-transparent border-none text-sm h-bold text-indigo-900 py-1 focus:ring-0 cursor-pointer" onchange="switchProfile(this.value)"></select>
-                    <button onclick="refreshDashboard()" class="p-1 bg-white rounded-md text-indigo-500 hover:text-indigo-700 shadow-sm border border-indigo-100 transition" title="Force Refresh"><i data-lucide="refresh-cw" size="14"></i></button>
+                    <button onclick="refreshDashboard()" id="refreshBtn" class="p-1 bg-white rounded-md text-indigo-500 hover:text-indigo-700 shadow-sm border border-indigo-100 transition" title="Refresh Data"><i data-lucide="refresh-cw" size="14"></i></button>
                 </div>
                 <button onclick="toggleSidebar()" class="w-10 h-10 bg-white border rounded-xl flex items-center justify-center text-slate-500 hover:text-indigo-600 transition shadow-sm"><i data-lucide="settings" size="20"></i></button>
             </div>
@@ -150,10 +133,12 @@
             <div class="portfolio-box p-10 md:p-12 shadow-2xl relative overflow-hidden">
                 <div class="portfolio-glow"></div>
                 <h3 class="text-center text-sm h-bold text-indigo-300 uppercase tracking-[0.3em] mb-4 relative z-10">ภาพรวมธุรกิจ (PORTFOLIO SUMMARY)</h3>
+                
                 <div class="text-center mb-10 relative z-10">
                     <p class="text-xs text-amber-400 uppercase h-bold mb-1"><i data-lucide="target" size="12" class="inline mb-0.5"></i> เป้าหมาย (TARGET)</p>
                     <div class="text-4xl md:text-5xl h-bold text-white drop-shadow-lg" id="sum-target">฿0</div>
                 </div>
+
                 <div class="grid grid-cols-2 md:grid-cols-6 gap-y-10 gap-x-4 text-center relative z-10">
                     <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ยอดขายรวม</p><div class="text-3xl md:text-4xl h-bold text-emerald-400 drop-shadow-lg" id="sum-sales">฿0</div></div>
                     <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ค่าแอดรวม</p><div class="text-3xl md:text-4xl h-bold text-rose-400 drop-shadow-lg" id="sum-ads">฿0</div></div>
@@ -219,36 +204,8 @@
         };
         const PRODUCTS = [{id:"เบต้าออยล์",css:"card-head-betaoil"},{id:"เบต้าไลฟ์",css:"card-head-betalife"},{id:"แล็บฟาร์ม",css:"card-head-labfarm"}];
         
+        // V10.22 GLOBAL VARS
         let allData=[], filteredData=[], config={goals:{}}, currentPage=1, currentUser={role:'', bucket:'', name:''}, currentUnsubscribe=null;
-        let loadingTimer = null; // Timer variable
-
-        // LOADING LOGIC (UPDATED V10.21)
-        const showLoading = (show) => {
-            const overlay = document.getElementById('loadingOverlay');
-            const loadState = document.getElementById('loadingState');
-            const timeoutState = document.getElementById('timeoutState');
-
-            if(show) {
-                overlay.style.display = 'flex';
-                loadState.classList.remove('hidden');
-                timeoutState.classList.add('hidden');
-                
-                // Clear any existing timer
-                if(loadingTimer) clearTimeout(loadingTimer);
-                
-                // Start 10s Timer (FAILSAFE)
-                loadingTimer = setTimeout(() => {
-                    loadState.classList.add('hidden');
-                    timeoutState.classList.remove('hidden'); // Show Timeout UI
-                }, 10000); // 10 Seconds limit
-            } else {
-                if(loadingTimer) clearTimeout(loadingTimer);
-                overlay.style.display = 'none';
-            }
-        };
-
-        window.retryLoad = () => { loadDataForBucket(document.body.dataset.currentBucket); };
-        window.forceEnter = () => { showLoading(false); }; // Just hide overlay
 
         // AUTH
         window.loginWithCode = () => { const c=document.getElementById('accessCode').value; if(ACCESS_CODES[c]){ sessionStorage.setItem('ads_user_code',c); initializeSession(ACCESS_CODES[c]); } else document.getElementById('loginError').classList.remove('hidden'); };
@@ -270,27 +227,30 @@
             lucide.createIcons(); loadDataForBucket(user.bucket); toggleFilterInputs();
         }
 
-        // DATA LOADER
+        // DATA LOADER (V10.22: BACK TO BASICS + ISOLATION)
         window.loadDataForBucket = (bucket) => {
-            showLoading(true); 
-            
-            // 1. HARD RESET
+            const btn = document.getElementById('refreshBtn').querySelector('svg');
+            if(btn) btn.classList.add('spin-anim');
+
+            // 1. ISOLATION: HARD RESET MEMORY
             if(typeof currentUnsubscribe === 'function') { currentUnsubscribe(); }
             allData = []; 
-            config = { goals: {} }; 
+            config = { goals: {} }; // Clear config
             document.body.dataset.currentBucket = bucket; 
             document.getElementById('currentBucketDisplay').innerText = bucket;
-            renderApp(); 
-
-            // 2. FETCH NEW DATA
+            
+            // 2. FETCH DATA & CONFIG
             onValue(ref(db, `adsData/${bucket}/config`), snap => { 
                 if(snap.exists()) { config={...config,...snap.val()}; }
+                // Re-render when config updates (goals)
                 renderApp(); 
             });
             
             currentUnsubscribe = onValue(ref(db, `adsData/${bucket}/records`), snap => { 
                 const r=snap.val(); allData=r?Object.keys(r).map(k=>({...r[k],id:k})):[]; 
-                
+                if(btn) btn.classList.remove('spin-anim');
+
+                // Smart Month Selector
                 if(allData.length > 0) {
                     const latest = allData.reduce((a,b)=> (a.date > b.date ? a : b));
                     const d = new Date(latest.date);
@@ -299,11 +259,9 @@
                         document.getElementById('filterYear').value = d.getFullYear();
                     }
                 }
-                
-                showLoading(false); // Success -> Hide & Clear Timer
                 renderApp(); 
             }, (error)=>{ 
-                showLoading(false);
+                if(btn) btn.classList.remove('spin-anim');
                 if(error.code==="PERMISSION_DENIED") alert("🚨 ACCESS DENIED: Please set Firebase Rules to true"); 
             });
         };
@@ -311,7 +269,7 @@
         window.switchProfile = (v) => loadDataForBucket(v);
         window.refreshDashboard = () => loadDataForBucket(document.body.dataset.currentBucket);
 
-        // IMPORT/EXPORT
+        // IMPORT/EXPORT (V10.19 SANITIZER)
         window.importJSON = (e) => {
             const f = e.target.files[0]; if(!f) return;
             const r = new FileReader();
@@ -339,17 +297,17 @@
 
                     const bucket = document.body.dataset.currentBucket;
                     if(confirm(`⚠️ ยืนยันการนำเข้าข้อมูล ${dt.length} รายการ ไปยัง [${bucket}]?`)){
-                        showLoading(true);
+                        document.body.style.cursor='wait';
                         const path = `adsData/${bucket}/records`;
                         await set(ref(db, path), null);
                         const updates = {};
                         dt.forEach(item => { const { id, ...cleanItem } = item; updates[push(ref(db, path)).key] = cleanItem; });
                         await update(ref(db, path), updates);
-                        showLoading(false);
+                        document.body.style.cursor='default'; 
                         alert("✅ Import สำเร็จ!"); 
                         loadDataForBucket(bucket);
                     }
-                } catch(e) { showLoading(false); alert("❌ Import ล้มเหลว: " + e.message); }
+                } catch(e) { document.body.style.cursor='default'; alert("❌ Import ล้มเหลว: " + e.message); }
                 document.getElementById('fileInput').value = '';
             };
             r.readAsText(f);
@@ -372,7 +330,7 @@
             try{ const p=`adsData/${b}/records`; if(id)await update(ref(db,`${p}/${id}`),d); else await push(ref(db,p),d); alert("✅ Saved!"); currentPage=1; loadDataForBucket(b); resetForm(); }catch(e){alert(e.message);}
         };
 
-        // GOAL SYSTEM
+        // GOAL SYSTEM (V10.22: MONTHLY GOALS)
         window.saveGoal=()=>{
             const mode = document.getElementById('filterMode').value;
             if(mode !== 'month') { alert("⚠️ กรุณาเลือกโหมด 'เดือน (Month)' ก่อนตั้งเป้าหมาย!"); return; }
@@ -443,6 +401,7 @@
         function renderStats(){
             const s=filteredData.reduce((a,b)=>a+(parseFloat(b.sales)||0),0),a=filteredData.reduce((a,b)=>a+(parseFloat(b.adSpend)||0),0),o=filteredData.reduce((a,b)=>a+(parseInt(b.orders)||0),0),i=filteredData.reduce((a,b)=>a+(parseInt(b.inquiries)||0),0);
             
+            // MONTHLY GOAL LOGIC
             let currentGoal = 0;
             const mode = document.getElementById('filterMode').value;
             if(mode === 'month') {
