@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ads Cloud Master V10.23 - Magic Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+    <style>
+        :root { --base-fsize: 16px; }
+        body { font-family: 'Kanit', sans-serif; background-color: #f8fafc; font-size: var(--base-fsize); color: #334155; }
+        .h-bold { font-weight: 700; } .h-medium { font-weight: 500; }
+        
+        /* OVERLAYS */
+        #lockOverlay { position: fixed; inset: 0; background-color: #0f172a; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        
+        /* CARD STYLES */
+        .card-stat { 
+            display: flex; flex-direction: column; justify-content: space-between;
+            width: 100%; max-width: 320px; min-height: 480px; 
+            margin: 0 auto; border-radius: 1.5rem; 
+            background: white; border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s; overflow: hidden;
+        }
+        
+        .card-head-betaoil { background: linear-gradient(135deg, #ca8a04 0%, #a16207 100%); color: white; } 
+        .card-head-betalife { background: linear-gradient(135deg, #78350f 0%, #451a03 100%); color: white; } 
+        .card-head-labfarm { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; }
+
+        /* METRIC GRID */
+        .metric-box { background-color: #f8fafc; border-radius: 0.75rem; padding: 0.75rem; text-align: center; border: 1px solid #e2e8f0; }
+        .metric-label { font-size: 0.7rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+        .metric-value { font-size: 1.1rem; font-weight: 700; color: #1e293b; }
+        .text-good { color: #16a34a; } .text-warn { color: #d97706; } .text-bad { color: #dc2626; }
+
+        /* PORTFOLIO & UI */
+        .portfolio-box { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); color: white; border-radius: 1.5rem; position: relative; overflow: hidden; box-shadow: 0 20px 50px -12px rgba(15, 23, 42, 0.25); border: 1px solid rgba(255,255,255,0.1); }
+        .progress-bar-bg { background: #e2e8f0; height: 48px; border-radius: 24px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #10b981 0%, #059669 100%); transition: width 1s; }
+        .progress-text-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); pointer-events: none; }
+        
+        .advice-box { margin-top: auto; padding: 0.75rem; border-radius: 0.75rem; font-size: 0.8rem; line-height: 1.4; border: 1px solid transparent; }
+        .advice-hidden { display: none !important; }
+        .hidden-force { display: none !important; }
+        
+        input, select { border: 2px solid #cbd5e1 !important; border-radius: 0.8rem !important; padding: 0.7rem 1rem !important; outline: none; transition: all 0.2s; font-size: 0.95rem; background-color: #fff; width: 100%; }
+        input:focus, select:focus { border-color: #6366f1 !important; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+        .sidebar { position: fixed; top: 0; right: 0; height: 100%; width: 320px; background: white; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transform: translateX(100%); transition: transform 0.3s ease; z-index: 2000; padding: 2rem; }
+        .sidebar.open { transform: translateX(0); }
+
+        /* REPORT STAGE (พื้นที่ถ่ายทำ - ซ่อนไว้ก่อน) */
+        #reportStage {
+            position: fixed; top: -9999px; left: -9999px; width: 1000px; /* บังคับกว้าง 1000px เพื่อให้การ์ดเรียงสวย */
+            background-color: #f8fafc; padding: 40px; border-radius: 0; z-index: -1;
+        }
+        .report-header { text-align: center; margin-bottom: 30px; }
+        .report-title { font-size: 2rem; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 2px; }
+        .report-subtitle { font-size: 1.2rem; color: #64748b; font-weight: 500; }
+        .report-credit { text-align: center; margin-top: 30px; color: #94a3b8; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+    </style>
+</head>
+<body id="appBody" class="p-4 md:p-8 pb-32">
+
+    <div id="reportStage">
+        <div class="report-header">
+            <h1 class="report-title">Performance Report</h1>
+            <p class="report-subtitle" id="reportDateDisplay">Monthly Report</p>
+        </div>
+        <div id="reportContent" class="space-y-8">
+            </div>
+        <div class="report-credit">Generated by Ads Cloud Master V10.23</div>
+    </div>
+
+    <div id="lockOverlay">
+        <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-sm text-center space-y-8">
+            <div class="w-20 h-20 bg-indigo-600 rounded-3xl flex items-center justify-center mx-auto text-white shadow-xl shadow-indigo-200"><i data-lucide="key" size="40"></i></div>
+            <div><h2 class="text-3xl h-bold text-slate-800">ADS CLOUD</h2><p class="text-slate-400 text-sm mt-2">Enter Access Code</p></div>
+            <div class="space-y-4">
+                <input type="password" id="accessCode" placeholder="รหัสผ่าน..." class="w-full text-center text-lg py-3 bg-slate-50 border-2 border-slate-100 focus:border-indigo-500 rounded-xl" onkeyup="if(event.key==='Enter') loginWithCode()">
+                <button onclick="loginWithCode()" class="w-full py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg hover:bg-indigo-700 transition transform active:scale-95">LOGIN</button>
+                <p id="loginError" class="text-rose-500 text-xs font-bold hidden">รหัสไม่ถูกต้อง!</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="mainContent" style="display: none;">
+        
+        <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.23 Reporter</p></div></div>
+            <div class="flex items-center gap-3">
+                <div id="adminSwitcher" class="hidden items-center gap-2 bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-100">
+                    <span class="text-[10px] h-bold text-indigo-600 uppercase">ADMIN VIEW:</span>
+                    <select id="profileSelector" class="bg-transparent border-none text-sm h-bold text-indigo-900 py-1 focus:ring-0 cursor-pointer" onchange="switchProfile(this.value)"></select>
+                    <button onclick="refreshDashboard()" id="refreshBtn" class="p-1 bg-white rounded-md text-indigo-500 hover:text-indigo-700 shadow-sm border border-indigo-100 transition" title="Refresh Data"><i data-lucide="refresh-cw" size="14"></i></button>
+                </div>
+                <button onclick="toggleSidebar()" class="w-10 h-10 bg-white border rounded-xl flex items-center justify-center text-slate-500 hover:text-indigo-600 transition shadow-sm"><i data-lucide="settings" size="20"></i></button>
+            </div>
+        </header>
+
+        <section class="max-w-7xl mx-auto mb-10" id="section-stats">
+            <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 relative overflow-hidden">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                    <div>
+                        <div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="target" size="14"></i><span class="text-xs h-bold uppercase">เป้าหมาย (Goal)</span></div>
+                        <div class="flex items-center gap-3">
+                            <div class="text-4xl h-bold text-slate-800" id="ui-goal">฿0</div>
+                            <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 hover:text-indigo-500 transition cursor-pointer" onclick="toggleGoalEdit(true)"><i data-lucide="edit-2" size="16"></i></div>
+                        </div>
+                        <div id="goalEdit" class="hidden flex items-center gap-2 mt-2"><input type="number" id="goalInput" class="w-full text-lg h-bold bg-slate-50 border rounded-lg px-3 py-1"><button onclick="saveGoal()" class="p-2 bg-emerald-500 text-white rounded-lg"><i data-lucide="check" size="18"></i></button><button onclick="toggleGoalEdit(false)" class="p-2 bg-slate-200 text-slate-500 rounded-lg"><i data-lucide="x" size="18"></i></button></div>
+                    </div>
+                    <div><div class="flex items-center gap-2 text-slate-400 mb-1"><i data-lucide="trending-up" size="14"></i><span class="text-xs h-bold uppercase">เฉลี่ยต่อวันจริง</span></div><div class="text-4xl h-bold text-emerald-500" id="ui-avg-actual">฿0</div></div>
+                    <div><div class="flex items-center gap-2 text-amber-500 mb-1"><i data-lucide="zap" size="14"></i><span class="text-xs h-bold uppercase">ยอดต้องทำ/วัน</span></div><div class="text-4xl h-bold text-amber-500" id="ui-avg-required">฿0</div></div>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-end"><span class="text-xs h-bold text-slate-400 uppercase tracking-widest">Progression Status</span><span class="text-2xl h-bold text-slate-800" id="ui-percent">0%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-text-overlay" id="ui-progress-text">฿0 / ขาด ฿0</div><div id="ui-progress-bar" class="progress-bar-fill" style="width: 0%"></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto mb-12">
+            <div class="bg-white rounded-[1.5rem] p-8 shadow-lg border-t-4 border-indigo-600 w-full">
+                <h3 class="h-bold text-lg mb-6 flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center"><i data-lucide="plus" size="16"></i></div> ลงข้อมูล (บันทึก: <span id="currentBucketDisplay" class="text-indigo-600 ml-1 h-bold">...</span>)</h3>
+                <form id="adsForm" class="grid grid-cols-2 md:grid-cols-6 gap-4">
+                    <input type="hidden" id="editId">
+                    <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="formPageId" class="w-full bg-slate-50"></select></div>
+                    <div class="col-span-2 md:col-span-1 space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">วันที่</label><input type="date" id="formDate" class="w-full bg-slate-50" required></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-rose-400 uppercase">ค่าแอด</label><input type="number" id="adSpend" placeholder="0" class="w-full bg-rose-50 text-rose-600 font-bold" step="any"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-emerald-500 uppercase">ยอดขาย</label><input type="number" id="sales" placeholder="0" class="w-full bg-emerald-50 text-emerald-600 font-bold" step="any"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-blue-400 uppercase">ออเดอร์</label><input type="number" id="orders" placeholder="0" class="w-full bg-blue-50 text-blue-600 font-bold"></div>
+                    <div class="col-span-1 space-y-1"><label class="text-[10px] h-bold text-amber-400 uppercase">ทัก</label><input type="number" id="inquiries" placeholder="0" class="w-full bg-amber-50 text-amber-600 font-bold"></div>
+                    <div class="col-span-2 md:col-span-4 space-y-1"><input type="text" id="note" placeholder="บันทึกหมายเหตุ..."></div>
+                    <div class="col-span-2 md:col-span-2 flex items-end gap-2"><button type="button" onclick="resetForm(true)" id="cancelBtn" class="hidden-force px-4 py-3 bg-slate-100 rounded-xl hover:bg-slate-200 transition"><i data-lucide="x"></i></button><button type="button" onclick="saveData()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl h-bold shadow-lg hover:bg-indigo-700 transition">บันทึกข้อมูล</button></div>
+                </form>
+            </div>
+        </section>
+
+        <div class="max-w-7xl mx-auto mb-6 flex justify-between items-end">
+            <div><h3 class="h-bold text-xl text-slate-800">Performance Cards</h3><div id="roleBadge" class="hidden mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs h-bold border"></div></div>
+            <div class="flex items-center gap-3"><span class="text-xs h-bold text-slate-400 uppercase">Show Advice:</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="adviceToggle" class="sr-only peer" onchange="window.renderApp()"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div></label></div>
+        </div>
+        <div id="product-cards" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 items-start justify-center"></div>
+
+        <section class="max-w-7xl mx-auto mb-12" id="section-summary">
+            <div class="portfolio-box p-10 md:p-12 shadow-2xl relative overflow-hidden">
+                <div class="portfolio-glow"></div>
+                <h3 class="text-center text-sm h-bold text-indigo-300 uppercase tracking-[0.3em] mb-4 relative z-10">ภาพรวมธุรกิจ (PORTFOLIO SUMMARY)</h3>
+                
+                <div class="text-center mb-10 relative z-10">
+                    <p class="text-xs text-amber-400 uppercase h-bold mb-1"><i data-lucide="target" size="12" class="inline mb-0.5"></i> เป้าหมาย (TARGET)</p>
+                    <div class="text-4xl md:text-5xl h-bold text-white drop-shadow-lg" id="sum-target">฿0</div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-6 gap-y-10 gap-x-4 text-center relative z-10">
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ยอดขายรวม</p><div class="text-3xl md:text-4xl h-bold text-emerald-400 drop-shadow-lg" id="sum-sales">฿0</div></div>
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ค่าแอดรวม</p><div class="text-3xl md:text-4xl h-bold text-rose-400 drop-shadow-lg" id="sum-ads">฿0</div></div>
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">% ค่าแอด</p><div class="text-3xl md:text-4xl h-bold text-white drop-shadow-lg" id="sum-pct">0%</div></div>
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">CPA เฉลี่ย</p><div class="text-2xl md:text-3xl h-bold text-indigo-400" id="sum-cpa">฿0</div></div>
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ทักเฉลี่ย</p><div class="text-2xl md:text-3xl h-bold text-blue-400" id="sum-inq">฿0</div></div>
+                    <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ROAS เฉลี่ย</p><div class="text-3xl md:text-4xl h-bold text-amber-400 drop-shadow-lg" id="sum-roas">0.0</div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto mb-6">
+            <div class="w-full bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600"><i data-lucide="filter" size="16"></i></div><span class="text-sm h-bold uppercase text-slate-700">Filter System</span></div>
+                    
+                    <button onclick="generateReport()" class="px-4 py-2 bg-purple-600 text-white rounded-xl h-bold text-xs flex items-center gap-2 shadow-lg hover:bg-purple-700 transition transform active:scale-95">
+                        <i data-lucide="camera" size="16"></i> <span>Export Report</span>
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">โหมด</label><select id="filterMode" onchange="toggleFilterInputs()"><option value="month">เดือน</option><option value="day">วัน</option><option value="range">ช่วงวัน</option><option value="year">ปี</option></select></div>
+                    <div id="filter-dynamic-group" class="space-y-1 col-span-2"></div>
+                    <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">สินค้า</label><select id="filterProduct"><option value="all">ทุกสินค้า</option></select></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-20">
+            <div class="p-6 border-b flex justify-between items-center bg-slate-50/50"><h3 class="h-bold text-lg text-slate-800 uppercase flex items-center gap-2"><i data-lucide="list" size="18"></i> ประวัติรายการ</h3><span class="text-xs bg-slate-200 px-3 py-1 rounded-full h-bold text-slate-600" id="tx-count">0 items</span></div>
+            <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-500 h-bold uppercase"><tr><th class="p-4">Date</th><th class="p-4">Product</th><th class="p-4 text-right">Sales</th><th class="p-4 text-right">Ads</th><th class="p-4 text-right">CPA</th><th class="p-4">Note</th><th class="p-4 text-center">Action</th></tr></thead><tbody id="tableBody" class="divide-y divide-slate-100"></tbody></table></div>
+            <div class="p-4 bg-white border-t flex justify-between items-center"><p class="text-xs h-medium text-slate-400" id="pageInfo">Page 1 of 1</p><div class="flex gap-2"><button onclick="changePage(-1)" id="prevPageBtn" class="px-4 py-2 bg-slate-100 rounded-lg text-slate-600 hover:bg-slate-200 disabled:opacity-50 h-medium text-xs">Previous</button><button onclick="changePage(1)" id="nextPageBtn" class="px-4 py-2 bg-slate-100 rounded-lg text-slate-600 hover:bg-slate-200 disabled:opacity-50 h-medium text-xs">Next</button></div></div>
+        </section>
+    </div>
+
+    <div id="settingsSidebar" class="sidebar flex flex-col gap-6">
+        <div class="flex justify-between items-center border-b pb-4"><h2 class="h-bold text-xl text-slate-800">MENU</h2><button onclick="toggleSidebar()" class="text-slate-400 hover:text-rose-500"><i data-lucide="x" size="24"></i></button></div>
+        <div class="p-4 bg-indigo-50 rounded-xl mb-4 border border-indigo-100"><p class="text-[10px] text-indigo-400 uppercase h-bold">Logged in as:</p><p id="sidebarRole" class="text-sm h-bold text-indigo-800 truncate">...</p></div>
+        <button onclick="logout()" class="w-full py-3 bg-rose-50 text-rose-600 border border-rose-100 rounded-xl h-bold text-sm flex justify-center gap-2 hover:bg-rose-100 transition"><i data-lucide="log-out"></i> Logout</button>
+        <div class="mt-auto">
+            <p class="text-xs text-slate-400 mb-2 uppercase h-bold">Current Profile Action:</p>
+            <button onclick="exportJSON()" class="w-full py-3 bg-slate-800 text-white rounded-xl h-bold text-sm flex justify-center gap-2 mb-3"><i data-lucide="download"></i> Backup Data</button>
+            <label class="w-full py-3 bg-amber-500 text-white rounded-xl h-bold text-sm flex justify-center gap-2 cursor-pointer hover:bg-amber-600 transition"><i data-lucide="upload"></i> Import (Replace) <input type="file" hidden onchange="importJSON(event)"></label>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+        import { getDatabase, ref, push, onValue, remove, update, set, off } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBMHbzxijgu_fb5NzXb0QtySb6v7U9osu4",
+            authDomain: "adstrackerkj.firebaseapp.com",
+            databaseURL: "https://adstrackerkj-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "adstrackerkj",
+            storageBucket: "adstrackerkj.firebasestorage.app",
+            messagingSenderId: "791146621049",
+            appId: "1:791146621049:web:f2e0c0ec480d1951a24ca8",
+            measurementId: "G-ZBNTZWYCEY"
+        };
+        const app = initializeApp(firebaseConfig); const db = getDatabase(app);
+
+        // CONFIG
+        const ACCESS_CODES = { 
+            "kjmaster": { role: "ADMIN", bucket: "adsData_master", name: "KJ Master (Admin)" }, 
+            "teamkj01": { role: "USER", bucket: "adsData_team01", name: "Team KJ 01" },
+            "teamkj02": { role: "USER", bucket: "adsData_team02", name: "Team KJ 02" },
+            "teamkj03": { role: "USER", bucket: "adsData_team03", name: "Team KJ 03" }
+        };
+        const PRODUCTS = [{id:"เบต้าออยล์",css:"card-head-betaoil"},{id:"เบต้าไลฟ์",css:"card-head-betalife"},{id:"แล็บฟาร์ม",css:"card-head-labfarm"}];
+        
+        let allData=[], filteredData=[], config={goals:{}}, currentPage=1, currentUser={role:'', bucket:'', name:''}, currentUnsubscribe=null;
+
+        // AUTH
+        window.loginWithCode = () => { const c=document.getElementById('accessCode').value; if(ACCESS_CODES[c]){ sessionStorage.setItem('ads_user_code',c); initializeSession(ACCESS_CODES[c]); } else document.getElementById('loginError').classList.remove('hidden'); };
+        window.checkAccessCode = () => { if(event.key==='Enter') window.loginWithCode(); };
+        window.logout = () => { sessionStorage.clear(); window.location.reload(); };
+
+        function initializeSession(user) {
+            currentUser = user; document.getElementById('lockOverlay').style.display='none'; document.getElementById('mainContent').style.display='block';
+            document.getElementById('sidebarRole').innerText = user.name; document.getElementById('currentBucketDisplay').innerText = user.bucket;
+            const b = document.getElementById('roleBadge'); b.classList.remove('hidden');
+            if(user.role==='ADMIN'){
+                b.className="mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-100 text-indigo-700 text-xs h-bold border border-indigo-200"; b.innerHTML=`<i data-lucide="shield-check" size="14"></i> ${user.name}`;
+                document.getElementById('adminSwitcher').classList.remove('hidden'); document.getElementById('adminSwitcher').classList.add('flex');
+                const s=document.getElementById('profileSelector'); s.innerHTML=`<option value="${user.bucket}">My Bucket</option>`;
+                Object.values(ACCESS_CODES).forEach(u=>{ if(u.bucket!==user.bucket) s.innerHTML+=`<option value="${u.bucket}">${u.name}</option>`; });
+            } else {
+                b.className="mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 text-slate-500 text-xs h-bold border border-slate-200"; b.innerHTML=`<i data-lucide="user" size="14"></i> ${user.name}`;
+            }
+            lucide.createIcons(); loadDataForBucket(user.bucket); toggleFilterInputs();
+        }
+
+        // DATA LOADER
+        window.loadDataForBucket = (bucket) => {
+            const btn = document.getElementById('refreshBtn').querySelector('svg');
+            if(btn) btn.classList.add('spin-anim');
+
+            if(typeof currentUnsubscribe === 'function') { currentUnsubscribe(); }
+            allData = []; config = { goals: {} }; 
+            document.body.dataset.currentBucket = bucket; 
+            document.getElementById('currentBucketDisplay').innerText = bucket;
+            
+            onValue(ref(db, `adsData/${bucket}/config`), snap => { 
+                if(snap.exists()) { config={...config,...snap.val()}; }
+                renderApp(); 
+            });
+            
+            currentUnsubscribe = onValue(ref(db, `adsData/${bucket}/records`), snap => { 
+                const r=snap.val(); allData=r?Object.keys(r).map(k=>({...r[k],id:k})):[]; 
+                if(btn) btn.classList.remove('spin-anim');
+                if(allData.length > 0) {
+                    const latest = allData.reduce((a,b)=> (a.date > b.date ? a : b));
+                    const d = new Date(latest.date);
+                    if(document.getElementById('filterMode').value === 'month') {
+                        document.getElementById('filterMonth').value = d.getMonth()+1;
+                        document.getElementById('filterYear').value = d.getFullYear();
+                    }
+                }
+                renderApp(); 
+            });
+        };
+        
+        window.switchProfile = (v) => loadDataForBucket(v);
+        window.refreshDashboard = () => loadDataForBucket(document.body.dataset.currentBucket);
+
+        // GENERATE REPORT (MAGIC BUTTON LOGIC)
+        window.generateReport = async () => {
+            const stage = document.getElementById('reportStage');
+            const content = document.getElementById('reportContent');
+            const dateText = document.getElementById('reportDateDisplay');
+
+            // 1. Set Date Text based on filter
+            const mode = document.getElementById('filterMode').value;
+            if(mode === 'month') dateText.innerText = `Report: ${document.getElementById('filterMonth').options[document.getElementById('filterMonth').selectedIndex].text} ${document.getElementById('filterYear').value}`;
+            else if(mode === 'day') dateText.innerText = `Report: ${document.getElementById('filterDate').value}`;
+            else dateText.innerText = `Custom Report`;
+
+            // 2. Clone Elements (Clean copies)
+            content.innerHTML = '';
+            
+            // Clone Summary Box
+            const summaryBox = document.getElementById('section-summary').querySelector('.portfolio-box').cloneNode(true);
+            summaryBox.style.margin = '0 auto'; 
+            content.appendChild(summaryBox);
+
+            // Clone Goal Bar (From Stats Section)
+            const goalSection = document.getElementById('section-stats').querySelector('.bg-white').cloneNode(true);
+            // Remove buttons from cloned version
+            const buttons = goalSection.querySelectorAll('button, .cursor-pointer');
+            buttons.forEach(b => b.remove());
+            content.appendChild(goalSection);
+
+            // Clone Cards (Force 3 cols layout for report)
+            const cards = document.getElementById('product-cards').cloneNode(true);
+            cards.className = "grid grid-cols-3 gap-8 items-start"; // Force Grid
+            content.appendChild(cards);
+
+            // 3. Capture with html2canvas
+            document.body.style.cursor = 'wait';
+            try {
+                const canvas = await html2canvas(stage, { scale: 2, backgroundColor: '#f8fafc' }); // High Res
+                const link = document.createElement('a');
+                link.download = `Report_${new Date().toISOString().slice(0,10)}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            } catch (err) {
+                alert("เกิดข้อผิดพลาดในการสร้างรูป: " + err);
+            }
+            document.body.style.cursor = 'default';
+        };
+
+        // ... [Standard Helpers: Import, Export, Save, Edit, etc.] ...
+        window.importJSON = (e) => {
+            const f = e.target.files[0]; if(!f) return;
+            const r = new FileReader();
+            r.onload = async (ev) => {
+                try {
+                    let rawContent = ev.target.result; if(rawContent.charCodeAt(0) === 0xFEFF) rawContent = rawContent.slice(1);
+                    let raw = JSON.parse(rawContent);
+                    let dt = []; if (Array.isArray(raw)) dt = raw; else if (raw.data) dt = raw.data; else dt = Object.values(raw);
+                    dt = dt.map(item => ({ ...item, adSpend: parseFloat(item.adSpend)||0, sales: parseFloat(item.sales)||0, orders: parseInt(item.orders)||0, inquiries: parseInt(item.inquiries)||0, date: item.date || new Date().toISOString().split('T')[0] }));
+                    if(confirm(`⚠️ Import ${dt.length} items?`)){
+                        const path = `adsData/${document.body.dataset.currentBucket}/records`;
+                        await set(ref(db, path), null);
+                        const updates = {}; dt.forEach(item => { const { id, ...clean } = item; updates[push(ref(db, path)).key] = clean; });
+                        await update(ref(db, path), updates);
+                        alert("✅ Done!"); loadDataForBucket(document.body.dataset.currentBucket);
+                    }
+                } catch(e) { alert("❌ Error: " + e.message); }
+            }; r.readAsText(f);
+        };
+        
+        window.onload=()=>{
+            lucide.createIcons(); document.getElementById('formDate').valueAsDate=new Date();
+            const pSelect=document.getElementById('formPageId'), fSelect=document.getElementById('filterProduct');
+            PRODUCTS.forEach(p=>{ pSelect.innerHTML+=`<option value="${p.id}">${p.id}</option>`; fSelect.innerHTML+=`<option value="${p.id}">${p.id}</option>`; });
+            const savedCode=sessionStorage.getItem('ads_user_code');
+            if(savedCode && ACCESS_CODES[savedCode]) initializeSession(ACCESS_CODES[savedCode]);
+            else { document.getElementById('lockOverlay').style.display='flex'; document.getElementById('mainContent').style.display='none'; }
+            document.getElementById('filterProduct').addEventListener('change',()=>{currentPage=1;renderApp()});
+        };
+        
+        window.saveData=async()=>{
+            const b=document.body.dataset.currentBucket; if(!b)return; 
+            const id=document.getElementById('editId').value;
+            const d={pageId:document.getElementById('formPageId').value, date:document.getElementById('formDate').value, adSpend:parseFloat(document.getElementById('adSpend').value)||0, sales:parseFloat(document.getElementById('sales').value)||0, orders:parseInt(document.getElementById('orders').value)||0, inquiries:parseInt(document.getElementById('inquiries').value)||0, note:document.getElementById('note').value, timestamp:Date.now()}; 
+            try{ const p=`adsData/${b}/records`; if(id)await update(ref(db,`${p}/${id}`),d); else await push(ref(db,p),d); alert("✅ Saved!"); currentPage=1; loadDataForBucket(b); resetForm(); }catch(e){alert(e.message);}
+        };
+        window.saveGoal=()=>{
+            const mode = document.getElementById('filterMode').value;
+            if(mode !== 'month') { alert("⚠️ Choose 'Month' mode first!"); return; }
+            const v = parseFloat(document.getElementById('goalInput').value);
+            const key = `${document.getElementById('filterYear').value}-${document.getElementById('filterMonth').value.padStart(2,'0')}`;
+            if(v>=0){ set(ref(db,`adsData/${document.body.dataset.currentBucket}/config/goals/${key}`), v); toggleGoalEdit(false); }
+        };
+        window.deleteEntry=async(id)=>{if(confirm("Delete?"))await remove(ref(db,`adsData/${document.body.dataset.currentBucket}/records/${id}`));};
+        window.exportJSON=()=>{const s="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(allData));const n=document.createElement('a');n.href=s;n.download=`backup_${document.body.dataset.currentBucket}.json`;n.click();};
+        window.resetForm=()=>{ document.getElementById('adsForm').reset(); document.getElementById('editId').value=''; document.getElementById('cancelBtn').classList.add('hidden-force'); };
+        window.editEntry = (id) => { const item = allData.find(x => x.id === id); if (!item) return; document.getElementById('editId').value = item.id; document.getElementById('formPageId').value = item.pageId; document.getElementById('formDate').value = item.date; document.getElementById('adSpend').value = item.adSpend; document.getElementById('sales').value = item.sales; document.getElementById('orders').value = item.orders; document.getElementById('inquiries').value = item.inquiries; document.getElementById('note').value = item.note || ''; document.getElementById('cancelBtn').classList.remove('hidden-force'); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+        window.toggleGoalEdit=(s)=>{ const m=document.getElementById('filterMode').value; if(s&&m!=='month'){alert("Month mode only!");return;} document.getElementById('ui-goal').classList.toggle('hidden',s); document.getElementById('goalEdit').classList.toggle('hidden',!s); document.getElementById('goalEdit').classList.toggle('flex',s); if(s) document.getElementById('goalInput').value=document.getElementById('ui-goal').innerText.replace(/[^\d.]/g,'')||0; };
+        window.toggleSidebar=()=>document.getElementById('settingsSidebar').classList.toggle('open');
+        window.changePage=(d)=>{currentPage+=d;renderApp();};
+
+        window.toggleFilterInputs=()=>{
+            const m=document.getElementById('filterMode').value,c=document.getElementById('filter-dynamic-group'),t=new Date().toISOString().split('T')[0];
+            c.innerHTML='';
+            if(m==='day')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เลือกวันที่</label><input type="date" id="filterDate" class="w-full" value="${t}" onchange="renderApp()">`;
+            else if(m==='range')c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">จาก - ถึง</label><div class="flex gap-2"><input type="date" id="filterStart" class="w-full" onchange="renderApp()"><input type="date" id="filterEnd" class="w-full" onchange="renderApp()"></div>`;
+            else if(m==='month'){c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">เดือน/ปี</label><div class="flex gap-2"><select id="filterMonth" class="w-full" onchange="renderApp()"></select><select id="filterYear" class="w-full" onchange="renderApp()"></select></div>`;setupMonthYear();}
+            else if(m==='year'){ c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ปี</label><select id="filterYearOnly" class="w-full" onchange="renderApp()"></select>`; setupYear('filterYearOnly'); document.getElementById('filterYearOnly').value = new Date().getFullYear(); }
+            currentPage=1;setTimeout(renderApp,100);
+        };
+        function setupMonthYear(){const m=document.getElementById('filterMonth'),n=new Date();["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."].forEach((v,i)=>m.innerHTML+=`<option value="${i+1}" ${i===n.getMonth()?'selected':''}>${v}</option>`);setupYear('filterYear');}
+        function setupYear(id){ const y=document.getElementById(id),c=new Date().getFullYear(); y.innerHTML = ''; for(let i=c;i>=2024;i--) y.innerHTML+=`<option value="${i}">${i}</option>`; }
+        
+        window.renderApp=()=>{
+            const m=document.getElementById('filterMode').value,fp=document.getElementById('filterProduct').value;
+            filteredData=allData.filter(d=>{const dt=new Date(d.date);let match=true;
+                if(m==='day')match=d.date===document.getElementById('filterDate').value;
+                else if(m==='range'){const s=document.getElementById('filterStart').value,e=document.getElementById('filterEnd').value;if(s&&e)match=d.date>=s&&d.date<=e;}
+                else if(m==='month')match=(dt.getMonth()+1)==document.getElementById('filterMonth').value&&dt.getFullYear()==document.getElementById('filterYear').value;
+                else if(m==='year')match=dt.getFullYear()==document.getElementById('filterYearOnly').value;
+                return match&&(fp==='all'||d.pageId===fp);
+            });
+            renderStats();renderCards();renderTable();lucide.createIcons();
+        };
+
+        function renderStats(){
+            const s=filteredData.reduce((a,b)=>a+(parseFloat(b.sales)||0),0),a=filteredData.reduce((a,b)=>a+(parseFloat(b.adSpend)||0),0),o=filteredData.reduce((a,b)=>a+(parseInt(b.orders)||0),0),i=filteredData.reduce((a,b)=>a+(parseInt(b.inquiries)||0),0);
+            let currentGoal = 0;
+            const mode = document.getElementById('filterMode').value;
+            if(mode === 'month') { const key = `${document.getElementById('filterYear').value}-${document.getElementById('filterMonth').value.padStart(2,'0')}`; if(config.goals && config.goals[key]) currentGoal = config.goals[key]; }
+            else if (mode === 'year') { const y = document.getElementById('filterYearOnly').value; if(config.goals) Object.keys(config.goals).forEach(k => { if(k.startsWith(y)) currentGoal += config.goals[k]; }); }
+
+            document.getElementById('sum-sales').innerText=`฿${s.toLocaleString()}`;
+            document.getElementById('sum-ads').innerText=`฿${a.toLocaleString()}`;
+            document.getElementById('sum-pct').innerText=s>0?`${((a/s)*100).toFixed(1)}%`:'0%';
+            document.getElementById('sum-cpa').innerText=o>0?`฿${(a/o).toFixed(0)}`:'0';
+            document.getElementById('sum-inq').innerText=i>0?`฿${(a/i).toFixed(0)}`:'0';
+            document.getElementById('sum-roas').innerText=a>0?(s/a).toFixed(2):'0.0';
+            document.getElementById('sum-target').innerText=`฿${currentGoal.toLocaleString()}`;
+            document.getElementById('ui-goal').innerText=`฿${currentGoal.toLocaleString()}`;
+
+            const goal=currentGoal,remain=Math.max(0,goal-s),pct=goal>0?(s/goal)*100:0;
+            document.getElementById('ui-progress-bar').style.width=`${Math.min(100,pct)}%`;
+            document.getElementById('ui-progress-text').innerText=`฿${s.toLocaleString()} / ขาด ฿${remain.toLocaleString()}`;
+            document.getElementById('ui-percent').innerText=`${pct.toFixed(1)}%`;
+            
+            const days=new Set(filteredData.map(d=>d.date)).size||1,now=new Date(),dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+            document.getElementById('ui-avg-actual').innerText=`฿${(s/days).toLocaleString(undefined,{maximumFractionDigits:0})}`;
+            document.getElementById('ui-avg-required').innerText=`฿${(remain/Math.max(1,dim-now.getDate())).toLocaleString(undefined,{maximumFractionDigits:0})}`;
+        }
+        
+        function renderCards(){
+            const c=document.getElementById('product-cards'),sh=document.getElementById('adviceToggle').checked;c.innerHTML='';
+            PRODUCTS.forEach(p=>{
+                const d=filteredData.filter(x=>x.pageId===p.id),s=d.reduce((a,b)=>a+(parseFloat(b.sales)||0),0),a=d.reduce((a,b)=>a+(parseFloat(b.adSpend)||0),0),o=d.reduce((a,b)=>a+(parseInt(b.orders)||0),0),i=d.reduce((a,b)=>a+(parseInt(b.inquiries)||0),0);
+                const pct=s>0?(a/s)*100:0, cpa=o>0?a/o:0, cpi=i>0?a/i:0, roas=a>0?s/a:0;
+                let adv='',cls='';
+                if(s===0||isNaN(s)){cls='bg-slate-50 border-slate-200';adv='<div class="flex items-center justify-center gap-2 h-full text-slate-400"><i data-lucide="clock" size="18"></i> รอข้อมูล...</div>';}
+                else if(pct<60){cls='bg-emerald-50 border-emerald-200';adv=`<div class="flex items-center gap-2 mb-1 text-emerald-800"><i data-lucide="flame" size="18" class="text-rose-500"></i><span class="h-bold">นาทีทอง!</span></div><p class="text-xs text-emerald-600">แอดถูก (${pct.toFixed(1)}%) อัดงบเพิ่มเลย!</p>`;}
+                else if(pct<=75){cls='bg-green-50 border-green-200';adv=`<div class="flex items-center gap-2 mb-1 text-green-800"><i data-lucide="trending-up" size="18" class="text-green-600"></i><span class="h-bold">กำไรดี</span></div><p class="text-xs text-green-600">อยู่ในเกณฑ์ดี ทยอยเพิ่มงบ</p>`;}
+                else if(pct<=85){cls='bg-amber-50 border-amber-200';adv=`<div class="flex items-center gap-2 mb-1 text-amber-800"><i data-lucide="alert-circle" size="18" class="text-amber-600"></i><span class="h-bold">เฝ้าระวัง</span></div><p class="text-xs text-amber-600">ห้ามเพิ่มงบ คุมยอดให้นิ่ง</p>`;}
+                else{cls='bg-rose-50 border-rose-200';adv=`<div class="flex items-center gap-2 mb-1 text-rose-800"><i data-lucide="x-octagon" size="18" class="text-rose-600"></i><span class="h-bold">อันตราย!</span></div><p class="text-xs text-rose-600">ขาดทุนแล้ว ลดงบด่วน</p>`;}
+                c.innerHTML+=`<div class="card-stat"><div class="${p.css} p-4 -m-6 mb-6 h-24 flex flex-col justify-center text-white shadow-sm"><h3 class="h-bold text-2xl drop-shadow-md text-center">${p.id}</h3></div><div class="flex-1 space-y-4 pt-6"><div class="grid grid-cols-2 gap-4"><div class="text-center"><p class="text-[10px] text-slate-400 uppercase">ยอดขาย</p><p class="text-xl h-bold text-emerald-600">฿${s.toLocaleString()}</p></div><div class="text-center"><p class="text-[10px] text-slate-400 uppercase">ค่าแอด</p><p class="text-xl h-bold text-rose-500">฿${a.toLocaleString()}</p></div></div><div class="grid grid-cols-2 gap-3 mt-4"><div class="metric-box"><p class="metric-label">% AD</p><p class="metric-value ${pct>80?'text-bad':pct<60?'text-good':'text-warn'}">${pct.toFixed(1)}%</p></div><div class="metric-box"><p class="metric-label">ROAS</p><p class="metric-value">${roas.toFixed(2)}</p></div><div class="metric-box"><p class="metric-label">CPA</p><p class="metric-value">฿${cpa.toFixed(0)}</p></div><div class="metric-box"><p class="metric-label">COST/CHAT</p><p class="metric-value">฿${cpi.toFixed(0)}</p></div></div></div><div class="advice-box ${cls} ${sh?'':'advice-hidden'} mt-4">${adv}</div></div>`;
+            });
+            lucide.createIcons();
+        }
+        function renderTable(){
+            const s=[...filteredData].sort((a,b)=>new Date(b.date)-new Date(a.date));
+            const t=document.getElementById('tableBody'); t.innerHTML='';
+            const pageSize=10; const start=(currentPage-1)*pageSize; const paged=s.slice(start, start+pageSize); const totalPages=Math.ceil(s.length/pageSize)||1;
+            document.getElementById('pageInfo').innerText=`Page ${currentPage} of ${totalPages}`; document.getElementById('prevPageBtn').disabled=currentPage===1; document.getElementById('nextPageBtn').disabled=currentPage>=totalPages; document.getElementById('tx-count').innerText=`${s.length} items`;
+            paged.forEach(i=>{
+                let rc='hover:bg-slate-50 border-l-slate-300',bc='bg-slate-100 text-slate-500';
+                if(i.pageId==='เบต้าออยล์'){rc='hover:bg-amber-50/80 bg-amber-50/30 border-l-amber-500';bc='bg-amber-100 text-amber-700';}
+                else if(i.pageId==='เบต้าไลฟ์'){rc='hover:bg-orange-50/80 bg-orange-50/30 border-l-orange-800';bc='bg-orange-100 text-orange-900';}
+                else if(i.pageId==='แล็บฟาร์ม'){rc='hover:bg-emerald-50/80 bg-emerald-50/30 border-l-emerald-500';bc='bg-emerald-100 text-emerald-700';}
+                const safeSales = parseFloat(i.sales)||0; const safeAds = parseFloat(i.adSpend)||0; const safeOrders = parseInt(i.orders)||0;
+                t.innerHTML+=`<tr class="transition border-l-[4px] border-b border-slate-100 ${rc}"><td class="p-4">${new Date(i.date).toLocaleDateString('th-TH')}</td><td class="p-4"><span class="text-xs px-2 py-1 rounded ${bc}">${i.pageId}</span></td><td class="p-4 text-right">฿${safeSales.toLocaleString()}</td><td class="p-4 text-right">฿${safeAds.toLocaleString()}</td><td class="p-4 text-right">฿${(safeOrders>0?(safeAds/safeOrders).toFixed(0):0)}</td><td class="p-4 text-xs">${i.note||'-'}</td><td class="p-4 text-center"><button onclick="window.editEntry('${i.id}')" class="text-indigo-500"><i data-lucide="edit-3" size="16"></i></button><button onclick="window.deleteEntry('${i.id}')" class="text-rose-500 ml-2"><i data-lucide="trash-2" size="16"></i></button></td></tr>`;
+            });
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>
