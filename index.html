@@ -3,20 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V10.22 - Stable Goals</title>
+    <title>Ads Cloud Master V10.25 - Stable & Insight</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-
     <style>
         :root { --base-fsize: 16px; }
         body { font-family: 'Kanit', sans-serif; background-color: #f8fafc; font-size: var(--base-fsize); color: #334155; }
         .h-bold { font-weight: 700; } .h-medium { font-weight: 500; }
         
-        /* SPIN ANIMATION */
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .spin-anim { animation: spin 1s linear infinite; }
-
         /* OVERLAYS */
         #lockOverlay { position: fixed; inset: 0; background-color: #0f172a; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
         
@@ -29,7 +24,6 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             transition: all 0.3s; overflow: hidden;
         }
-        .card-stat:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15); }
         
         .card-head-betaoil { background: linear-gradient(135deg, #ca8a04 0%, #a16207 100%); color: white; } 
         .card-head-betalife { background: linear-gradient(135deg, #78350f 0%, #451a03 100%); color: white; } 
@@ -43,6 +37,9 @@
 
         /* PORTFOLIO & UI */
         .portfolio-box { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); color: white; border-radius: 1.5rem; position: relative; overflow: hidden; box-shadow: 0 20px 50px -12px rgba(15, 23, 42, 0.25); border: 1px solid rgba(255,255,255,0.1); }
+        .portfolio-glow { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, rgba(0,0,0,0) 70%); animation: glow 10s infinite alternate; pointer-events: none; }
+        @keyframes glow { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(-20px, -20px) scale(1.1); } }
+        
         .progress-bar-bg { background: #e2e8f0; height: 48px; border-radius: 24px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #10b981 0%, #059669 100%); transition: width 1s; }
         .progress-text-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); pointer-events: none; }
@@ -50,6 +47,7 @@
         .advice-box { margin-top: auto; padding: 0.75rem; border-radius: 0.75rem; font-size: 0.8rem; line-height: 1.4; border: 1px solid transparent; }
         .advice-hidden { display: none !important; }
         .hidden-force { display: none !important; }
+        .spin-anim { animation: spin 1s linear infinite; } @keyframes spin { 100% { transform: rotate(360deg); } }
         
         input, select { border: 2px solid #cbd5e1 !important; border-radius: 0.8rem !important; padding: 0.7rem 1rem !important; outline: none; transition: all 0.2s; font-size: 0.95rem; background-color: #fff; width: 100%; }
         input:focus, select:focus { border-color: #6366f1 !important; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
@@ -74,7 +72,7 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.22 Stable Goals</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.25 Stable</p></div></div>
             <div class="flex items-center gap-3">
                 <div id="adminSwitcher" class="hidden items-center gap-2 bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-100">
                     <span class="text-[10px] h-bold text-indigo-600 uppercase">ADMIN VIEW:</span>
@@ -152,7 +150,9 @@
 
         <section class="max-w-7xl mx-auto mb-6">
             <div class="w-full bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                <div class="flex items-center gap-2 mb-4"><div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600"><i data-lucide="filter" size="16"></i></div><span class="text-sm h-bold uppercase text-slate-700">Filter System</span></div>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600"><i data-lucide="filter" size="16"></i></div><span class="text-sm h-bold uppercase text-slate-700">Filter System</span></div>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                     <div class="space-y-1"><label class="text-[10px] h-bold text-slate-400 uppercase">โหมด</label><select id="filterMode" onchange="toggleFilterInputs()"><option value="month">เดือน</option><option value="day">วัน</option><option value="range">ช่วงวัน</option><option value="year">ปี</option></select></div>
                     <div id="filter-dynamic-group" class="space-y-1 col-span-2"></div>
@@ -204,7 +204,6 @@
         };
         const PRODUCTS = [{id:"เบต้าออยล์",css:"card-head-betaoil"},{id:"เบต้าไลฟ์",css:"card-head-betalife"},{id:"แล็บฟาร์ม",css:"card-head-labfarm"}];
         
-        // V10.22 GLOBAL VARS
         let allData=[], filteredData=[], config={goals:{}}, currentPage=1, currentUser={role:'', bucket:'', name:''}, currentUnsubscribe=null;
 
         // AUTH
@@ -227,30 +226,24 @@
             lucide.createIcons(); loadDataForBucket(user.bucket); toggleFilterInputs();
         }
 
-        // DATA LOADER (V10.22: BACK TO BASICS + ISOLATION)
+        // DATA LOADER
         window.loadDataForBucket = (bucket) => {
             const btn = document.getElementById('refreshBtn').querySelector('svg');
             if(btn) btn.classList.add('spin-anim');
 
-            // 1. ISOLATION: HARD RESET MEMORY
             if(typeof currentUnsubscribe === 'function') { currentUnsubscribe(); }
-            allData = []; 
-            config = { goals: {} }; // Clear config
+            allData = []; config = { goals: {} }; 
             document.body.dataset.currentBucket = bucket; 
             document.getElementById('currentBucketDisplay').innerText = bucket;
             
-            // 2. FETCH DATA & CONFIG
             onValue(ref(db, `adsData/${bucket}/config`), snap => { 
                 if(snap.exists()) { config={...config,...snap.val()}; }
-                // Re-render when config updates (goals)
                 renderApp(); 
             });
             
             currentUnsubscribe = onValue(ref(db, `adsData/${bucket}/records`), snap => { 
                 const r=snap.val(); allData=r?Object.keys(r).map(k=>({...r[k],id:k})):[]; 
                 if(btn) btn.classList.remove('spin-anim');
-
-                // Smart Month Selector
                 if(allData.length > 0) {
                     const latest = allData.reduce((a,b)=> (a.date > b.date ? a : b));
                     const d = new Date(latest.date);
@@ -260,59 +253,33 @@
                     }
                 }
                 renderApp(); 
-            }, (error)=>{ 
-                if(btn) btn.classList.remove('spin-anim');
-                if(error.code==="PERMISSION_DENIED") alert("🚨 ACCESS DENIED: Please set Firebase Rules to true"); 
             });
         };
         
         window.switchProfile = (v) => loadDataForBucket(v);
         window.refreshDashboard = () => loadDataForBucket(document.body.dataset.currentBucket);
 
-        // IMPORT/EXPORT (V10.19 SANITIZER)
+        // --- HELPERS (Import/Export/Edit/Delete) ---
         window.importJSON = (e) => {
             const f = e.target.files[0]; if(!f) return;
             const r = new FileReader();
             r.onload = async (ev) => {
                 try {
-                    let rawContent = ev.target.result;
-                    if(rawContent.charCodeAt(0) === 0xFEFF) rawContent = rawContent.slice(1);
-                    let raw; try { raw = JSON.parse(rawContent); } catch(err) { throw new Error("ไฟล์ไม่ใช่ JSON"); }
-
-                    let dt = [];
-                    if (Array.isArray(raw)) dt = raw;
-                    else if (raw.data && Array.isArray(raw.data)) dt = raw.data;
-                    else if (typeof raw === 'object') dt = Object.values(raw);
-
-                    if (!dt || dt.length === 0) throw new Error("ไม่พบข้อมูล");
-                    
-                    dt = dt.map(item => ({
-                        ...item,
-                        adSpend: parseFloat(item.adSpend) || 0,
-                        sales: parseFloat(item.sales) || 0,
-                        orders: parseInt(item.orders) || 0,
-                        inquiries: parseInt(item.inquiries) || 0,
-                        date: item.date || new Date().toISOString().split('T')[0]
-                    }));
-
-                    const bucket = document.body.dataset.currentBucket;
-                    if(confirm(`⚠️ ยืนยันการนำเข้าข้อมูล ${dt.length} รายการ ไปยัง [${bucket}]?`)){
-                        document.body.style.cursor='wait';
-                        const path = `adsData/${bucket}/records`;
+                    let rawContent = ev.target.result; if(rawContent.charCodeAt(0) === 0xFEFF) rawContent = rawContent.slice(1);
+                    let raw = JSON.parse(rawContent);
+                    let dt = []; if (Array.isArray(raw)) dt = raw; else if (raw.data) dt = raw.data; else dt = Object.values(raw);
+                    dt = dt.map(item => ({ ...item, adSpend: parseFloat(item.adSpend)||0, sales: parseFloat(item.sales)||0, orders: parseInt(item.orders)||0, inquiries: parseInt(item.inquiries)||0, date: item.date || new Date().toISOString().split('T')[0] }));
+                    if(confirm(`⚠️ Import ${dt.length} items?`)){
+                        const path = `adsData/${document.body.dataset.currentBucket}/records`;
                         await set(ref(db, path), null);
-                        const updates = {};
-                        dt.forEach(item => { const { id, ...cleanItem } = item; updates[push(ref(db, path)).key] = cleanItem; });
+                        const updates = {}; dt.forEach(item => { const { id, ...clean } = item; updates[push(ref(db, path)).key] = clean; });
                         await update(ref(db, path), updates);
-                        document.body.style.cursor='default'; 
-                        alert("✅ Import สำเร็จ!"); 
-                        loadDataForBucket(bucket);
+                        alert("✅ Done!"); loadDataForBucket(document.body.dataset.currentBucket);
                     }
-                } catch(e) { document.body.style.cursor='default'; alert("❌ Import ล้มเหลว: " + e.message); }
-                document.getElementById('fileInput').value = '';
-            };
-            r.readAsText(f);
+                } catch(e) { alert("❌ Error: " + e.message); }
+            }; r.readAsText(f);
         };
-
+        
         window.onload=()=>{
             lucide.createIcons(); document.getElementById('formDate').valueAsDate=new Date();
             const pSelect=document.getElementById('formPageId'), fSelect=document.getElementById('filterProduct');
@@ -329,50 +296,22 @@
             const d={pageId:document.getElementById('formPageId').value, date:document.getElementById('formDate').value, adSpend:parseFloat(document.getElementById('adSpend').value)||0, sales:parseFloat(document.getElementById('sales').value)||0, orders:parseInt(document.getElementById('orders').value)||0, inquiries:parseInt(document.getElementById('inquiries').value)||0, note:document.getElementById('note').value, timestamp:Date.now()}; 
             try{ const p=`adsData/${b}/records`; if(id)await update(ref(db,`${p}/${id}`),d); else await push(ref(db,p),d); alert("✅ Saved!"); currentPage=1; loadDataForBucket(b); resetForm(); }catch(e){alert(e.message);}
         };
-
-        // GOAL SYSTEM (V10.22: MONTHLY GOALS)
         window.saveGoal=()=>{
             const mode = document.getElementById('filterMode').value;
-            if(mode !== 'month') { alert("⚠️ กรุณาเลือกโหมด 'เดือน (Month)' ก่อนตั้งเป้าหมาย!"); return; }
+            if(mode !== 'month') { alert("⚠️ Choose 'Month' mode first!"); return; }
             const v = parseFloat(document.getElementById('goalInput').value);
-            const m = document.getElementById('filterMonth').value.padStart(2,'0');
-            const y = document.getElementById('filterYear').value;
-            const key = `${y}-${m}`;
-            if(v>=0){
-                set(ref(db,`adsData/${document.body.dataset.currentBucket}/config/goals/${key}`), v);
-                toggleGoalEdit(false);
-            }
+            const key = `${document.getElementById('filterYear').value}-${document.getElementById('filterMonth').value.padStart(2,'0')}`;
+            if(v>=0){ set(ref(db,`adsData/${document.body.dataset.currentBucket}/config/goals/${key}`), v); toggleGoalEdit(false); }
         };
-
-        window.deleteEntry=async(id)=>{if(!confirm("Delete?"))return;await remove(ref(db,`adsData/${document.body.dataset.currentBucket}/records/${id}`));};
+        window.deleteEntry=async(id)=>{if(confirm("Delete?"))await remove(ref(db,`adsData/${document.body.dataset.currentBucket}/records/${id}`));};
         window.exportJSON=()=>{const s="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(allData));const n=document.createElement('a');n.href=s;n.download=`backup_${document.body.dataset.currentBucket}.json`;n.click();};
-        
-        window.resetForm=(full=false)=>{
-            document.getElementById('adsForm').reset(); document.getElementById('editId').value=''; document.getElementById('formDate').valueAsDate=new Date();
-            document.getElementById('cancelBtn').classList.add('hidden-force');
-        };
-        
-        window.editEntry = (id) => {
-            const item = allData.find(x => x.id === id); if (!item) return;
-            document.getElementById('editId').value = item.id; document.getElementById('formPageId').value = item.pageId; document.getElementById('formDate').value = item.date; document.getElementById('adSpend').value = item.adSpend; document.getElementById('sales').value = item.sales; document.getElementById('orders').value = item.orders; document.getElementById('inquiries').value = item.inquiries; document.getElementById('note').value = item.note || '';
-            document.getElementById('cancelBtn').classList.remove('hidden-force'); window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-        
-        window.toggleGoalEdit=(s)=>{
-            const mode = document.getElementById('filterMode').value;
-            if(s && mode !== 'month') { alert("⚠️ ต้องเลือกโหมด 'เดือน (Month)' เพื่อแก้ไขเป้าหมายครับ"); return; }
-            document.getElementById('ui-goal').classList.toggle('hidden',s);
-            document.getElementById('goalEdit').classList.toggle('hidden',!s);
-            document.getElementById('goalEdit').classList.toggle('flex',s);
-            if(s) {
-                const currentText = document.getElementById('ui-goal').innerText.replace(/[^\d.]/g, '');
-                document.getElementById('goalInput').value = currentText || 0;
-                document.getElementById('goalInput').focus();
-            }
-        };
+        window.resetForm=()=>{ document.getElementById('adsForm').reset(); document.getElementById('editId').value=''; document.getElementById('cancelBtn').classList.add('hidden-force'); };
+        window.editEntry = (id) => { const item = allData.find(x => x.id === id); if (!item) return; document.getElementById('editId').value = item.id; document.getElementById('formPageId').value = item.pageId; document.getElementById('formDate').value = item.date; document.getElementById('adSpend').value = item.adSpend; document.getElementById('sales').value = item.sales; document.getElementById('orders').value = item.orders; document.getElementById('inquiries').value = item.inquiries; document.getElementById('note').value = item.note || ''; document.getElementById('cancelBtn').classList.remove('hidden-force'); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+        window.toggleGoalEdit=(s)=>{ const m=document.getElementById('filterMode').value; if(s&&m!=='month'){alert("Month mode only!");return;} document.getElementById('ui-goal').classList.toggle('hidden',s); document.getElementById('goalEdit').classList.toggle('hidden',!s); document.getElementById('goalEdit').classList.toggle('flex',s); if(s) document.getElementById('goalInput').value=document.getElementById('ui-goal').innerText.replace(/[^\d.]/g,'')||0; };
         window.toggleSidebar=()=>document.getElementById('settingsSidebar').classList.toggle('open');
         window.changePage=(d)=>{currentPage+=d;renderApp();};
 
+        // --- FILTER & RENDER ---
         window.toggleFilterInputs=()=>{
             const m=document.getElementById('filterMode').value,c=document.getElementById('filter-dynamic-group'),t=new Date().toISOString().split('T')[0];
             c.innerHTML='';
@@ -382,7 +321,6 @@
             else if(m==='year'){ c.innerHTML=`<label class="text-[10px] h-bold text-slate-400 uppercase">ปี</label><select id="filterYearOnly" class="w-full" onchange="renderApp()"></select>`; setupYear('filterYearOnly'); document.getElementById('filterYearOnly').value = new Date().getFullYear(); }
             currentPage=1;setTimeout(renderApp,100);
         };
-
         function setupMonthYear(){const m=document.getElementById('filterMonth'),n=new Date();["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."].forEach((v,i)=>m.innerHTML+=`<option value="${i+1}" ${i===n.getMonth()?'selected':''}>${v}</option>`);setupYear('filterYear');}
         function setupYear(id){ const y=document.getElementById(id),c=new Date().getFullYear(); y.innerHTML = ''; for(let i=c;i>=2024;i--) y.innerHTML+=`<option value="${i}">${i}</option>`; }
         
@@ -400,23 +338,10 @@
 
         function renderStats(){
             const s=filteredData.reduce((a,b)=>a+(parseFloat(b.sales)||0),0),a=filteredData.reduce((a,b)=>a+(parseFloat(b.adSpend)||0),0),o=filteredData.reduce((a,b)=>a+(parseInt(b.orders)||0),0),i=filteredData.reduce((a,b)=>a+(parseInt(b.inquiries)||0),0);
-            
-            // MONTHLY GOAL LOGIC
             let currentGoal = 0;
             const mode = document.getElementById('filterMode').value;
-            if(mode === 'month') {
-                const m = document.getElementById('filterMonth').value.padStart(2,'0');
-                const y = document.getElementById('filterYear').value;
-                const key = `${y}-${m}`;
-                if(config.goals && config.goals[key]) currentGoal = config.goals[key];
-            } else if (mode === 'year') {
-                const y = document.getElementById('filterYearOnly').value;
-                if(config.goals) {
-                    Object.keys(config.goals).forEach(k => {
-                        if(k.startsWith(y)) currentGoal += config.goals[k];
-                    });
-                }
-            }
+            if(mode === 'month') { const key = `${document.getElementById('filterYear').value}-${document.getElementById('filterMonth').value.padStart(2,'0')}`; if(config.goals && config.goals[key]) currentGoal = config.goals[key]; }
+            else if (mode === 'year') { const y = document.getElementById('filterYearOnly').value; if(config.goals) Object.keys(config.goals).forEach(k => { if(k.startsWith(y)) currentGoal += config.goals[k]; }); }
 
             document.getElementById('sum-sales').innerText=`฿${s.toLocaleString()}`;
             document.getElementById('sum-ads').innerText=`฿${a.toLocaleString()}`;
@@ -448,10 +373,43 @@
                 else if(pct<=75){cls='bg-green-50 border-green-200';adv=`<div class="flex items-center gap-2 mb-1 text-green-800"><i data-lucide="trending-up" size="18" class="text-green-600"></i><span class="h-bold">กำไรดี</span></div><p class="text-xs text-green-600">อยู่ในเกณฑ์ดี ทยอยเพิ่มงบ</p>`;}
                 else if(pct<=85){cls='bg-amber-50 border-amber-200';adv=`<div class="flex items-center gap-2 mb-1 text-amber-800"><i data-lucide="alert-circle" size="18" class="text-amber-600"></i><span class="h-bold">เฝ้าระวัง</span></div><p class="text-xs text-amber-600">ห้ามเพิ่มงบ คุมยอดให้นิ่ง</p>`;}
                 else{cls='bg-rose-50 border-rose-200';adv=`<div class="flex items-center gap-2 mb-1 text-rose-800"><i data-lucide="x-octagon" size="18" class="text-rose-600"></i><span class="h-bold">อันตราย!</span></div><p class="text-xs text-rose-600">ขาดทุนแล้ว ลดงบด่วน</p>`;}
-                c.innerHTML+=`<div class="card-stat"><div class="${p.css} p-4 -m-6 mb-6 h-24 flex flex-col justify-center text-white shadow-sm"><h3 class="h-bold text-2xl drop-shadow-md text-center">${p.id}</h3></div><div class="flex-1 space-y-4 pt-6"><div class="grid grid-cols-2 gap-4"><div class="text-center"><p class="text-[10px] text-slate-400 uppercase">ยอดขาย</p><p class="text-xl h-bold text-emerald-600">฿${s.toLocaleString()}</p></div><div class="text-center"><p class="text-[10px] text-slate-400 uppercase">ค่าแอด</p><p class="text-xl h-bold text-rose-500">฿${a.toLocaleString()}</p></div></div><div class="grid grid-cols-2 gap-3 mt-4"><div class="metric-box"><p class="metric-label">% AD</p><p class="metric-value ${pct>80?'text-bad':pct<60?'text-good':'text-warn'}">${pct.toFixed(1)}%</p></div><div class="metric-box"><p class="metric-label">ROAS</p><p class="metric-value">${roas.toFixed(2)}</p></div><div class="metric-box"><p class="metric-label">CPA</p><p class="metric-value">฿${cpa.toFixed(0)}</p></div><div class="metric-box"><p class="metric-label">COST/CHAT</p><p class="metric-value">฿${cpi.toFixed(0)}</p></div></div></div><div class="advice-box ${cls} ${sh?'':'advice-hidden'} mt-4">${adv}</div></div>`;
+                
+                // --- INSERTING ORDERS/CHATS ROW HERE ---
+                c.innerHTML+=`
+                <div class="card-stat">
+                    <div class="${p.css} p-4 -m-6 mb-6 h-24 flex flex-col justify-center text-white shadow-sm">
+                        <h3 class="h-bold text-2xl drop-shadow-md text-center">${p.id}</h3>
+                    </div>
+                    <div class="flex-1 space-y-4 pt-6">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center"><p class="text-[10px] text-slate-400 uppercase">ยอดขาย</p><p class="text-xl h-bold text-emerald-600">฿${s.toLocaleString()}</p></div>
+                            <div class="text-center"><p class="text-[10px] text-slate-400 uppercase">ค่าแอด</p><p class="text-xl h-bold text-rose-500">฿${a.toLocaleString()}</p></div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 border-t border-b border-slate-100 py-3 my-3 bg-slate-50/50 rounded-lg">
+                            <div class="text-center">
+                                <p class="text-[10px] text-slate-400 uppercase flex items-center justify-center gap-1"><i data-lucide="package" size="10"></i> ออเดอร์</p>
+                                <p class="text-lg h-bold text-slate-700">${o.toLocaleString()}</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-[10px] text-slate-400 uppercase flex items-center justify-center gap-1"><i data-lucide="message-circle" size="10"></i> ทักแชท</p>
+                                <p class="text-lg h-bold text-slate-700">${i.toLocaleString()}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3 mt-4">
+                            <div class="metric-box"><p class="metric-label">% AD</p><p class="metric-value ${pct>80?'text-bad':pct<60?'text-good':'text-warn'}">${pct.toFixed(1)}%</p></div>
+                            <div class="metric-box"><p class="metric-label">ROAS</p><p class="metric-value">${roas.toFixed(2)}</p></div>
+                            <div class="metric-box"><p class="metric-label">CPA</p><p class="metric-value">฿${cpa.toFixed(0)}</p></div>
+                            <div class="metric-box"><p class="metric-label">COST/CHAT</p><p class="metric-value">฿${cpi.toFixed(0)}</p></div>
+                        </div>
+                    </div>
+                    <div class="advice-box ${cls} ${sh?'':'advice-hidden'} mt-4">${adv}</div>
+                </div>`;
             });
             lucide.createIcons();
         }
+
         function renderTable(){
             const s=[...filteredData].sort((a,b)=>new Date(b.date)-new Date(a.date));
             const t=document.getElementById('tableBody'); t.innerHTML='';
