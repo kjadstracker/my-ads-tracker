@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V10.18 - Monthly Goal & Portfolio Target</title>
+    <title>Ads Cloud Master V10.19 - Clean Import System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -76,7 +76,7 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.18 Monthly Goal</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.19 Clean Import</p></div></div>
             <div class="flex items-center gap-3">
                 <div id="adminSwitcher" class="hidden items-center gap-2 bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-100">
                     <span class="text-[10px] h-bold text-indigo-600 uppercase">ADMIN VIEW:</span>
@@ -250,6 +250,7 @@
                 if(allData.length > 0) {
                     const latest = allData.reduce((a,b)=> (a.date > b.date ? a : b));
                     const d = new Date(latest.date);
+                    // Smart Month Selector (only change if user hasn't messed with filters)
                     if(document.getElementById('filterMode').value === 'month') {
                         document.getElementById('filterMonth').value = d.getMonth()+1;
                         document.getElementById('filterYear').value = d.getFullYear();
@@ -269,27 +270,72 @@
             loadDataForBucket(bucket);
         };
 
-        // IMPORT
+        // ==========================================
+        // V10.19: UNIVERSAL IMPORT & SANITIZER
+        // ==========================================
         window.importJSON = (e) => {
             const f = e.target.files[0]; if(!f) return;
             const r = new FileReader();
             r.onload = async (ev) => {
                 try {
-                    let rawContent = ev.target.result; if(rawContent.charCodeAt(0) === 0xFEFF) rawContent = rawContent.slice(1);
-                    const raw = JSON.parse(rawContent);
+                    let rawContent = ev.target.result;
+                    // Fix BOM issue if present
+                    if(rawContent.charCodeAt(0) === 0xFEFF) rawContent = rawContent.slice(1);
+                    
+                    let raw;
+                    try { raw = JSON.parse(rawContent); } catch(err) { throw new Error("ไฟล์ไม่ใช่ JSON ที่ถูกต้อง"); }
+
                     let dt = [];
-                    if (raw.data && Array.isArray(raw.data)) dt = raw.data; else if (Array.isArray(raw)) dt = raw; else if (typeof raw === 'object') dt = Object.values(raw);
-                    if (dt.length === 0) { alert("❌ No valid data!"); return; }
+                    // UNIVERSAL LOADER: Handle Array, Object, or Wrapper
+                    if (Array.isArray(raw)) {
+                        dt = raw;
+                    } else if (raw.data && Array.isArray(raw.data)) {
+                        dt = raw.data;
+                    } else if (typeof raw === 'object') {
+                        dt = Object.values(raw);
+                    }
+
+                    if (!dt || dt.length === 0) { throw new Error("ไม่พบข้อมูลในไฟล์ (No Data Found)"); }
+                    
+                    // DATA SANITIZER (The Smelter)
+                    dt = dt.map(item => ({
+                        ...item,
+                        // Force convert to Number, if fail/null use 0
+                        adSpend: parseFloat(item.adSpend) || 0,
+                        sales: parseFloat(item.sales) || 0,
+                        orders: parseInt(item.orders) || 0,
+                        inquiries: parseInt(item.inquiries) || 0,
+                        // Keep Date and ID Logic
+                        date: item.date || new Date().toISOString().split('T')[0]
+                    }));
+
                     const bucket = document.body.dataset.currentBucket;
-                    if(confirm(`⚠️ Import ${dt.length} items to [${bucket}]?\n(Old data will be CLEARED)`)){
+                    if(confirm(`⚠️ ยืนยันการนำเข้าข้อมูล ${dt.length} รายการ ไปยัง [${bucket}]?\n(ข้อมูลเก่าจะถูกล้างทั้งหมด!)`)){
                         document.body.style.cursor='wait';
                         const path = `adsData/${bucket}/records`;
+                        
+                        // Clear old data
                         await set(ref(db, path), null);
-                        for(const i of dt) await push(ref(db, path), i);
-                        document.body.style.cursor='default'; alert("✅ Import Success"); 
+                        
+                        // Push new data (Batch)
+                        const updates = {};
+                        dt.forEach(item => {
+                            const newKey = push(ref(db, path)).key;
+                            // Clean item (remove old ID to avoid collision)
+                            const { id, ...cleanItem } = item; 
+                            updates[newKey] = cleanItem;
+                        });
+                        
+                        await update(ref(db, path), updates);
+                        
+                        document.body.style.cursor='default'; 
+                        alert("✅ Import สำเร็จเรียบร้อย! (Sanitized)"); 
                         loadDataForBucket(bucket);
                     }
-                } catch(e) { document.body.style.cursor='default'; alert("Import Error: " + e.message); }
+                } catch(e) { 
+                    document.body.style.cursor='default'; 
+                    alert("❌ Import ล้มเหลว: " + e.message); 
+                }
                 document.getElementById('fileInput').value = '';
             };
             r.readAsText(f);
@@ -312,7 +358,6 @@
             try{ const p=`adsData/${b}/records`; if(id)await update(ref(db,`${p}/${id}`),d); else await push(ref(db,p),d); alert("✅ Saved!"); currentPage=1; loadDataForBucket(b); resetForm(); }catch(e){alert(e.message);}
         };
 
-        // NEW: Save Monthly Goal
         window.saveGoal=()=>{
             const mode = document.getElementById('filterMode').value;
             if(mode !== 'month') { alert("⚠️ กรุณาเลือกโหมด 'เดือน (Month)' ก่อนตั้งเป้าหมาย!"); return; }
@@ -389,7 +434,7 @@
         function renderStats(){
             const s=filteredData.reduce((a,b)=>a+(parseFloat(b.sales)||0),0),a=filteredData.reduce((a,b)=>a+(parseFloat(b.adSpend)||0),0),o=filteredData.reduce((a,b)=>a+(parseInt(b.orders)||0),0),i=filteredData.reduce((a,b)=>a+(parseInt(b.inquiries)||0),0);
             
-            // NEW: GOAL LOGIC
+            // GOAL LOGIC (Yearly Sum Capable)
             let currentGoal = 0;
             const mode = document.getElementById('filterMode').value;
             if(mode === 'month') {
@@ -414,7 +459,7 @@
             document.getElementById('sum-cpa').innerText=o>0?`฿${(a/o).toFixed(0)}`:'0';
             document.getElementById('sum-inq').innerText=i>0?`฿${(a/i).toFixed(0)}`:'0';
             document.getElementById('sum-roas').innerText=a>0?(s/a).toFixed(2):'0.0';
-            document.getElementById('sum-target').innerText=`฿${currentGoal.toLocaleString()}`; // NEW SUMMARY TARGET
+            document.getElementById('sum-target').innerText=`฿${currentGoal.toLocaleString()}`;
 
             const goal=currentGoal,remain=Math.max(0,goal-s),pct=goal>0?(s/goal)*100:0;
             document.getElementById('ui-goal').innerText=`฿${goal.toLocaleString()}`;
@@ -452,7 +497,11 @@
                 if(i.pageId==='เบต้าออยล์'){rc='hover:bg-amber-50/80 bg-amber-50/30 border-l-amber-500';bc='bg-amber-100 text-amber-700';}
                 else if(i.pageId==='เบต้าไลฟ์'){rc='hover:bg-orange-50/80 bg-orange-50/30 border-l-orange-800';bc='bg-orange-100 text-orange-900';}
                 else if(i.pageId==='แล็บฟาร์ม'){rc='hover:bg-emerald-50/80 bg-emerald-50/30 border-l-emerald-500';bc='bg-emerald-100 text-emerald-700';}
-                t.innerHTML+=`<tr class="transition border-l-[4px] border-b border-slate-100 ${rc}"><td class="p-4">${new Date(i.date).toLocaleDateString('th-TH')}</td><td class="p-4"><span class="text-xs px-2 py-1 rounded ${bc}">${i.pageId}</span></td><td class="p-4 text-right">฿${parseFloat(i.sales).toLocaleString()}</td><td class="p-4 text-right">฿${parseFloat(i.adSpend).toLocaleString()}</td><td class="p-4 text-right">฿${(i.orders>0?(i.adSpend/i.orders).toFixed(0):0)}</td><td class="p-4 text-xs">${i.note||'-'}</td><td class="p-4 text-center"><button onclick="window.editEntry('${i.id}')" class="text-indigo-500"><i data-lucide="edit-3" size="16"></i></button><button onclick="window.deleteEntry('${i.id}')" class="text-rose-500 ml-2"><i data-lucide="trash-2" size="16"></i></button></td></tr>`;
+                // SAFE RENDER: Check for null/undefined
+                const safeSales = parseFloat(i.sales)||0;
+                const safeAds = parseFloat(i.adSpend)||0;
+                const safeOrders = parseInt(i.orders)||0;
+                t.innerHTML+=`<tr class="transition border-l-[4px] border-b border-slate-100 ${rc}"><td class="p-4">${new Date(i.date).toLocaleDateString('th-TH')}</td><td class="p-4"><span class="text-xs px-2 py-1 rounded ${bc}">${i.pageId}</span></td><td class="p-4 text-right">฿${safeSales.toLocaleString()}</td><td class="p-4 text-right">฿${safeAds.toLocaleString()}</td><td class="p-4 text-right">฿${(safeOrders>0?(safeAds/safeOrders).toFixed(0):0)}</td><td class="p-4 text-xs">${i.note||'-'}</td><td class="p-4 text-center"><button onclick="window.editEntry('${i.id}')" class="text-indigo-500"><i data-lucide="edit-3" size="16"></i></button><button onclick="window.deleteEntry('${i.id}')" class="text-rose-500 ml-2"><i data-lucide="trash-2" size="16"></i></button></td></tr>`;
             });
             lucide.createIcons();
         }
