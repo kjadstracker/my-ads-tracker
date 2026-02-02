@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V10.20 - Isolation & Goals</title>
+    <title>Ads Cloud Master V10.21 - Anti-Freeze</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -19,7 +19,7 @@
 
         /* OVERLAYS */
         #lockOverlay { position: fixed; inset: 0; background-color: #0f172a; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-        #loadingOverlay { position: fixed; inset: 0; background-color: rgba(255,255,255,0.8); backdrop-filter: blur(4px); z-index: 5000; display: none; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.3s; }
+        #loadingOverlay { position: fixed; inset: 0; background-color: rgba(255,255,255,0.9); backdrop-filter: blur(4px); z-index: 5000; display: none; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.3s; }
         
         /* CARD STYLES */
         .card-stat { 
@@ -73,16 +73,25 @@
     </div>
 
     <div id="loadingOverlay">
-        <div class="bg-white p-6 rounded-2xl shadow-xl flex flex-col items-center gap-4">
+        <div id="loadingState" class="flex flex-col items-center gap-4">
             <i data-lucide="loader-2" size="48" class="text-indigo-600 spin-anim"></i>
             <p class="text-indigo-900 h-bold animate-pulse">กำลังโหลดข้อมูล...</p>
+        </div>
+        <div id="timeoutState" class="hidden flex flex-col items-center gap-4 text-center">
+            <div class="w-16 h-16 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center mb-2"><i data-lucide="wifi-off" size="32"></i></div>
+            <h3 class="text-xl h-bold text-slate-800">เชื่อมต่อล่าช้าผิดปกติ</h3>
+            <p class="text-sm text-slate-500 max-w-xs">ระบบใช้เวลานานเกินไปในการดึงข้อมูลจาก Cloud</p>
+            <div class="flex gap-3 mt-4">
+                <button onclick="retryLoad()" class="px-6 py-2 bg-indigo-600 text-white rounded-lg h-bold shadow-lg hover:bg-indigo-700 transition flex items-center gap-2"><i data-lucide="refresh-cw" size="16"></i> ลองใหม่</button>
+                <button onclick="forceEnter()" class="px-6 py-2 bg-slate-200 text-slate-600 rounded-lg h-bold hover:bg-slate-300 transition flex items-center gap-2"><i data-lucide="log-in" size="16"></i> เข้าใช้งานเลย</button>
+            </div>
         </div>
     </div>
 
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.20 Isolation</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.21 Anti-Freeze</p></div></div>
             <div class="flex items-center gap-3">
                 <div id="adminSwitcher" class="hidden items-center gap-2 bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-100">
                     <span class="text-[10px] h-bold text-indigo-600 uppercase">ADMIN VIEW:</span>
@@ -141,12 +150,10 @@
             <div class="portfolio-box p-10 md:p-12 shadow-2xl relative overflow-hidden">
                 <div class="portfolio-glow"></div>
                 <h3 class="text-center text-sm h-bold text-indigo-300 uppercase tracking-[0.3em] mb-4 relative z-10">ภาพรวมธุรกิจ (PORTFOLIO SUMMARY)</h3>
-                
                 <div class="text-center mb-10 relative z-10">
                     <p class="text-xs text-amber-400 uppercase h-bold mb-1"><i data-lucide="target" size="12" class="inline mb-0.5"></i> เป้าหมาย (TARGET)</p>
                     <div class="text-4xl md:text-5xl h-bold text-white drop-shadow-lg" id="sum-target">฿0</div>
                 </div>
-
                 <div class="grid grid-cols-2 md:grid-cols-6 gap-y-10 gap-x-4 text-center relative z-10">
                     <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ยอดขายรวม</p><div class="text-3xl md:text-4xl h-bold text-emerald-400 drop-shadow-lg" id="sum-sales">฿0</div></div>
                     <div><p class="text-sm h-bold text-indigo-300 uppercase mb-3">ค่าแอดรวม</p><div class="text-3xl md:text-4xl h-bold text-rose-400 drop-shadow-lg" id="sum-ads">฿0</div></div>
@@ -213,9 +220,35 @@
         const PRODUCTS = [{id:"เบต้าออยล์",css:"card-head-betaoil"},{id:"เบต้าไลฟ์",css:"card-head-betalife"},{id:"แล็บฟาร์ม",css:"card-head-labfarm"}];
         
         let allData=[], filteredData=[], config={goals:{}}, currentPage=1, currentUser={role:'', bucket:'', name:''}, currentUnsubscribe=null;
+        let loadingTimer = null; // Timer variable
 
-        // LOADING STATE
-        const showLoading = (show) => document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        // LOADING LOGIC (UPDATED V10.21)
+        const showLoading = (show) => {
+            const overlay = document.getElementById('loadingOverlay');
+            const loadState = document.getElementById('loadingState');
+            const timeoutState = document.getElementById('timeoutState');
+
+            if(show) {
+                overlay.style.display = 'flex';
+                loadState.classList.remove('hidden');
+                timeoutState.classList.add('hidden');
+                
+                // Clear any existing timer
+                if(loadingTimer) clearTimeout(loadingTimer);
+                
+                // Start 10s Timer (FAILSAFE)
+                loadingTimer = setTimeout(() => {
+                    loadState.classList.add('hidden');
+                    timeoutState.classList.remove('hidden'); // Show Timeout UI
+                }, 10000); // 10 Seconds limit
+            } else {
+                if(loadingTimer) clearTimeout(loadingTimer);
+                overlay.style.display = 'none';
+            }
+        };
+
+        window.retryLoad = () => { loadDataForBucket(document.body.dataset.currentBucket); };
+        window.forceEnter = () => { showLoading(false); }; // Just hide overlay
 
         // AUTH
         window.loginWithCode = () => { const c=document.getElementById('accessCode').value; if(ACCESS_CODES[c]){ sessionStorage.setItem('ads_user_code',c); initializeSession(ACCESS_CODES[c]); } else document.getElementById('loginError').classList.remove('hidden'); };
@@ -237,29 +270,27 @@
             lucide.createIcons(); loadDataForBucket(user.bucket); toggleFilterInputs();
         }
 
-        // DATA LOADER (UPDATED: ISOLATION & VISUAL FEEDBACK)
+        // DATA LOADER
         window.loadDataForBucket = (bucket) => {
-            showLoading(true); // SHOW SPINNER
+            showLoading(true); 
             
-            // 1. HARD RESET (ISOLATION)
+            // 1. HARD RESET
             if(typeof currentUnsubscribe === 'function') { currentUnsubscribe(); }
             allData = []; 
-            config = { goals: {} }; // Clear previous profile's config
+            config = { goals: {} }; 
             document.body.dataset.currentBucket = bucket; 
             document.getElementById('currentBucketDisplay').innerText = bucket;
-            renderApp(); // Clear screen momentarily
+            renderApp(); 
 
             // 2. FETCH NEW DATA
             onValue(ref(db, `adsData/${bucket}/config`), snap => { 
                 if(snap.exists()) { config={...config,...snap.val()}; }
-                // Goals logic handled in render
                 renderApp(); 
             });
             
             currentUnsubscribe = onValue(ref(db, `adsData/${bucket}/records`), snap => { 
                 const r=snap.val(); allData=r?Object.keys(r).map(k=>({...r[k],id:k})):[]; 
                 
-                // Smart Month Selector
                 if(allData.length > 0) {
                     const latest = allData.reduce((a,b)=> (a.date > b.date ? a : b));
                     const d = new Date(latest.date);
@@ -269,7 +300,7 @@
                     }
                 }
                 
-                showLoading(false); // HIDE SPINNER
+                showLoading(false); // Success -> Hide & Clear Timer
                 renderApp(); 
             }, (error)=>{ 
                 showLoading(false);
@@ -280,7 +311,7 @@
         window.switchProfile = (v) => loadDataForBucket(v);
         window.refreshDashboard = () => loadDataForBucket(document.body.dataset.currentBucket);
 
-        // IMPORT/EXPORT (V10.19 LOGIC)
+        // IMPORT/EXPORT
         window.importJSON = (e) => {
             const f = e.target.files[0]; if(!f) return;
             const r = new FileReader();
@@ -341,21 +372,17 @@
             try{ const p=`adsData/${b}/records`; if(id)await update(ref(db,`${p}/${id}`),d); else await push(ref(db,p),d); alert("✅ Saved!"); currentPage=1; loadDataForBucket(b); resetForm(); }catch(e){alert(e.message);}
         };
 
-        // GOAL SYSTEM (UPDATED: Month-Locked Logic)
+        // GOAL SYSTEM
         window.saveGoal=()=>{
             const mode = document.getElementById('filterMode').value;
             if(mode !== 'month') { alert("⚠️ กรุณาเลือกโหมด 'เดือน (Month)' ก่อนตั้งเป้าหมาย!"); return; }
-            
             const v = parseFloat(document.getElementById('goalInput').value);
-            const m = document.getElementById('filterMonth').value.padStart(2,'0'); // Ensure 01, 02
+            const m = document.getElementById('filterMonth').value.padStart(2,'0');
             const y = document.getElementById('filterYear').value;
             const key = `${y}-${m}`;
-            
             if(v>=0){
-                // Save to current bucket -> config -> goals -> YYYY-MM
                 set(ref(db,`adsData/${document.body.dataset.currentBucket}/config/goals/${key}`), v);
                 toggleGoalEdit(false);
-                // Render will happen automatically via onValue listener
             }
         };
 
@@ -374,15 +401,12 @@
         };
         
         window.toggleGoalEdit=(s)=>{
-            // Check mode
             const mode = document.getElementById('filterMode').value;
             if(s && mode !== 'month') { alert("⚠️ ต้องเลือกโหมด 'เดือน (Month)' เพื่อแก้ไขเป้าหมายครับ"); return; }
-
             document.getElementById('ui-goal').classList.toggle('hidden',s);
             document.getElementById('goalEdit').classList.toggle('hidden',!s);
             document.getElementById('goalEdit').classList.toggle('flex',s);
             if(s) {
-                // Pre-fill with current displayed goal
                 const currentText = document.getElementById('ui-goal').innerText.replace(/[^\d.]/g, '');
                 document.getElementById('goalInput').value = currentText || 0;
                 document.getElementById('goalInput').focus();
@@ -419,14 +443,12 @@
         function renderStats(){
             const s=filteredData.reduce((a,b)=>a+(parseFloat(b.sales)||0),0),a=filteredData.reduce((a,b)=>a+(parseFloat(b.adSpend)||0),0),o=filteredData.reduce((a,b)=>a+(parseInt(b.orders)||0),0),i=filteredData.reduce((a,b)=>a+(parseInt(b.inquiries)||0),0);
             
-            // GOAL LOGIC (UPDATED: KEY LOOKUP)
             let currentGoal = 0;
             const mode = document.getElementById('filterMode').value;
             if(mode === 'month') {
                 const m = document.getElementById('filterMonth').value.padStart(2,'0');
                 const y = document.getElementById('filterYear').value;
                 const key = `${y}-${m}`;
-                // Look up in Config -> Goals
                 if(config.goals && config.goals[key]) currentGoal = config.goals[key];
             } else if (mode === 'year') {
                 const y = document.getElementById('filterYearOnly').value;
@@ -443,8 +465,6 @@
             document.getElementById('sum-cpa').innerText=o>0?`฿${(a/o).toFixed(0)}`:'0';
             document.getElementById('sum-inq').innerText=i>0?`฿${(a/i).toFixed(0)}`:'0';
             document.getElementById('sum-roas').innerText=a>0?(s/a).toFixed(2):'0.0';
-            
-            // Update BOTH Summary Target & UI Goal
             document.getElementById('sum-target').innerText=`฿${currentGoal.toLocaleString()}`;
             document.getElementById('ui-goal').innerText=`฿${currentGoal.toLocaleString()}`;
 
