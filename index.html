@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Cloud Master V10.25 - Stable & Insight</title>
+    <title>Ads Cloud Master V10.27 - Flex & Control</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -18,11 +18,15 @@
         /* CARD STYLES */
         .card-stat { 
             display: flex; flex-direction: column; justify-content: space-between;
-            width: 100%; max-width: 320px; min-height: 480px; 
-            margin: 0 auto; border-radius: 1.5rem; 
+            width: 100%; max-width: 350px; /* ขยายการ์ดนิดหน่อยให้สมดุล */
+            min-height: 480px; 
+            border-radius: 1.5rem; 
             background: white; border: 1px solid #e2e8f0;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             transition: all 0.3s; overflow: hidden;
+            /* Flex Item Props */
+            flex-grow: 1; 
+            flex-basis: 300px;
         }
         
         .card-head-betaoil { background: linear-gradient(135deg, #ca8a04 0%, #a16207 100%); color: white; } 
@@ -49,6 +53,19 @@
         .hidden-force { display: none !important; }
         .spin-anim { animation: spin 1s linear infinite; } @keyframes spin { 100% { transform: rotate(360deg); } }
         
+        /* TOGGLE BADGES */
+        .toggle-badge { 
+            cursor: pointer; padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; 
+            transition: all 0.2s; border: 2px solid transparent; display: flex; items-center: center; gap: 0.5rem;
+        }
+        .toggle-badge.active { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transform: translateY(-1px); }
+        .toggle-badge.inactive { background-color: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; opacity: 0.7; }
+        
+        /* THEME COLORS FOR BADGES */
+        .badge-betaoil.active { background-color: #fef9c3; color: #854d0e; border-color: #ca8a04; }
+        .badge-betalife.active { background-color: #ffedd5; color: #9a3412; border-color: #ea580c; }
+        .badge-labfarm.active { background-color: #dcfce7; color: #166534; border-color: #16a34a; }
+
         input, select { border: 2px solid #cbd5e1 !important; border-radius: 0.8rem !important; padding: 0.7rem 1rem !important; outline: none; transition: all 0.2s; font-size: 0.95rem; background-color: #fff; width: 100%; }
         input:focus, select:focus { border-color: #6366f1 !important; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
         .sidebar { position: fixed; top: 0; right: 0; height: 100%; width: 320px; background: white; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transform: translateX(100%); transition: transform 0.3s ease; z-index: 2000; padding: 2rem; }
@@ -72,7 +89,7 @@
     <div id="mainContent" style="display: none;">
         
         <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.25 Stable</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200"><i data-lucide="layout-dashboard"></i></div><div><h1 class="h-bold text-2xl text-slate-900 uppercase tracking-tight">Ads Cloud Master</h1><p class="text-xs font-bold text-slate-400 tracking-widest uppercase">V10.27 Flex Control</p></div></div>
             <div class="flex items-center gap-3">
                 <div id="adminSwitcher" class="hidden items-center gap-2 bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-100">
                     <span class="text-[10px] h-bold text-indigo-600 uppercase">ADMIN VIEW:</span>
@@ -121,11 +138,18 @@
             </div>
         </section>
 
-        <div class="max-w-7xl mx-auto mb-6 flex justify-between items-end">
-            <div><h3 class="h-bold text-xl text-slate-800">Performance Cards</h3><div id="roleBadge" class="hidden mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs h-bold border"></div></div>
+        <div class="max-w-7xl mx-auto mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h3 class="h-bold text-xl text-slate-800">Performance Cards</h3>
+                <div id="roleBadge" class="hidden mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs h-bold border"></div>
+            </div>
+            
+            <div id="productToggles" class="flex flex-wrap justify-center gap-2"></div>
+
             <div class="flex items-center gap-3"><span class="text-xs h-bold text-slate-400 uppercase">Show Advice:</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="adviceToggle" class="sr-only peer" onchange="window.renderApp()"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div></label></div>
         </div>
-        <div id="product-cards" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 items-start justify-center"></div>
+        
+        <div id="product-cards" class="max-w-7xl mx-auto flex flex-wrap justify-center gap-8 mb-8 items-start"></div>
 
         <section class="max-w-7xl mx-auto mb-12">
             <div class="portfolio-box p-10 md:p-12 shadow-2xl relative overflow-hidden">
@@ -202,8 +226,11 @@
             "teamkj02": { role: "USER", bucket: "adsData_team02", name: "Team KJ 02" },
             "teamkj03": { role: "USER", bucket: "adsData_team03", name: "Team KJ 03" }
         };
-        const PRODUCTS = [{id:"เบต้าออยล์",css:"card-head-betaoil"},{id:"เบต้าไลฟ์",css:"card-head-betalife"},{id:"แล็บฟาร์ม",css:"card-head-labfarm"}];
+        const PRODUCTS = [{id:"เบต้าออยล์",css:"card-head-betaoil",badge:"badge-betaoil"},{id:"เบต้าไลฟ์",css:"card-head-betalife",badge:"badge-betalife"},{id:"แล็บฟาร์ม",css:"card-head-labfarm",badge:"badge-labfarm"}];
         
+        // VISIBILITY STATE (Default ALL ON)
+        let productVisibility = { "เบต้าออยล์": true, "เบต้าไลฟ์": true, "แล็บฟาร์ม": true };
+
         let allData=[], filteredData=[], config={goals:{}}, currentPage=1, currentUser={role:'', bucket:'', name:''}, currentUnsubscribe=null;
 
         // AUTH
@@ -223,7 +250,7 @@
             } else {
                 b.className="mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 text-slate-500 text-xs h-bold border border-slate-200"; b.innerHTML=`<i data-lucide="user" size="14"></i> ${user.name}`;
             }
-            lucide.createIcons(); loadDataForBucket(user.bucket); toggleFilterInputs();
+            lucide.createIcons(); loadDataForBucket(user.bucket); toggleFilterInputs(); renderToggles();
         }
 
         // DATA LOADER
@@ -256,7 +283,12 @@
             });
         };
         
-        window.switchProfile = (v) => loadDataForBucket(v);
+        window.switchProfile = (v) => {
+            // Reset visibility to default when switching profiles for fresh view
+            productVisibility = { "เบต้าออยล์": true, "เบต้าไลฟ์": true, "แล็บฟาร์ม": true };
+            renderToggles();
+            loadDataForBucket(v);
+        };
         window.refreshDashboard = () => loadDataForBucket(document.body.dataset.currentBucket);
 
         // --- HELPERS (Import/Export/Edit/Delete) ---
@@ -324,6 +356,25 @@
         function setupMonthYear(){const m=document.getElementById('filterMonth'),n=new Date();["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."].forEach((v,i)=>m.innerHTML+=`<option value="${i+1}" ${i===n.getMonth()?'selected':''}>${v}</option>`);setupYear('filterYear');}
         function setupYear(id){ const y=document.getElementById(id),c=new Date().getFullYear(); y.innerHTML = ''; for(let i=c;i>=2024;i--) y.innerHTML+=`<option value="${i}">${i}</option>`; }
         
+        // VISIBILITY TOGGLE LOGIC
+        window.toggleVisibility = (pid) => {
+            productVisibility[pid] = !productVisibility[pid];
+            renderToggles();
+            renderApp();
+        };
+
+        window.renderToggles = () => {
+            const container = document.getElementById('productToggles');
+            container.innerHTML = '';
+            PRODUCTS.forEach(p => {
+                const isActive = productVisibility[p.id];
+                const cls = isActive ? `active ${p.badge}` : 'inactive';
+                const icon = isActive ? 'check-circle' : 'circle';
+                container.innerHTML += `<div onclick="toggleVisibility('${p.id}')" class="toggle-badge ${cls}"><i data-lucide="${icon}" size="14"></i> ${p.id}</div>`;
+            });
+            lucide.createIcons();
+        };
+
         window.renderApp=()=>{
             const m=document.getElementById('filterMode').value,fp=document.getElementById('filterProduct').value;
             filteredData=allData.filter(d=>{const dt=new Date(d.date);let match=true;
@@ -364,17 +415,22 @@
         
         function renderCards(){
             const c=document.getElementById('product-cards'),sh=document.getElementById('adviceToggle').checked;c.innerHTML='';
+            
             PRODUCTS.forEach(p=>{
-                const d=filteredData.filter(x=>x.pageId===p.id),s=d.reduce((a,b)=>a+(parseFloat(b.sales)||0),0),a=d.reduce((a,b)=>a+(parseFloat(b.adSpend)||0),0),o=d.reduce((a,b)=>a+(parseInt(b.orders)||0),0),i=d.reduce((a,b)=>a+(parseInt(b.inquiries)||0),0);
+                // 1. CHECK MANUAL TOGGLE
+                if(!productVisibility[p.id]) return; // Skip if manually hidden
+
+                const d=filteredData.filter(x=>x.pageId===p.id);
+                const s=d.reduce((a,b)=>a+(parseFloat(b.sales)||0),0),a=d.reduce((a,b)=>a+(parseFloat(b.adSpend)||0),0),o=d.reduce((a,b)=>a+(parseInt(b.orders)||0),0),i=d.reduce((a,b)=>a+(parseInt(b.inquiries)||0),0);
                 const pct=s>0?(a/s)*100:0, cpa=o>0?a/o:0, cpi=i>0?a/i:0, roas=a>0?s/a:0;
                 let adv='',cls='';
+                
                 if(s===0||isNaN(s)){cls='bg-slate-50 border-slate-200';adv='<div class="flex items-center justify-center gap-2 h-full text-slate-400"><i data-lucide="clock" size="18"></i> รอข้อมูล...</div>';}
                 else if(pct<60){cls='bg-emerald-50 border-emerald-200';adv=`<div class="flex items-center gap-2 mb-1 text-emerald-800"><i data-lucide="flame" size="18" class="text-rose-500"></i><span class="h-bold">นาทีทอง!</span></div><p class="text-xs text-emerald-600">แอดถูก (${pct.toFixed(1)}%) อัดงบเพิ่มเลย!</p>`;}
                 else if(pct<=75){cls='bg-green-50 border-green-200';adv=`<div class="flex items-center gap-2 mb-1 text-green-800"><i data-lucide="trending-up" size="18" class="text-green-600"></i><span class="h-bold">กำไรดี</span></div><p class="text-xs text-green-600">อยู่ในเกณฑ์ดี ทยอยเพิ่มงบ</p>`;}
                 else if(pct<=85){cls='bg-amber-50 border-amber-200';adv=`<div class="flex items-center gap-2 mb-1 text-amber-800"><i data-lucide="alert-circle" size="18" class="text-amber-600"></i><span class="h-bold">เฝ้าระวัง</span></div><p class="text-xs text-amber-600">ห้ามเพิ่มงบ คุมยอดให้นิ่ง</p>`;}
                 else{cls='bg-rose-50 border-rose-200';adv=`<div class="flex items-center gap-2 mb-1 text-rose-800"><i data-lucide="x-octagon" size="18" class="text-rose-600"></i><span class="h-bold">อันตราย!</span></div><p class="text-xs text-rose-600">ขาดทุนแล้ว ลดงบด่วน</p>`;}
                 
-                // --- INSERTING ORDERS/CHATS ROW HERE ---
                 c.innerHTML+=`
                 <div class="card-stat">
                     <div class="${p.css} p-4 -m-6 mb-6 h-24 flex flex-col justify-center text-white shadow-sm">
